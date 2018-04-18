@@ -1,0 +1,25 @@
+{
+  "name": "resolver-engine",
+  "version": "1.0.0",
+  "main": "build/src/index.js",
+  "repository": "git@github.com:ritave/resolver-engine.git",
+  "author": "Olaf Tomalka <olaf@tomalka.me>",
+  "scripts": {
+    "build": "tsc",
+    "tsc": "tsc",
+    "clean": "rimraf build/"
+  },
+  "devDependencies": {
+    "@types/debug": "^0.0.30",
+    "@types/node": "^9.6.5",
+    "@types/request": "^2.47.0",
+    "@types/tmp": "^0.0.33",
+    "rimraf": "^2.6.2",
+    "typescript": "^2.8.1"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "request": "^2.85.0",
+    "tmp": "^0.0.33"
+  }
+}
