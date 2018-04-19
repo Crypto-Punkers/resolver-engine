@@ -24,7 +24,7 @@ export class FsResolver implements SubResolver {
       const stats = await statAsync(myWhat);
       return stats.isFile() ? myWhat : null;
     } catch (e) {
-      if (e === NO_FILE) {
+      if (e.code === NO_FILE) {
         return null;
       }
       throw e;
