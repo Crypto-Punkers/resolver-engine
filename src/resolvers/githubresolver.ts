@@ -9,7 +9,7 @@ const debug = Debug("resolverengine:githubresolver");
 // 1st group - protocol, location, owner, repo
 // 2nd group - file inside repo
 // 3rd group - comittish
-const FILE_LOCATION_REGEX = /^((?:.+:\/\/)?[^/]+[/:][^/]+[/][^/]+)[/](.+?)(#.+)?$/;
+const FILE_LOCATION_REGEX = /^((?:.+:\/\/)?[^:/]+[/:][^/]+[/][^/]+)[/](.+?)(#.+)?$/;
 
 // TODO(ritave): Support private repositories
 export class GithubResolver extends UrlResolver {
