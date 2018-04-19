@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import Debug from "debug";
 
-import { SubParser } from "../subparser";
 import { promisify } from "util";
+
+import { SubParser } from "./subparser";
 
 const readFileAsync = promisify(fs.readFile);
 

@@ -1,7 +1,7 @@
 import Debug from "debug";
 
-import { SubResolver } from "./subresolver";
-import { SubParser } from "./subparser";
+import { SubResolver } from "./resolvers/subresolver";
+import { SubParser } from "./parsers/subparser";
 
 const debug = Debug("resolverengine:main");
 

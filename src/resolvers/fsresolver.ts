@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { SubResolver } from "../subresolver";
+import { SubResolver } from "./subresolver";
 import { promisify } from "util";
 
 const statAsync = promisify(fs.stat);
