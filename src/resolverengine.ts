@@ -1,7 +1,6 @@
 import Debug from "debug";
-
-import { SubResolver } from "./resolvers/subresolver";
 import { SubParser } from "./parsers/subparser";
+import { SubResolver } from "./resolvers/subresolver";
 
 const debug = Debug("resolverengine:main");
 
@@ -23,7 +22,7 @@ export class ResolverEngine<R> {
   public async resolve(what: string): Promise<string> {
     debug(`Resolving "${what}"`);
 
-    const result = await ResolverEngine.firstResult(this.resolvers, resolver => resolver.resolve(what));
+    const result = await ResolverEngine.firstResult(this.resolvers, resolver => resolver(what));
 
     if (result === null) {
       throw new Error(`None of the sub-resolvers resolved "${what}" location.`);
@@ -39,7 +38,7 @@ export class ResolverEngine<R> {
 
     const path = await this.resolve(what);
 
-    const result = await ResolverEngine.firstResult(this.parsers, parser => parser.require(path));
+    const result = await ResolverEngine.firstResult(this.parsers, parser => parser(path));
 
     if (result === null) {
       throw new Error(`None of the sub-parsers resolved "${what}" into data. Please confirm your configuration.`);

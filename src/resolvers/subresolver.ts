@@ -1,3 +1,1 @@
-export interface SubResolver {
-  resolve(what: string): Promise<string | null>;
-}
+export type SubResolver = (what: string) => Promise<string | null>;

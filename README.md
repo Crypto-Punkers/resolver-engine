@@ -1,42 +1,48 @@
-# resolver-engine
+<p align="center">
+  <img src="doc/Logo@2x.png?raw=true">
+</p>
+
+---
+
 Inspired by node's require(). Singular API for resolving and parsing imports of any kind from multiple sources
 
-## Target example
+## Why
+
+Each Solidity framework has different logic concerning Solidity import statements as well as creating different format of artifacts. This becomes problematic when target developers want to use multiple tools on the same codebase.
+
+For example, Truffle artifacts are not compatible with 0xProject's solidity coverage tooling. Documentation generation doesn't support NPM-like Solidity imports which are supported by both Truffle and 0x, at the same time, neither of which support github import statements as the ones Remix does.
+
+The goal of this library is to provide tooling for framework developers so that they can implement multiple artifacts and solidity importing with ease, as well as providing sane defaults that would standarize the functionallity.
+
+## Usage
+
+Using sane defaults is strongly prefered.
 
 ```typescript
-import { ResolverEngine } from "node-subresolver";
-import { NpmResolver, EthPmResolver, FsResolver, GithubResolver } from "eth-subresolvers";
-import { SolidityCodeParser } from 'solidity-subresolvers';
-import { ZrxArtifactParser } from 'zrx-subresolvers';
-import { TruffleArtifactParser } from 'truffle-subresolvers';
+import { SolidityImportResolver } from "resolver-engine";
 
-const resolverBase = ResolverEngine
-    .addSubResolver(new NpmResolver())
-    .addSubResolver(new EthPmResolver(onDownloadCallback))
-    .addSubResolver(new GithubResolver(MY_GITHUB_TOKEN));
+const resolver = SolidityImportResolver();
 
-const artifactResolver = resolverBase
-    .addSubResolver(new FsResolver("build/artifacts/"))
-    .addParser(new TruffleArtifactParser())
-    .addParser(new ZrxArtifactParser())
-    .build();
-
-const codeResolver = resolverBase
-    .addSubResolver(new FsResolver("src/contracts/"))
-    .addParser(new SolidityCodeParser())
-    .build();
-
-const contract = resolver.require("open-zeppelin/Ownable.sol");
-
-// Some kind of machinery, eg solc
-compile(
-    "src/contracts/Root.sol",
-    (importName) => { `${codeResolver.packageName(importName)}`: codeResolver.require(importName) }
-);
-
-if (artifactResolver.resolve("build/contracts/Root.json") == null) {
-    console.error("File not found");
-}
-
-link("build/artifacts/", (contractName) => codeResolver.require(contractName) );
+resolver
+  .require("@zeppelin-solidity/contracts/Ownable.sol")
+  .then(console.log)
+  .catch(console.error);
 ```
+
+Otherwise, you can build your own engines
+
+```typescript
+import { ResolverEngine, NodeResolver, FsResolver, FsParser } from "resolver-engine";
+
+const resolver = new ResolverEngine<string>()
+  .addResolver(FsResolver("contracts/"))
+  .addResolver(NodeResolver())
+  .add(FsParser());
+
+resolver
+  .resolve("@zeppelin-solidity/contracts/Ownable.sol")
+  .then(console.log)
+  .catch(console.error);
+```
+
+In the [`examples/` folder](examples/) more granular examples can be found

@@ -1,19 +1,16 @@
+import Debug from "debug";
+import * as fs from "fs";
 import request from "request";
 import * as tmp from "tmp";
-import * as fs from "fs";
-import Debug from "debug";
-
-import { SubResolver } from "./subresolver";
+import { SubResolver } from ".";
 
 const debug = Debug("resolverengine:urlresolver");
 
-export class UrlResolver implements SubResolver {
-  constructor() {
-    tmp.setGracefulCleanup();
-  }
+export function UrlResolver(): SubResolver {
+  tmp.setGracefulCleanup();
 
-  resolve(what: string, options?: request.Options): Promise<string | null> {
-    return new Promise((resolve, reject) => {
+  return (what: string, options?: request.Options): Promise<string | null> =>
+    new Promise((resolve, reject) => {
       tmp.file((err, path, fd) => {
         if (err) {
           reject(err);
@@ -34,5 +31,4 @@ export class UrlResolver implements SubResolver {
           .on("end", () => resolve(path));
       });
     });
-  }
 }

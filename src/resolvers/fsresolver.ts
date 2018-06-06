@@ -1,33 +1,22 @@
 import * as fs from "fs";
 import * as path from "path";
-
-import { SubResolver } from "./subresolver";
 import { promisify } from "util";
+import { SubResolver } from ".";
 
 const statAsync = promisify(fs.stat);
 const NO_FILE = "ENOENT";
 
-export class FsResolver implements SubResolver {
-  private readonly root: string;
-
-  public constructor(root?: string) {
-    this.root = root || "";
-  }
-
-  async resolve(what: string): Promise<string | null> {
-    let myWhat = what;
-    if (path.isAbsolute(myWhat)) {
-      myWhat = this.root + myWhat;
-    }
-
+export function FsResolver(root?: string): SubResolver {
+  return async (resolvePath: string): Promise<string | null> => {
+    let myPath = path.join(root || "", resolvePath);
     try {
-      const stats = await statAsync(myWhat);
-      return stats.isFile() ? myWhat : null;
+      const stats = await statAsync(myPath);
+      return stats.isFile() ? myPath : null;
     } catch (e) {
       if (e.code === NO_FILE) {
         return null;
       }
       throw e;
     }
-  }
+  };
 }

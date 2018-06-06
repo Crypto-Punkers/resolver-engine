@@ -1,11 +1,11 @@
-import { ResolverEngine, FsParser, FsResolver, GithubResolver, UrlResolver, NodeResolver } from "../src";
+import { FsParser, FsResolver, GithubResolver, NodeResolver, ResolverEngine, UrlResolver } from "../src";
 
 const resolver = new ResolverEngine<string>()
-  .addResolver(new FsResolver())
-  .addResolver(new NodeResolver())
-  .addResolver(new GithubResolver())
-  .addResolver(new UrlResolver())
-  .addParser(new FsParser());
+  .addResolver(FsResolver())
+  .addResolver(NodeResolver())
+  .addResolver(GithubResolver())
+  .addResolver(UrlResolver())
+  .addParser(FsParser());
 
 async function print(path: string) {
   console.log(path);
