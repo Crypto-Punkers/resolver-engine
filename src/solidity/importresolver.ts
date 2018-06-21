@@ -1,6 +1,7 @@
 import { FsParser, SubParser } from "../parsers";
 import { ResolverEngine } from "../resolverengine";
 import { FsResolver, GithubResolver, NodeResolver, UrlResolver } from "../resolvers";
+import { EthPmResolver } from "./ethpmresolver";
 
 export interface ImportFile {
   path: string;
@@ -23,13 +24,11 @@ export function ImportParser(): SubParser<ImportFile> {
 }
 
 export function SolidityImportResolver() {
-  return (
-    new ResolverEngine<ImportFile>()
-      .addResolver(FsResolver())
-      .addResolver(NodeResolver())
-      .addResolver(GithubResolver())
-      .addResolver(UrlResolver())
-      // TODO(ritave): Add EthPM support
-      .addParser(ImportParser())
-  );
+  return new ResolverEngine<ImportFile>()
+    .addResolver(FsResolver())
+    .addResolver(EthPmResolver())
+    .addResolver(NodeResolver())
+    .addResolver(GithubResolver())
+    .addResolver(UrlResolver())
+    .addParser(ImportParser());
 }

@@ -2,18 +2,27 @@ import Debug from "debug";
 import * as fs from "fs";
 import request from "request";
 import * as tmp from "tmp";
+import * as url from "url";
 import { SubResolver } from ".";
 
 const debug = Debug("resolverengine:urlresolver");
+
+function isValidUri(uri: string): boolean {
+  return !!url.parse(uri).host;
+}
 
 export function UrlResolver(): SubResolver {
   tmp.setGracefulCleanup();
 
   return (what: string, options?: request.Options): Promise<string | null> =>
     new Promise((resolve, reject) => {
+      if (!isValidUri(what)) {
+        return resolve(null);
+      }
+
       tmp.file((err, path, fd) => {
         if (err) {
-          reject(err);
+          return reject(err);
         }
         debug("Created temporary file: ", path);
 
