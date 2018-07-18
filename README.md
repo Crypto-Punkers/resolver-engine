@@ -14,6 +14,10 @@ For example, Truffle artifacts are not compatible with 0xProject's solidity cove
 
 The goal of this library is to provide tooling for framework developers so that they can implement multiple artifacts and solidity importing with ease, as well as providing sane defaults that would standarize the functionallity.
 
+<p align="center">
+  <img src="doc/SequenceRender.png?raw=true">
+</p>
+
 ## Usage
 
 Using sane defaults is strongly prefered.
