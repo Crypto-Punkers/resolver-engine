@@ -3,6 +3,7 @@
 </p>
 
 ---
+[![chat on telegram](https://img.shields.io/badge/chat-on%20telegram-blue.svg)](https://t.me/resolverengine)
 
 Inspired by node's require(). Singular API for resolving and parsing imports of any kind from multiple sources
 
