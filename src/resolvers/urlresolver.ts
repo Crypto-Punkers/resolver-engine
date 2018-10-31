@@ -4,6 +4,7 @@ import request from "request";
 import * as tmp from "tmp";
 import * as url from "url";
 import { SubResolver } from ".";
+import { ResolverContext } from "./subresolver";
 
 const debug = Debug("resolverengine:urlresolver");
 
@@ -11,10 +12,14 @@ function isValidUri(uri: string): boolean {
   return !!url.parse(uri).host;
 }
 
+export interface UrlResolverContext extends ResolverContext {
+  options?: request.Options;
+}
+
 export function UrlResolver(): SubResolver {
   tmp.setGracefulCleanup();
 
-  return (what: string, options?: request.Options): Promise<string | null> =>
+  return (what: string, ctx: UrlResolverContext): Promise<string | null> =>
     new Promise((resolve, reject) => {
       if (!isValidUri(what)) {
         return resolve(null);
@@ -26,7 +31,7 @@ export function UrlResolver(): SubResolver {
         }
         debug("Created temporary file: ", path);
 
-        const req = request({ url: what, ...options });
+        const req = request({ url: what, ...ctx.options });
         req
           .on("response", response => {
             debug("Got response:", response.statusCode);

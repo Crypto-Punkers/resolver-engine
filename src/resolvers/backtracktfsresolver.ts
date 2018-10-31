@@ -1,19 +1,20 @@
 import * as path from "path";
 import { SubResolver } from ".";
 import { FsResolver } from "./fsresolver";
+import { ResolverContext } from "./subresolver";
 
 export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
   const fsResolver = FsResolver();
 
-  return async (resolvePath: string): Promise<string | null> => {
+  return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
     if (path.isAbsolute(resolvePath)) {
       return null;
     }
 
-    let previous: string = path.resolve("./");
+    let previous: string = path.resolve(ctx.cwd, "./");
     let current: string = previous;
     do {
-      const result = await fsResolver(path.join(current, pathPrefix, resolvePath));
+      const result = await fsResolver(path.join(current, pathPrefix, resolvePath), ctx);
 
       if (result) {
         return result;

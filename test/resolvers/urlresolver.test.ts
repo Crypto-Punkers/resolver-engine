@@ -3,6 +3,7 @@ import MockFs from "mock-fs";
 import nock from "nock";
 import { FsParser, SubParser, SubResolver, UrlResolver } from "../../src";
 import "../utils/setup";
+import { defaultCtx } from "./utils";
 
 const expect = chai.expect;
 
@@ -29,7 +30,7 @@ describe("UrlResolver", function() {
       "relative/path.file": "wrong",
     });
 
-    expect(await instance("relative/path.file")).to.be.null;
+    expect(await instance("relative/path.file", defaultCtx())).to.be.null;
   });
 
   it("downloads the file", async function() {
@@ -38,7 +39,7 @@ describe("UrlResolver", function() {
       .get("/")
       .reply(200, CONTENTS);
 
-    const path = await instance("http://captive.apple.com/");
+    const path = await instance("http://captive.apple.com/", defaultCtx());
     expect(path).to.not.be.null;
     expect(await contentsResolver(path!)).to.be.equal(CONTENTS);
   });
@@ -49,7 +50,7 @@ describe("UrlResolver", function() {
       .get("/")
       .replyWithError(ERROR);
 
-    await expect(instance("http://somewebsite.com")).to.eventually.be.rejectedWith(ERROR);
+    await expect(instance("http://somewebsite.com", defaultCtx())).to.eventually.be.rejectedWith(ERROR);
   });
 
   it("throws on failure code", async function() {
@@ -57,6 +58,6 @@ describe("UrlResolver", function() {
       .get("/")
       .reply(404);
 
-    await expect(instance("http://somewebsite.com")).to.eventually.be.rejected;
+    await expect(instance("http://somewebsite.com", defaultCtx())).to.eventually.be.rejected;
   });
 });

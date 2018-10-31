@@ -2,13 +2,19 @@ import * as fs from "fs";
 import * as path from "path";
 import { promisify } from "util";
 import { SubResolver } from ".";
+import { ResolverContext } from "./subresolver";
 
 const statAsync = promisify(fs.stat);
 const NO_FILE = "ENOENT";
 
-export function FsResolver(root?: string): SubResolver {
-  return async (resolvePath: string): Promise<string | null> => {
-    let myPath = path.join(root || "", resolvePath);
+export function FsResolver(): SubResolver {
+  return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
+    let myPath: string;
+    if (!path.isAbsolute(resolvePath)) {
+      myPath = path.join(ctx.cwd, resolvePath);
+    } else {
+      myPath = resolvePath;
+    }
     try {
       const stats = await statAsync(myPath);
       return stats.isFile() ? myPath : null;
