@@ -1,6 +1,7 @@
 import Debug from "debug";
+import * as process from "process";
 import { SubParser } from "./parsers/subparser";
-import { SubResolver } from "./resolvers/subresolver";
+import { ResolverContext, SubResolver } from "./resolvers/subresolver";
 
 const debug = Debug("resolverengine:main");
 
@@ -19,10 +20,15 @@ export class ResolverEngine<R> {
     }
   }
 
-  public async resolve(what: string): Promise<string> {
+  public async resolve(what: string, workingDir?: string): Promise<string> {
     debug(`Resolving "${what}"`);
+    const cwd = workingDir || process.cwd();
 
-    const result = await ResolverEngine.firstResult(this.resolvers, resolver => resolver(what));
+    const ctx: ResolverContext = {
+      cwd,
+    };
+
+    const result = await ResolverEngine.firstResult(this.resolvers, resolver => resolver(what, ctx));
 
     if (result === null) {
       throw new Error(`None of the sub-resolvers resolved "${what}" location.`);
@@ -33,10 +39,10 @@ export class ResolverEngine<R> {
     return result;
   }
 
-  public async require(what: string): Promise<R> {
+  public async require(what: string, workingDir?: string): Promise<R> {
     debug(`Requiring "${what}"`);
 
-    const path = await this.resolve(what);
+    const path = await this.resolve(what, workingDir);
 
     const result = await ResolverEngine.firstResult(this.parsers, parser => parser(path));
 

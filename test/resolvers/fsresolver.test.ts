@@ -1,6 +1,8 @@
 import { expect } from "chai";
 import MockFs from "mock-fs";
+import * as path from "path";
 import { FsParser, FsResolver, SubParser, SubResolver } from "../../src";
+import { defaultContext } from "./utils";
 
 describe("FsResolver", function() {
   let instance: SubResolver;
@@ -25,7 +27,7 @@ describe("FsResolver", function() {
         "file.test": "wrong",
       });
 
-      const path = await instance("/file.test");
+      const path = await instance("/file.test", defaultContext());
       expect(path).to.be.equal("/file.test");
       expect(await contentsParser(path!)).to.be.equal("correct");
     });
@@ -36,9 +38,9 @@ describe("FsResolver", function() {
         "relative/path/file.test": "correct",
       });
 
-      const path = await instance("relative/path/file.test");
-      expect(path).to.be.equal("relative/path/file.test");
-      expect(await contentsParser(path!)).to.be.equal("correct");
+      const resolved = await instance("relative/path/file.test", defaultContext());
+      expect(resolved).to.be.equal(path.join(process.cwd(), "relative/path/file.test"));
+      expect(await contentsParser(resolved!)).to.be.equal("correct");
     });
 
     it("returns null on non-existent", async function() {
@@ -47,13 +49,14 @@ describe("FsResolver", function() {
         "b.test": "b",
       });
 
-      expect(await instance("c.test")).to.be.null;
+      expect(await instance("c.test", defaultContext())).to.be.null;
     });
   });
 
   context("with root preffix", function() {
+    const ctx = { ...defaultContext(), cwd: "root" };
     beforeEach(function() {
-      instance = FsResolver("root");
+      instance = FsResolver();
     });
 
     it("appends root preffix", async function() {
@@ -62,7 +65,7 @@ describe("FsResolver", function() {
         "dir/file.test": "wrong",
       });
 
-      expect(await instance("dir/file.test")).to.be.equal("root/dir/file.test");
+      expect(await instance("dir/file.test", ctx)).to.be.equal("root/dir/file.test");
     });
 
     it("returns null on failure", async function() {
@@ -71,7 +74,7 @@ describe("FsResolver", function() {
         "root/b.test": "wrong",
       });
 
-      expect(await instance("a.test")).to.be.null;
+      expect(await instance("a.test", ctx)).to.be.null;
     });
   });
 });
