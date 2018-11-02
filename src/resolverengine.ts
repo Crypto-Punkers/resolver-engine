@@ -1,7 +1,7 @@
 import Debug from "debug";
 import * as process from "process";
 import { SubParser } from "./parsers/subparser";
-import { SubResolver } from "./resolvers/subresolver";
+import { ResolverContext, SubResolver } from "./resolvers/subresolver";
 
 const debug = Debug("resolverengine:main");
 
@@ -24,7 +24,7 @@ export class ResolverEngine<R> {
     debug(`Resolving "${what}"`);
     const cwd = workingDir || process.cwd();
 
-    const ctx = {
+    const ctx: ResolverContext = {
       cwd,
     };
 

@@ -1,7 +1,7 @@
 import * as process from "process";
 import { ResolverContext } from "../../src";
 
-export function defaultCtx(): ResolverContext {
+export function defaultContext(): ResolverContext {
   return {
     cwd: process.cwd(),
   };

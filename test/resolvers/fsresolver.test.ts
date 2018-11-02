@@ -2,7 +2,7 @@ import { expect } from "chai";
 import MockFs from "mock-fs";
 import * as path from "path";
 import { FsParser, FsResolver, SubParser, SubResolver } from "../../src";
-import { defaultCtx } from "./utils";
+import { defaultContext } from "./utils";
 
 describe("FsResolver", function() {
   let instance: SubResolver;
@@ -27,7 +27,7 @@ describe("FsResolver", function() {
         "file.test": "wrong",
       });
 
-      const path = await instance("/file.test", defaultCtx());
+      const path = await instance("/file.test", defaultContext());
       expect(path).to.be.equal("/file.test");
       expect(await contentsParser(path!)).to.be.equal("correct");
     });
@@ -38,7 +38,7 @@ describe("FsResolver", function() {
         "relative/path/file.test": "correct",
       });
 
-      const resolved = await instance("relative/path/file.test", defaultCtx());
+      const resolved = await instance("relative/path/file.test", defaultContext());
       expect(resolved).to.be.equal(path.join(process.cwd(), "relative/path/file.test"));
       expect(await contentsParser(resolved!)).to.be.equal("correct");
     });
@@ -49,12 +49,12 @@ describe("FsResolver", function() {
         "b.test": "b",
       });
 
-      expect(await instance("c.test", defaultCtx())).to.be.null;
+      expect(await instance("c.test", defaultContext())).to.be.null;
     });
   });
 
   context("with root preffix", function() {
-    const ctx = { ...defaultCtx(), cwd: "root" };
+    const ctx = { ...defaultContext(), cwd: "root" };
     beforeEach(function() {
       instance = FsResolver();
     });
