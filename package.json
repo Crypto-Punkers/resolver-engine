@@ -29,9 +29,11 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
     "debug": "^3.1.0",
     "hosted-git-info": "^2.6.0",
     "request": "^2.85.0",
+    "solc": "^0.5.0",
     "tmp": "^0.0.33"
   },
   "engines": {
