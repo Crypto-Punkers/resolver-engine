@@ -1,11 +1,9 @@
-import chai from "chai";
-import MockFs from "mock-fs";
+import { expect } from "chai";
+import mockFs from "mock-fs";
 import nock from "nock";
 import { FsParser, SubParser, SubResolver, UrlResolver } from "../../src";
 import "../utils/setup";
 import { defaultContext } from "./utils";
-
-const expect = chai.expect;
 
 describe("UrlResolver", function() {
   let instance: SubResolver;
@@ -21,12 +19,12 @@ describe("UrlResolver", function() {
   });
 
   afterEach(function() {
-    MockFs.restore();
+    mockFs.restore();
     expect(nock.isDone()).to.be.true;
   });
 
   it("returns null on non-urls", async function() {
-    MockFs({
+    mockFs({
       "relative/path.file": "wrong",
     });
 
