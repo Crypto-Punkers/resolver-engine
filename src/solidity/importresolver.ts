@@ -39,7 +39,7 @@ export function findImports<R extends ImportFile>(data: R) : string[] {
   let match: RegExpExecArray | null;
   while (match = regex.exec(data.source)) {
     result.push(match[1]);
-    console.log(match);
+    // console.log(match);
   }
   return result;
 }
@@ -47,6 +47,7 @@ export function findImports<R extends ImportFile>(data: R) : string[] {
 export async function gatherSources<R extends ImportFile>(what: string, workingDir?: string, resolver?: ResolverEngine<R>): Promise<R[]> {
 //  resolver || (resolver = SolidityImportResolver());
   let result: R[] = [];
+  const path = require("path");
 
   if (!resolver) //TODO resolver should default to SolidityImportResolver()
     throw Error("No resolver provided!");
@@ -57,11 +58,15 @@ export async function gatherSources<R extends ImportFile>(what: string, workingD
 
   while (queue.length > 0){
     const fileData = queue.shift()!;
-    let tmp: R = await resolver.require(fileData.file, fileData.cwd);
+    let tmp: R = await resolver.require(fileData.file, fileData.cwd); //TODO try
     const foundImports = findImports(tmp);
     console.log(foundImports);
+    //TODO check if file was already resolved
     result.push(tmp);
-    //TODO add found imports to queue 
+    const filewd = path.dirname(tmp.path);
+    for (let i in foundImports) {
+      queue.push({cwd: filewd, file: foundImports[i]});
+    }
   }
 
   return result;
