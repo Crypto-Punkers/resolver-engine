@@ -44,5 +44,9 @@ describe("findImports", function() {
         });
     });
 
-    it("finds multiple import statements");
+    it("finds multiple import statements", async function() {
+        providedFile.source = 'pragma solidity ^0.5.0;\nimport "./SomeLib.sol";\nimport "./SomeLib2.sol";\nimport "./SomeLib3.sol";\n\ncontract SomeContract {}\n';
+        const result = findImports(providedFile);
+        expect(result).to.have.members(["./SomeLib.sol", "./SomeLib2.sol", "./SomeLib3.sol"]);
+    });
 });
