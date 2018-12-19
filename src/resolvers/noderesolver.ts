@@ -6,7 +6,7 @@ const debug = Debug("resolverengine:noderesolver");
 export function NodeResolver(): SubResolver {
   return async (what: string): Promise<string | null> => {
     try {
-      return require.resolve(what);
+      return require.resolve(what, {paths: [process.cwd()]});
     } catch (e) {
       debug("Node's require.resolve failed, returning null", e);
       return null;
