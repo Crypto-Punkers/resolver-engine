@@ -33,24 +33,19 @@ export function SolidityImportResolver() {
     .addParser(ImportParser());
 }
 
-export function findImports<R extends ImportFile>(data: R) : string[] {
+export function findImports(data: ImportFile) : string[] {
   let result: string[] = [];
   const regex: RegExp = /import \"([^\"]+)\";/g;
   let match: RegExpExecArray | null;
   while (match = regex.exec(data.source)) {
     result.push(match[1]);
-    // console.log(match);
   }
   return result;
 }
 
-export async function gatherSources<R extends ImportFile>(what: string, workingDir?: string, resolver?: ResolverEngine<R>): Promise<R[]> {
-//  resolver || (resolver = SolidityImportResolver());
-  let result: R[] = [];
+export async function gatherSources(what: string, workingDir?: string, resolver: ResolverEngine<ImportFile> = SolidityImportResolver()): Promise<ImportFile[]> {
+  let result: ImportFile[] = [];
   const path = require("path");
-
-  if (!resolver) //TODO resolver should default to SolidityImportResolver()
-    throw Error("No resolver provided!");
 
   let queue = [];
 
@@ -58,7 +53,7 @@ export async function gatherSources<R extends ImportFile>(what: string, workingD
 
   while (queue.length > 0){
     const fileData = queue.shift()!;
-    let tmp: R = await resolver.require(fileData.file, fileData.cwd); //TODO try
+    let tmp: ImportFile = await resolver.require(fileData.file, fileData.cwd); //TODO try
     const foundImports = findImports(tmp);
     console.log(foundImports);
     //TODO check if file was already resolved
