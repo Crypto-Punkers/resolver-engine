@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import MockFs from "mock-fs";
-// import * as path from "path";
 import { gatherSources, ResolverEngine, SolidityImportResolver, ImportFile } from "../../src";
 
 describe("gatherSources function", function() {
