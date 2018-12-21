@@ -33,9 +33,70 @@ describe("gatherSources function", function() {
         ]);
     });
 
-    it("gathers all files required to compile");
-    it("does not include the same file twice");
-    it("works without passing resolver to it");
+    it("gathers files imported by imported files", async function() {
+        MockFs({
+            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+            "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
+            "contracts/something.sol": 'filecontents'
+        });
+
+        const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
+        expect(fileList).to.have.deep.members([
+            {
+                path: process.cwd() + '/mainfile.sol',
+                source: 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah'
+            },
+            {
+                path: process.cwd() + '/otherfile.sol',
+                source: 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah'
+            },
+            {
+                path: process.cwd() + '/contracts/something.sol',
+                source: 'filecontents'
+            }
+        ]);
+    });
+
+    it("does not include the same file twice", async function() {
+        MockFs({
+            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+            "otherfile.sol": 'otherfilecontents;\nimport "somethingelse.sol";\nsmthsmth',
+            "somethingelse.sol": "somethingelsecontents"
+        });
+        const fileList = await gatherSources("mainfile.sol", process.cwd());
+        expect(fileList).to.have.deep.members([
+            {
+                path: process.cwd() + '/mainfile.sol',
+                source: 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah'
+            },
+            {
+                path: process.cwd() + '/otherfile.sol',
+                source: 'otherfilecontents;\nimport "somethingelse.sol";\nsmthsmth'
+            },
+            {
+                path: process.cwd() + '/somethingelse.sol',
+                source: "somethingelsecontents"
+            }
+        ]);
+    });
+
+    it("works without passing resolver to it", async function() {
+        MockFs({
+            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+            "otherfile.sol": 'herpderp'
+        });
+        const fileList = await gatherSources("mainfile.sol", process.cwd());
+        expect(fileList).to.have.deep.members([
+            {
+                path: process.cwd() + '/mainfile.sol',
+                source: 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah'
+            },
+            {
+                path: process.cwd() + '/otherfile.sol',
+                source: 'herpderp'
+            }
+        ]);
+    });
 
     
 });
