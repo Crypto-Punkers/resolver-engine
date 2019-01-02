@@ -43,24 +43,33 @@ export function findImports(data: ImportFile) : string[] {
   return result;
 }
 
+// when importing files from parent directory solc requests sifferent file name
+// e.g. for "../dir/file" solc requests fine named "dir/file"
+// solidifyName returns file name that will  be requested by solc
+export function solidifyName(fileName: string) : string {
+  return fileName.split("./").pop()!;
+}
+
 export async function gatherSources(what: string, workingDir?: string, resolver: ResolverEngine<ImportFile> = SolidityImportResolver()): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
   const path = require("path");
-
   let queue = [];
+  let alreadyImported = new Set();
 
   queue.push({cwd: workingDir, file: what});
-
+  alreadyImported.add(solidifyName(what));
   while (queue.length > 0){
     const fileData = queue.shift()!;
-    let tmp: ImportFile = await resolver.require(fileData.file, fileData.cwd); //TODO try
+    let tmp: ImportFile = await resolver.require(fileData.file, fileData.cwd);
     const foundImports = findImports(tmp);
-    console.log(foundImports);
-    //TODO check if file was already resolved
     result.push(tmp);
     const filewd = path.dirname(tmp.path);
     for (let i in foundImports) {
-      queue.push({cwd: filewd, file: foundImports[i]});
+      const solidifiedName: string = solidifyName(foundImports[i]);
+      if (!alreadyImported.has(solidifiedName)) {
+        alreadyImported.add(solidifiedName);
+        queue.push({cwd: filewd, file: foundImports[i]});
+      }
     }
   }
 
