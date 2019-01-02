@@ -35,10 +35,15 @@ export function SolidityImportResolver() {
 
 export function findImports(data: ImportFile) : string[] {
   let result: string[] = [];
-  const regex: RegExp = /import \"([^\"]+)\";/g;
+  const regex: RegExp = /import\s+(?:(?:"([^;]*)"|'([^;]*)')(?:;|\s+as\s+[^;]*;)|.+from\s+(?:"(.*)"|'(.*)');)/g;
   let match: RegExpExecArray | null;
   while (match = regex.exec(data.source)) {
-    result.push(match[1]);
+    for (let i = 1; i < match.length; i++) {
+      if (match[i] !== undefined) {
+        result.push(match[i]);
+        break;
+      }
+    }
   }
   return result;
 }
