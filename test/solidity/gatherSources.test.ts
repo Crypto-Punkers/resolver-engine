@@ -59,7 +59,7 @@ describe("gatherSources function", function() {
     it("does not include the same file twice", async function() {
         MockFs({
             "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-            "otherfile.sol": 'otherfilecontents;\nimport "somethingelse.sol";\nsmthsmth',
+            "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
             "somethingelse.sol": "somethingelsecontents"
         });
         const fileList = await gatherSources("mainfile.sol", process.cwd());
@@ -70,7 +70,7 @@ describe("gatherSources function", function() {
             },
             {
                 path: process.cwd() + '/otherfile.sol',
-                source: 'otherfilecontents;\nimport "somethingelse.sol";\nsmthsmth'
+                source: 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth'
             },
             {
                 path: process.cwd() + '/somethingelse.sol',
