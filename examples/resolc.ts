@@ -6,7 +6,7 @@ const chalk = require("chalk");
 const yargs = require("yargs");
 const path = require("path");
 
-import {SolidityImportResolver} from "../src";
+import { SolidityImportResolver } from "../src";
 const resolver = SolidityImportResolver();
 
 var argv = yargs.argv;
@@ -15,17 +15,17 @@ var files = argv._;
 console.log(chalk.cyan("Supplied files: ") + files);
 
 //based on https://stackoverflow.com/a/14210948/8482839
-function getAllGroupMatches(text : string, regex : RegExp, index? : number) : string[] {
+function getAllGroupMatches(text: string, regex: RegExp, index?: number): string[] {
 	index || (index = 1);
-	let matches : string[] = [];
-	let match : RegExpExecArray | null;
+	let matches: string[] = [];
+	let match: RegExpExecArray | null;
 	while (match = regex.exec(text)) {
 		matches.push(match[index]);
 	}
 	return matches;
 }
 
-function solidifyImportName(origName : string) : string {
+function solidifyImportName(origName: string): string {
 	return origName.split("./").pop()!;
 }
 
@@ -34,17 +34,17 @@ interface ImportQueueItem {
 	importName: string;
 }
 
-async function resolveInputFiles(fileList : string[]) {
-	let input : {[index: string] : {[index: string] : string}} = {};
-	let queue : ImportQueueItem[] = [];
+async function resolveInputFiles(fileList: string[]) {
+	let input: { [index: string]: { [index: string]: string } } = {};
+	let queue: ImportQueueItem[] = [];
 
 	for (let i in fileList) {
-		queue.push({cwd: process.cwd(), importName: fileList[i]});
+		queue.push({ cwd: process.cwd(), importName: fileList[i] });
 	}
 
 	while (queue.length > 0) {
-		let fileData : ImportQueueItem = queue.shift()!;
-		let file : string = fileData.importName;
+		let fileData: ImportQueueItem = queue.shift()!;
+		let file: string = fileData.importName;
 		console.log(chalk.green("Processing file: ") + file);
 
 		let fileSolc = solidifyImportName(file);
@@ -52,7 +52,7 @@ async function resolveInputFiles(fileList : string[]) {
 		let tmp = await resolver.require(file, fileData.cwd);
 
 		if (!(file in input)) {
-			input[fileSolc] = {"content": tmp.source};
+			input[fileSolc] = { "content": tmp.source };
 
 			//TODO make better regex
 			//this one finds only lines like:
@@ -64,23 +64,23 @@ async function resolveInputFiles(fileList : string[]) {
 			}
 			console.log("This file imports: " + chalk.cyan(imported));
 			for (let i in imported) {
-				queue.push({cwd: path.dirname(tmp.path), importName : imported[i]});
+				queue.push({ cwd: path.dirname(tmp.path), importName: imported[i] });
 			}
 		}
 		else {
-// 			console.log(chalk.red(tmp.path + " is already in 'input'"));
+			// 			console.log(chalk.red(tmp.path + " is already in 'input'"));
 		}
 	}
 
 	return input;
 }
 
-function missingImport(p : string) {
+function missingImport(p: string) {
 	console.log(chalk.magenta("File not supplied: ") + p);
-	return {'contents': ""};
+	return { 'contents': "" };
 }
 
-resolveInputFiles(files).then(function(input) {
+resolveInputFiles(files).then(function (input) {
 	let inputJSON = {
 		language: "Solidity",
 		sources: input,
@@ -88,7 +88,7 @@ resolveInputFiles(files).then(function(input) {
 			evmVersion: "byzantium",
 			outputSelection: {
 				"*": {
-					"*": [ "abi", "evm.bytecode" ]
+					"*": ["abi", "evm.bytecode"]
 				}
 			}
 		}
