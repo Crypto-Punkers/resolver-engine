@@ -22,7 +22,7 @@ export function UrlResolver(): SubResolver {
   return (what: string, ctx: UrlResolverContext): Promise<string | null> =>
     new Promise((resolve, reject) => {
       if (!isValidUri(what)) {
-        return resolve(null);
+        return resolve(null); // TODO: REJECT
       }
 
       tmp.file((err, path, fd) => {

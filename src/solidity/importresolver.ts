@@ -32,3 +32,13 @@ export function SolidityImportResolver() {
     .addResolver(UrlResolver())
     .addParser(ImportParser());
 }
+
+
+// WIP
+export function BrowserImportResolver() {
+  return new ResolverEngine<ImportFile>({ debug: true })
+    .addParser(ImportParser())
+    .addResolver(FsResolver())
+    .addResolver(GithubResolver())
+    .addResolver(UrlResolver());
+}
