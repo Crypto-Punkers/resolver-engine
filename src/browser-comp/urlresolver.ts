@@ -1,4 +1,7 @@
 import { SubResolver, ResolverContext } from "../resolvers";
+import Debug from "debug";
+
+const debug = Debug("resolverengine:urlresolver2");
 
 export interface BrowserCompatibleUrlResolverContext extends ResolverContext {
 	// options?: request.Options;
@@ -20,11 +23,13 @@ export function BrowserCompatibleUrlResolver(): SubResolver {
 
 				ctx.system.requestGet(
 					what,
-					reject,
+					(err) => { resolve(null) },
 					(data: any) => {
+						debug("Received data %O", data);
 						sink(data);
 					},
 					() => {
+						debug("Resolving with %s", path);
 						resolve(path);
 					})
 			})

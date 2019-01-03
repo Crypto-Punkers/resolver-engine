@@ -6,9 +6,10 @@
   "author": "Olaf Tomalka <olaf@tomalka.me>",
   "scripts": {
     "build": "tsc",
-    "test": "mocha build/test/**/*.test.js",
+    "test": "mocha build/test/resolvers/*.test.js",
     "tsc": "tsc",
-    "clean": "rimraf build/"
+    "clean": "rimraf build/",
+    "browser-test": "node --version && yarn build && mocha --require async-dump build/test/browser-comp/*.test.js"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",

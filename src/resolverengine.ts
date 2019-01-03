@@ -2,11 +2,11 @@ import Debug from "debug";
 import * as process from "process";
 import { SubParser } from "./parsers/subparser";
 import { ResolverContext, SubResolver, IResolverServiceLayer } from "./resolvers/subresolver";
-import request = require("request");
+// import request = require("request");
 import tmp = require("tmp");
 import fs = require("fs");
 import http = require("http");
-import { stringify } from "querystring";
+// import { stringify } from "querystring";
 
 const debug = Debug("resolverengine:main");
 
@@ -36,24 +36,31 @@ function getSystem(env: "node" | "browser"): IResolverServiceLayer {
   }
 }
 
-class NodeService implements IResolverServiceLayer {
+export class NodeService implements IResolverServiceLayer {
+  private maxBuffSize: number;
+
   constructor() {
     tmp.setGracefulCleanup();
+    this.maxBuffSize = 69 * 1024; // 69kB
   }
 
   requestGet(url: string, error: (err: Error) => void, response: (data: any) => void, end: () => void): void {
+    debug("Requesting %s", url);
     http.get(url, (res) => {
-      let buff = new Buffer("");
+      // let buff = new Buffer("");
+      let buff = Buffer.alloc(this.maxBuffSize);
       res
         .on("error", error)
         .on("data", (chunk) => {
+          debug("Writing data chunk %O", chunk);
           buff.write(chunk.toString()); // I hope this works as I expect it to
         })
         .on("end", () => {
+          debug("Ending request");
           response(buff);
           end();
         });
-    })
+    });
     // const req = request({ url: url }); // TODO: add options capability
     // req
     //   .on("response", response)
@@ -61,17 +68,20 @@ class NodeService implements IResolverServiceLayer {
     //   // .on("pipe", ()) // TODO?
     //   .on("complete", end);
   }
+
   tmpFile(cb: (error: any, path: string, sink: (data: any) => void) => void): void {
     tmp.file((err, path, fd) => {
+      debug("Creating write stream to file %s", path);
       const ws = fs.createWriteStream("", { autoClose: false, fd: fd });
       cb(err, path, (data: any) => {
-        ws.write(data);
+        debug("Writing to stream");
+        ws.write(data, () => { debug("Closing stream"); ws.close() });
       })
     });
   }
 }
 
-class BrowserService implements IResolverServiceLayer {
+export class BrowserService implements IResolverServiceLayer {
   constructor() {
     // it has 'window' object available
     // let window: any;

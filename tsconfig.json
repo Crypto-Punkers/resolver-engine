@@ -2,10 +2,10 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "lib": [
-      "es6",
-      "dom",
-    ],
+    // "lib": [
+    //   "es6",
+    //   "dom",
+    // ],
     "declaration": true,
     "sourceMap": true,
     "outDir": "./build",
