@@ -1,5 +1,6 @@
 import { ImportFile, SolidityImportResolver } from "./importresolver";
 import { ResolverEngine } from "../resolverengine";
+import path from "path";
 
 export function findImports(data: ImportFile): string[] {
   let result: string[] = [];
@@ -35,7 +36,6 @@ export async function gatherSources(
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
-  const path = require("path");
   let queue = [];
   let alreadyImported = new Set();
 
