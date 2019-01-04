@@ -1,6 +1,7 @@
 import * as path from "path";
-import { ResolverContext, SubResolver } from "../resolvers";
+import { SubResolver } from "../resolvers";
 import { BacktrackFsResolver } from "../resolvers/backtracktfsresolver";
+import { ResolverContext } from "..";
 
 // 1st group - package name
 // 2nd group - contract path

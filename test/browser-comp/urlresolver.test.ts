@@ -1,4 +1,5 @@
 import chai from "chai";
+import { fs as memfs } from "memfs";
 import MockFs from "mock-fs";
 import nock from "nock";
 import { FsParser, SubParser, SubResolver } from "../../src";
@@ -8,6 +9,7 @@ import { BrowserCompatibleUrlResolver } from "../../src/browser-comp/urlresolver
 import Debug from "debug";
 
 const expect = chai.expect;
+(MockFs.fs as any) = memfs;
 
 Debug.enable("resolverengine:main,resolverengine:urlresolver2,resolverengine:fsparser");
 

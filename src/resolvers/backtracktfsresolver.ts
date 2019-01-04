@@ -1,7 +1,7 @@
 import * as path from "path";
 import { SubResolver } from ".";
 import { FsResolver } from "./fsresolver";
-import { ResolverContext } from "./subresolver";
+import { ResolverContext } from "..";
 
 export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
   const fsResolver = FsResolver();

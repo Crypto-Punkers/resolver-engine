@@ -1,22 +1,37 @@
 import Debug from "debug";
 import * as process from "process";
 import { SubParser } from "./parsers/subparser";
-import { ResolverContext, SubResolver, IResolverServiceLayer } from "./resolvers/subresolver";
-// import request = require("request");
+import { SubResolver } from "./resolvers/subresolver";
 import tmp = require("tmp");
 import fs = require("fs");
+import { fs as memfs } from "memfs";
 import http = require("http");
-// import { stringify } from "querystring";
+import { FSWrapper } from "./context/fs";
 
 const debug = Debug("resolverengine:main");
 
-let environment: "node" | "browser" = "node";
+export type env_t = "node" | "browser" | "test"; // "test" implies "node"
+let environment: env_t = "node";
 
 (() => {
   if (typeof window !== 'undefined' && typeof module === 'undefined') {
     environment = "browser"
   }
 })()
+
+export interface ResolverContext {
+  cwd: string;
+  environment: env_t;
+  system: IResolverServiceLayer;
+}
+
+export interface IResolverServiceLayer {
+  // these two won't get their own wrappers because of cross-dependency
+  requestGet(url: string, error: (err: Error) => void, response: (data: any) => void, end: () => void): void;
+  tmpFile(cb: (error: any, path: string, sink: (data: any) => void) => void): void;
+
+  fs: FSWrapper;
+}
 
 function getContext(workingDir?: string): ResolverContext {
   const cwd = workingDir || process.cwd(); // TODO: what about browser env?
@@ -28,20 +43,24 @@ function getContext(workingDir?: string): ResolverContext {
   } as ResolverContext;
 }
 
-function getSystem(env: "node" | "browser"): IResolverServiceLayer {
+function getSystem(env: env_t): IResolverServiceLayer {
   if (env === "browser") {
     return new BrowserService();
   } else {
-    return new NodeService();
+    return new NodeService(env);
   }
 }
 
 export class NodeService implements IResolverServiceLayer {
   private maxBuffSize: number;
+  public fs: FSWrapper; // we will be using intersection of both
 
-  constructor() {
+  constructor(env: env_t) {
     tmp.setGracefulCleanup();
     this.maxBuffSize = 69 * 1024; // 69kB
+
+    this.fs = env === "node" ? fs : memfs;
+
   }
 
   requestGet(url: string, error: (err: Error) => void, response: (data: any) => void, end: () => void): void {
@@ -61,18 +80,12 @@ export class NodeService implements IResolverServiceLayer {
           end();
         });
     });
-    // const req = request({ url: url }); // TODO: add options capability
-    // req
-    //   .on("response", response)
-    //   .on("error", error)
-    //   // .on("pipe", ()) // TODO?
-    //   .on("complete", end);
   }
 
   tmpFile(cb: (error: any, path: string, sink: (data: any) => void) => void): void {
     tmp.file((err, path, fd) => {
       debug("Creating write stream to file %s", path);
-      const ws = fs.createWriteStream("", { autoClose: false, fd: fd });
+      const ws = this.fs.createWriteStream("", { autoClose: false, fd: fd });
       cb(err, path, (data: any) => {
         debug("Writing to stream");
         ws.write(data, () => { debug("Closing stream"); ws.close() });
@@ -82,10 +95,10 @@ export class NodeService implements IResolverServiceLayer {
 }
 
 export class BrowserService implements IResolverServiceLayer {
+  public fs: FSWrapper;
+
   constructor() {
-    // it has 'window' object available
-    // let window: any;
-    window["FS"] = new Map();
+    this.fs = memfs;
   }
 
   requestGet(url: string, error: (err: Error) => void, response: (data: any) => void, end: () => void): void {

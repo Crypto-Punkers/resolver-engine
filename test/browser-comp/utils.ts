@@ -12,6 +12,6 @@ function getSystem(env: "node" | "browser"): IResolverServiceLayer {
 	if (env === "browser") {
 		return new BrowserService();
 	} else {
-		return new NodeService();
+		return new NodeService("test");
 	}
 }

@@ -1,5 +1,6 @@
-import { SubResolver, ResolverContext } from "../resolvers";
+import { SubResolver } from "../resolvers";
 import Debug from "debug";
+import { ResolverContext } from "..";
 
 const debug = Debug("resolverengine:urlresolver2");
 

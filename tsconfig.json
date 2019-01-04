@@ -6,6 +6,7 @@
     //   "es6",
     //   "dom",
     // ],
+    "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,
     "outDir": "./build",

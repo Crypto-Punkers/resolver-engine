@@ -6,3 +6,6 @@ declare module "hosted-git-info" {
 
   export function fromUrl(url: string, options?: Options): any;
 }
+
+type BigInt = number;
+declare const BigInt: typeof Number;

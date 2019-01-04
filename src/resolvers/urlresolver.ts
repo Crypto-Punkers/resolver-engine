@@ -4,7 +4,7 @@ import request from "request";
 import * as tmp from "tmp";
 import * as url from "url";
 import { SubResolver } from ".";
-import { ResolverContext } from "./subresolver";
+import { ResolverContext } from "..";
 
 const debug = Debug("resolverengine:urlresolver");
 
