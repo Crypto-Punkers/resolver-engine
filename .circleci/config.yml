@@ -2,12 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: debian:stretch
+        - image: circleci/node:9
     steps:
-      - checkout
-      - run:
-          name: Greeting
-          command: echo Hello, world.
-      - run:
-          name: Print the Current Time
-          command: date
+        - checkout
+        - run:
+            name: Install modules
+            command: yarn --frozen-lockfile install
+        - run:
+            name: Build
+            command: yarn build
+        - run:
+            name: Tests
+            command: yarn test
