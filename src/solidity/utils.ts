@@ -3,6 +3,12 @@ import { ResolverEngine } from "../resolverengine";
 
 export function findImports(data: ImportFile): string[] {
   let result: string[] = [];
+  // regex below matches all possible import statements, namely:
+  // - import "somefile";
+  // - import "somefile" as something;
+  // - import something from "somefile"
+  // (double that for single quotes)
+  // and captures file names
   const regex: RegExp = /import\s+(?:(?:"([^;]*)"|'([^;]*)')(?:;|\s+as\s+[^;]*;)|.+from\s+(?:"(.*)"|'(.*)');)/g;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(data.source))) {
