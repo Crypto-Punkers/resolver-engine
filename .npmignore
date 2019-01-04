@@ -1,0 +1,6 @@
+test/
+doc/
+examples/
+build/examples/
+build/test/
+.circleci/
