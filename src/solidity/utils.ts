@@ -43,10 +43,10 @@ export async function gatherSources(
   alreadyImported.add(solidifyName(what));
   while (queue.length > 0) {
     const fileData = queue.shift()!;
-    let tmp: ImportFile = await resolver.require(fileData.file, fileData.cwd);
-    const foundImports = findImports(tmp);
-    result.push(tmp);
-    const filewd = path.dirname(tmp.path);
+    const resolvedFile: ImportFile = await resolver.require(fileData.file, fileData.cwd);
+    const foundImports = findImports(resolvedFile);
+    result.push(resolvedFile);
+    const filewd = path.dirname(resolvedFile.path);
     for (let i in foundImports) {
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {
