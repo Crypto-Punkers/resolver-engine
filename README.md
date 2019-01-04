@@ -1,8 +1,11 @@
 <p align="center">
   <img src="doc/Logo@2x.png?raw=true">
   <p align="center">Single API for resolving Solidity artefacts and imports</p>
-  
-  <p align="center"><a href="https://t.me/resolverengine"><img alt="Chat on telegram" src="https://img.shields.io/badge/chat-on%20telegram-blue.svg" /></a></p>
+
+  <p align="center">
+    <a href="https://t.me/resolverengine"><img alt="Chat on telegram" src="https://img.shields.io/badge/chat-on%20telegram-blue.svg" /></a>
+    <a href="https://circleci.com/gh/Crypto-Punkers/resolver-engine/tree/master"><img alt="Build status" src="https://img.shields.io/circleci/project/github/Crypto-Punkers/resolver-engine/master.svg" /></a>
+  </p>
 </p>
 
 ## Usage
