@@ -21,53 +21,53 @@ describe("gatherSources function", function() {
   });
 
   it("gathers files included by given file", async function() {
-    const files: { [s: string]: string } = {
+    const FILES: { [s: string]: string } = {
       "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
       "otherfile.sol": "otherfilecontents",
       "somethingelse.sol": "somethingelsecontents",
     };
-    const expectedFiles = expectedOutput(files);
+    const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(files);
+    MockFs(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
-    expect(fileList).to.have.deep.members(expectedFiles);
+    expect(fileList).to.have.deep.members(EXPECTED_FILES);
   });
 
   it("gathers files imported by imported files", async function() {
-    const files: { [s: string]: string } = {
+    const FILES: { [s: string]: string } = {
       "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
       "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
       "contracts/something.sol": "filecontents",
     };
-    const expectedFiles = expectedOutput(files);
+    const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(files);
+    MockFs(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
-    expect(fileList).to.have.deep.members(expectedFiles);
+    expect(fileList).to.have.deep.members(EXPECTED_FILES);
   });
 
   it("does not include the same file twice", async function() {
-    const files: { [s: string]: string } = {
+    const FILES: { [s: string]: string } = {
       "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
       "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
       "somethingelse.sol": "somethingelsecontents",
     };
-    const expectedFiles = expectedOutput(files);
+    const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(files);
+    MockFs(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd());
-    expect(fileList).to.have.deep.members(expectedFiles);
+    expect(fileList).to.have.deep.members(EXPECTED_FILES);
   });
 
   it("works without passing resolver to it", async function() {
-    const files: { [s: string]: string } = {
+    const FILES: { [s: string]: string } = {
       "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
       "otherfile.sol": "herpderp",
     };
-    const expectedFiles = expectedOutput(files);
+    const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(files);
+    MockFs(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd());
-    expect(fileList).to.have.deep.members(expectedFiles);
+    expect(fileList).to.have.deep.members(EXPECTED_FILES);
   });
 });
