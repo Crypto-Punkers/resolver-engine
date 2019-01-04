@@ -2,100 +2,72 @@ import { expect } from "chai";
 import MockFs from "mock-fs";
 import { gatherSources, ResolverEngine, SolidityImportResolver, ImportFile } from "../../src";
 
+function expectedOutput(filesObj: { [s: string]: string }): ImportFile[] {
+  let result = [];
+  for (let k of Object.keys(filesObj)) {
+    result.push({
+      path: process.cwd() + "/" + k,
+      source: filesObj[k],
+    });
+  }
+  return result;
+}
+
 describe("gatherSources function", function() {
-    let resolver: ResolverEngine<ImportFile> = SolidityImportResolver();
+  const resolver: ResolverEngine<ImportFile> = SolidityImportResolver();
 
-     afterEach(function() {
-        MockFs.restore();
-    });
-    
-    it("gathers files included by given file", async function() {
-        MockFs({
-            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-            "otherfile.sol": "otherfilecontents",
-            "somethingelse.sol": "somethingelsecontents"
-        });
-        const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
-        expect(fileList).to.have.deep.members([
-            {
-                path: process.cwd() + '/mainfile.sol',
-                source: 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah'
-            },
-            {
-                path: process.cwd() + '/otherfile.sol',
-                source: 'otherfilecontents'
-            },
-            {
-                path: process.cwd() + '/somethingelse.sol',
-                source: 'somethingelsecontents'
-            }
-        ]);
-    });
+  afterEach(function() {
+    MockFs.restore();
+  });
 
-    it("gathers files imported by imported files", async function() {
-        MockFs({
-            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
-            "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
-            "contracts/something.sol": 'filecontents'
-        });
+  it("gathers files included by given file", async function() {
+    const files: { [s: string]: string } = {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": "otherfilecontents",
+      "somethingelse.sol": "somethingelsecontents",
+    };
+    const expectedFiles = expectedOutput(files);
 
-        const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
-        expect(fileList).to.have.deep.members([
-            {
-                path: process.cwd() + '/mainfile.sol',
-                source: 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah'
-            },
-            {
-                path: process.cwd() + '/otherfile.sol',
-                source: 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah'
-            },
-            {
-                path: process.cwd() + '/contracts/something.sol',
-                source: 'filecontents'
-            }
-        ]);
-    });
+    MockFs(files);
+    const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
+    expect(fileList).to.have.deep.members(expectedFiles);
+  });
 
-    it("does not include the same file twice", async function() {
-        MockFs({
-            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-            "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
-            "somethingelse.sol": "somethingelsecontents"
-        });
-        const fileList = await gatherSources("mainfile.sol", process.cwd());
-        expect(fileList).to.have.deep.members([
-            {
-                path: process.cwd() + '/mainfile.sol',
-                source: 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah'
-            },
-            {
-                path: process.cwd() + '/otherfile.sol',
-                source: 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth'
-            },
-            {
-                path: process.cwd() + '/somethingelse.sol',
-                source: "somethingelsecontents"
-            }
-        ]);
-    });
+  it("gathers files imported by imported files", async function() {
+    const files: { [s: string]: string } = {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
+      "contracts/something.sol": "filecontents",
+    };
+    const expectedFiles = expectedOutput(files);
 
-    it("works without passing resolver to it", async function() {
-        MockFs({
-            "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
-            "otherfile.sol": 'herpderp'
-        });
-        const fileList = await gatherSources("mainfile.sol", process.cwd());
-        expect(fileList).to.have.deep.members([
-            {
-                path: process.cwd() + '/mainfile.sol',
-                source: 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah'
-            },
-            {
-                path: process.cwd() + '/otherfile.sol',
-                source: 'herpderp'
-            }
-        ]);
-    });
+    MockFs(files);
+    const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
+    expect(fileList).to.have.deep.members(expectedFiles);
+  });
 
-    
+  it("does not include the same file twice", async function() {
+    const files: { [s: string]: string } = {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
+      "somethingelse.sol": "somethingelsecontents",
+    };
+    const expectedFiles = expectedOutput(files);
+
+    MockFs(files);
+    const fileList = await gatherSources("mainfile.sol", process.cwd());
+    expect(fileList).to.have.deep.members(expectedFiles);
+  });
+
+  it("works without passing resolver to it", async function() {
+    const files: { [s: string]: string } = {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+      "otherfile.sol": "herpderp",
+    };
+    const expectedFiles = expectedOutput(files);
+
+    MockFs(files);
+    const fileList = await gatherSources("mainfile.sol", process.cwd());
+    expect(fileList).to.have.deep.members(expectedFiles);
+  });
 });
