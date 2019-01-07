@@ -1,10 +1,9 @@
-jest.mock("fs");
-import { gatherSources, ResolverEngine, SolidityImportResolver, ImportFile } from "../../../src";
 import { vol } from "memfs";
+import { gatherSources, ImportFile, ResolverEngine, SolidityImportResolver } from "../../../src";
 import deepequal = require("deep-equal");
 
 function expectedOutput(filesObj: { [s: string]: string }): ImportFile[] {
-  let result = [];
+  let result: ImportFile[] = [];
   for (let k of Object.keys(filesObj)) {
     result.push({
       path: process.cwd() + "/" + k,

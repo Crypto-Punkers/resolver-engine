@@ -1,8 +1,6 @@
 // import * as fs from "fs";
 import * as path from "path";
-// import { promisify } from "util";
-import { SubResolver } from ".";
-import { ResolverContext } from "..";
+import { ResolverContext, SubResolver } from "..";
 
 const NO_FILE = "ENOENT";
 
@@ -25,14 +23,15 @@ export function FsResolver(): SubResolver {
           } else {
             reject(error);
           }
+          return;
         }
 
         if (!stats) {
-          resolve(null);
+          return resolve(null);
         }
 
-        return stats!.isFile() ? myPath : null;
-      })
+        return resolve(stats.isFile() ? myPath : null);
+      });
     });
   };
 }

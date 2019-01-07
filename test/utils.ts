@@ -1,8 +1,17 @@
-import * as process from "process";
-import { ResolverContext } from "../src";
+import { BrowserService, env_t, IResolverServiceLayer, NodeService, ResolverContext } from "../src";
 
-export function defaultContext(): ResolverContext {
+export function defaultContext(environment: env_t): ResolverContext {
   return {
     cwd: process.cwd(),
-  } as ResolverContext; // tests created before my changes don't need anything more
+    environment: environment,
+    system: getSystem(environment),
+  } as ResolverContext;
+}
+
+function getSystem(env: env_t): IResolverServiceLayer {
+  if (env === "browser") {
+    return new BrowserService();
+  } else {
+    return new NodeService("test");
+  }
 }

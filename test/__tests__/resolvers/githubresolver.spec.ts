@@ -1,8 +1,7 @@
-jest.mock("fs");
+import { vol } from "memfs";
 import nock from "nock";
 import { FsParser, GithubResolver, SubParser, SubResolver } from "../../../src";
 import { defaultContext } from "../../utils";
-import { vol } from "memfs";
 
 describe("GithubResolver", function() {
   let instance: SubResolver;
@@ -25,12 +24,12 @@ describe("GithubResolver", function() {
       "/root/path.file": "wrong",
     });
 
-    expect(await instance("relative/path.file", defaultContext())).toBeNull();
-    expect(await instance("/root/path.file", defaultContext())).toBeNull();
+    expect(await instance("relative/path.file", defaultContext("test"))).toBeNull();
+    expect(await instance("/root/path.file", defaultContext("test"))).toBeNull();
   });
 
   it("returns null on non-github links", async function() {
-    expect(await instance("http://captive.apple.com", defaultContext())).toBeNull();
+    expect(await instance("http://captive.apple.com", defaultContext("test"))).toBeNull();
   });
 
   describe("url testing", function() {
@@ -41,7 +40,7 @@ describe("GithubResolver", function() {
           .get(expectedPath)
           .reply(200, CONTENTS);
 
-        const path = await instance(url, defaultContext());
+        const path = await instance(url, defaultContext("test"));
         expect(path).not.toBeNull();
         expect(await contentsResolver(path!)).toEqual(CONTENTS);
       };

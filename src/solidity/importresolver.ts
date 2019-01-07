@@ -1,7 +1,13 @@
-import { FsParser, SubParser } from "../parsers";
-import { ResolverEngine } from "../resolverengine";
-import { FsResolver, GithubResolver, NodeResolver, UrlResolver } from "../resolvers";
-import { EthPmResolver } from "./ethpmresolver";
+import {
+  EthPmResolver,
+  FsParser,
+  FsResolver,
+  GithubResolver,
+  NodeResolver,
+  ResolverEngine,
+  SubParser,
+  UrlResolver,
+} from "..";
 
 export interface ImportFile {
   path: string;
@@ -32,7 +38,6 @@ export function SolidityImportResolver() {
     .addResolver(UrlResolver())
     .addParser(ImportParser());
 }
-
 
 // WIP
 export function BrowserImportResolver() {

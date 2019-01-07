@@ -1,6 +1,5 @@
-import { ImportFile, SolidityImportResolver } from "./importresolver";
-import { ResolverEngine } from "../resolverengine";
 import path from "path";
+import { ImportFile, ResolverEngine, SolidityImportResolver } from "..";
 
 export function findImports(data: ImportFile): string[] {
   let result: string[] = [];
@@ -30,13 +29,18 @@ export function solidifyName(fileName: string): string {
   return fileName.split("./").pop()!;
 }
 
+declare interface QueueEl {
+  cwd?: string;
+  file: string;
+}
+
 export async function gatherSources(
   what: string,
   workingDir?: string,
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
-  let queue = [];
+  let queue: QueueEl[] = [];
   let alreadyImported = new Set();
 
   queue.push({ cwd: workingDir, file: what });

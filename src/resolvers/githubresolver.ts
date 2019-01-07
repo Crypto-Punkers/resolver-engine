@@ -1,7 +1,6 @@
 import Debug from "debug";
 import * as GitInfo from "hosted-git-info";
-import { SubResolver, UrlResolver } from ".";
-import { ResolverContext } from "..";
+import { ResolverContext, SubResolver, UrlResolver } from "..";
 
 const debug = Debug("resolverengine:githubresolver");
 

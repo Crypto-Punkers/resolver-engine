@@ -1,8 +1,7 @@
-jest.mock("fs");
+import { vol } from "memfs";
 import * as path from "path";
 import { FsParser, FsResolver, SubParser, SubResolver } from "../../../src";
 import { defaultContext } from "../../utils";
-import { vol } from "memfs";
 
 describe("FsResolver", function() {
   let instance: SubResolver;
@@ -25,7 +24,7 @@ describe("FsResolver", function() {
         "./file.test": "wrong",
       });
 
-      const resolved = await instance("/file.test", defaultContext());
+      const resolved = await instance("/file.test", defaultContext("test"));
       expect(resolved).toEqual("/file.test");
       expect(await contentsParser(resolved!)).toEqual("correct");
     });
@@ -36,7 +35,7 @@ describe("FsResolver", function() {
         "relative/path/file.test": "correct",
       });
 
-      const resolved = await instance("relative/path/file.test", defaultContext());
+      const resolved = await instance("relative/path/file.test", defaultContext("test"));
       expect(resolved).toEqual(path.join(process.cwd(), "relative/path/file.test"));
       expect(await contentsParser(resolved!)).toEqual("correct");
     });
@@ -47,12 +46,12 @@ describe("FsResolver", function() {
         "b.test": "b",
       });
 
-      expect(await instance("c.test", defaultContext())).toBeNull();
+      expect(await instance("c.test", defaultContext("test"))).toBeNull();
     });
   });
 
   describe("with root prefix", function() {
-    const ctx = { ...defaultContext(), cwd: "root" };
+    const ctx = { ...defaultContext("test"), cwd: "root" };
 
     it("appends root prefix", async function() {
       vol.fromJSON({

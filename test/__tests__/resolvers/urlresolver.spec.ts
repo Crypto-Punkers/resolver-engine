@@ -1,8 +1,7 @@
-jest.mock("fs");
+import { vol } from "memfs";
 import nock from "nock";
 import { FsParser, SubParser, SubResolver, UrlResolver } from "../../../src";
 import { defaultContext } from "../../utils";
-import { vol } from "memfs";
 
 describe("UrlResolver", function() {
   let instance: SubResolver;
@@ -28,7 +27,7 @@ describe("UrlResolver", function() {
       "./relative/path.file": "wrong",
     });
 
-    expect(await instance("relative/path.file", defaultContext())).toBeNull();
+    expect(await instance("relative/path.file", defaultContext("test"))).toBeNull();
   });
 
   it("downloads the file", async function() {
@@ -37,7 +36,7 @@ describe("UrlResolver", function() {
       .get("/")
       .reply(200, CONTENTS);
 
-    const path = await instance("http://captive.apple.com/", defaultContext());
+    const path = await instance("http://captive.apple.com/", defaultContext("test"));
     expect(path).not.toBeNull();
     expect(await contentsResolver(path!)).toBe(CONTENTS);
   });
@@ -48,8 +47,8 @@ describe("UrlResolver", function() {
       .get("/")
       .replyWithError(ERROR);
 
-    // expect(await instance("http://somewebsite.com", defaultContext())).toThrowError(ERROR);
-    await expect(instance("http://somewebsite.com", defaultContext())).rejects.toThrowError(ERROR);
+    // expect(await instance("http://somewebsite.com", defaultContext("test"))).toThrowError(ERROR);
+    await expect(instance("http://somewebsite.com", defaultContext("test"))).rejects.toThrowError(ERROR);
   });
 
   it("throws on failure code", async function() {
@@ -57,6 +56,6 @@ describe("UrlResolver", function() {
       .get("/")
       .reply(404);
 
-    await expect(instance("http://somewebsite.com", defaultContext())).rejects.toThrow();
+    await expect(instance("http://somewebsite.com", defaultContext("test"))).rejects.toThrow();
   });
 });

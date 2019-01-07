@@ -3,8 +3,7 @@ import * as fs from "fs";
 import request from "request";
 import * as tmp from "tmp";
 import * as url from "url";
-import { SubResolver } from ".";
-import { ResolverContext } from "..";
+import { ResolverContext, SubResolver } from "..";
 
 const debug = Debug("resolverengine:urlresolver");
 

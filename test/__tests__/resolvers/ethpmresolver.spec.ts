@@ -1,9 +1,8 @@
-jest.mock("fs");
+import { vol } from "memfs";
 import path from "path";
 import process from "process";
 import { EthPmResolver, SubResolver } from "../../../src";
 import { defaultContext } from "../../utils";
-import { vol } from "memfs";
 
 describe("EthPmResolver", function() {
   let instance: SubResolver;
@@ -25,7 +24,7 @@ describe("EthPmResolver", function() {
       "installed_contracts/package/file.test": "correct",
     });
 
-    expect(await instance("package/file.test", defaultContext())).toEqual(
+    expect(await instance("package/file.test", defaultContext("test"))).toEqual(
       `${process.cwd()}/installed_contracts/package/file.test`,
     );
   });
@@ -35,7 +34,7 @@ describe("EthPmResolver", function() {
       "package/file.test": "wrong",
     });
 
-    expect(await instance("package/file.test", defaultContext())).toBeNull();
+    expect(await instance("package/file.test", defaultContext("test"))).toBeNull();
   });
 
   it("returns null on absolute paths", async function() {
@@ -43,7 +42,7 @@ describe("EthPmResolver", function() {
       "installed_contracts/package/file.test": "wrong",
     });
 
-    expect(await instance("/package/file.test", defaultContext())).toBeNull();
+    expect(await instance("/package/file.test", defaultContext("test"))).toBeNull();
   });
 
   it("works above cwd", async function() {
@@ -53,7 +52,7 @@ describe("EthPmResolver", function() {
     });
 
     const expectedPath = path.normalize(`${process.cwd()}/../installed_contracts/package/file.test`);
-    expect(await instance("package/file.test", defaultContext())).toEqual(expectedPath);
+    expect(await instance("package/file.test", defaultContext("test"))).toEqual(expectedPath);
   });
 
   it("works without contract/ folder", async function() {
@@ -63,6 +62,6 @@ describe("EthPmResolver", function() {
 
     const expectedPath = path.normalize(`${process.cwd()}/../installed_contracts/package/contracts/file.sol`);
 
-    expect(await instance("package/file.sol", defaultContext())).toEqual(expectedPath);
+    expect(await instance("package/file.sol", defaultContext("test"))).toEqual(expectedPath);
   });
 });
