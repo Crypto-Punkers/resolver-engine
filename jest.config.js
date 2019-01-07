@@ -1,19 +1,13 @@
 module.exports = {
-  roots: [
-    "./test"
-  ],
+  roots: ["./test"],
   transform: { "^.+\\.tsx?$": "ts-jest" },
-  testRegex: "(/__tests__/.*|(\\.|/)(spec))\\.tsx?$",
-  moduleFileExtensions: [
-    "js",
-    "jsx",
-    "ts",
-  ],
+  // Note: '*.test.ts' intentionally omitted; '*.spec.ts' stands out in VSCode as it is yellow
+  // Also, no tsx files.
+  testRegex: "(/__tests__/.*|(\\.|/)(spec))\\.ts$",
+  moduleFileExtensions: ["js", "jsx", "ts"],
   globals: {
-    'ts-jest': {
+    "ts-jest": {
       tsConfig: "./tsconfig.json",
-    }
-  }
-  // preset: "ts-jest"
-  //test|
-}
+    },
+  },
+};
