@@ -1,7 +1,7 @@
 jest.mock("fs");
 import nock from "nock";
-import { FsParser, SubParser, SubResolver, UrlResolver } from "../../src";
-import { defaultContext } from "../utils";
+import { FsParser, SubParser, SubResolver, UrlResolver } from "../../../src";
+import { defaultContext } from "../../utils";
 import { vol } from "memfs";
 
 describe("UrlResolver", function() {

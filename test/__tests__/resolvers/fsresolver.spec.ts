@@ -1,7 +1,7 @@
 jest.mock("fs");
 import * as path from "path";
-import { FsParser, FsResolver, SubParser, SubResolver } from "../../src";
-import { defaultContext } from "../utils";
+import { FsParser, FsResolver, SubParser, SubResolver } from "../../../src";
+import { defaultContext } from "../../utils";
 import { vol } from "memfs";
 
 describe("FsResolver", function() {

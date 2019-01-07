@@ -1,6 +1,7 @@
-import { expect } from "chai";
-import MockFs from "mock-fs";
-import { gatherSources, ResolverEngine, SolidityImportResolver, ImportFile } from "../../src";
+jest.mock("fs");
+import { gatherSources, ResolverEngine, SolidityImportResolver, ImportFile } from "../../../src";
+import { vol } from "memfs";
+import deepequal = require("deep-equal");
 
 function expectedOutput(filesObj: { [s: string]: string }): ImportFile[] {
   let result = [];
@@ -13,11 +14,24 @@ function expectedOutput(filesObj: { [s: string]: string }): ImportFile[] {
   return result;
 }
 
+/**
+ * Checks if a is contained in b, using deep comparison on objects.
+ * @param a
+ * @param b
+ */
+function deepSubset<T>(a: T[], b: T[]): boolean {
+  return a.every(obj1 => b.some(obj2 => deepequal(obj1, obj2)));
+}
+
 describe("gatherSources function", function() {
   const resolver: ResolverEngine<ImportFile> = SolidityImportResolver();
 
+  beforeAll(function() {
+    process.chdir(__dirname);
+  });
+
   afterEach(function() {
-    MockFs.restore();
+    vol.reset();
   });
 
   it("gathers files included by given file", async function() {
@@ -28,9 +42,9 @@ describe("gatherSources function", function() {
     };
     const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(FILES);
+    vol.fromJSON(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
-    expect(fileList).to.have.deep.members(EXPECTED_FILES);
+    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
   it("gathers files imported by imported files", async function() {
@@ -41,9 +55,9 @@ describe("gatherSources function", function() {
     };
     const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(FILES);
+    vol.fromJSON(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
-    expect(fileList).to.have.deep.members(EXPECTED_FILES);
+    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
   it("does not include the same file twice", async function() {
@@ -54,9 +68,9 @@ describe("gatherSources function", function() {
     };
     const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(FILES);
+    vol.fromJSON(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd());
-    expect(fileList).to.have.deep.members(EXPECTED_FILES);
+    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
   it("works without passing resolver to it", async function() {
@@ -66,8 +80,8 @@ describe("gatherSources function", function() {
     };
     const EXPECTED_FILES = expectedOutput(FILES);
 
-    MockFs(FILES);
+    vol.fromJSON(FILES);
     const fileList = await gatherSources("mainfile.sol", process.cwd());
-    expect(fileList).to.have.deep.members(EXPECTED_FILES);
+    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 });

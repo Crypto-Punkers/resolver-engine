@@ -1,7 +1,7 @@
 jest.mock("fs");
 import nock from "nock";
-import { FsParser, GithubResolver, SubParser, SubResolver } from "../../src";
-import { defaultContext } from "../utils";
+import { FsParser, GithubResolver, SubParser, SubResolver } from "../../../src";
+import { defaultContext } from "../../utils";
 import { vol } from "memfs";
 
 describe("GithubResolver", function() {
