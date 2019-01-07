@@ -23,7 +23,7 @@ describe.skip("UrlResolver", function () {
     expect(nock.isDone()).toBe(true);
   });
 
-  it("returns null on non-urls", async () => {
+  it("returns null on non-urls", async function () {
     vol.fromJSON({
       "./relative/path.file": "wrong",
     });
@@ -31,7 +31,7 @@ describe.skip("UrlResolver", function () {
     expect(await instance("relative/path.file", defaultContext())).toBeNull();
   });
 
-  it("downloads the file", async () => {
+  it("downloads the file", async function () {
     const CONTENTS = "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>\n";
     nock("http://captive.apple.com:80")
       .get("/")
@@ -42,7 +42,7 @@ describe.skip("UrlResolver", function () {
     expect(await contentsResolver(path!)).toBe(CONTENTS);
   });
 
-  it("throws on network error", async () => {
+  it("throws on network error", async function () {
     const ERROR = "test error";
     nock("http://somewebsite.com:80")
       .get("/")
@@ -52,7 +52,7 @@ describe.skip("UrlResolver", function () {
     await expect(instance("http://somewebsite.com", defaultContext())).rejects.toThrowError(ERROR);
   });
 
-  it("throws on failure code", async () => {
+  it("throws on failure code", async function () {
     nock("http://somewebsite.com:80")
       .get("/")
       .reply(404);
