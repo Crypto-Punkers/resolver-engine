@@ -1,29 +1,29 @@
-jest.mock('fs');
+jest.mock("fs");
 import nock from "nock";
-import { FsParser, SubParser, SubResolver, UrlResolver } from "../../src";
-import { defaultContext } from "../utils";
-import { vol } from 'memfs';
+import { FsParser, SubParser, SubResolver, UrlResolver } from "../../../src";
+import { defaultContext } from "../../utils";
+import { vol } from "memfs";
 
-describe("UrlResolver", function () {
+describe("UrlResolver", function() {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
 
-  beforeAll(function () {
+  beforeAll(function() {
     nock.disableNetConnect();
     contentsResolver = FsParser();
   });
 
-  beforeEach(function () {
+  beforeEach(function() {
     instance = UrlResolver();
     vol.fromJSON({ "stub.file": "lol" }, "/tmp");
   });
 
-  afterEach(function () {
+  afterEach(function() {
     vol.reset();
     expect(nock.isDone()).toBe(true);
   });
 
-  it("returns null on non-urls", async function () {
+  it("returns null on non-urls", async function() {
     vol.fromJSON({
       "./relative/path.file": "wrong",
     });
@@ -31,7 +31,7 @@ describe("UrlResolver", function () {
     expect(await instance("relative/path.file", defaultContext())).toBeNull();
   });
 
-  it("downloads the file", async function () {
+  it("downloads the file", async function() {
     const CONTENTS = "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>\n";
     nock("http://captive.apple.com:80")
       .get("/")
@@ -42,7 +42,7 @@ describe("UrlResolver", function () {
     expect(await contentsResolver(path!)).toBe(CONTENTS);
   });
 
-  it("throws on network error", async function () {
+  it("throws on network error", async function() {
     const ERROR = "test error";
     nock("http://somewebsite.com:80")
       .get("/")
@@ -52,7 +52,7 @@ describe("UrlResolver", function () {
     await expect(instance("http://somewebsite.com", defaultContext())).rejects.toThrowError(ERROR);
   });
 
-  it("throws on failure code", async function () {
+  it("throws on failure code", async function() {
     nock("http://somewebsite.com:80")
       .get("/")
       .reply(404);

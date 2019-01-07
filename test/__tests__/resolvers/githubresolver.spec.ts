@@ -1,25 +1,25 @@
-jest.mock('fs');
+jest.mock("fs");
 import nock from "nock";
-import { FsParser, GithubResolver, SubParser, SubResolver } from "../../src";
-import { defaultContext } from "../utils";
-import { vol } from 'memfs';
+import { FsParser, GithubResolver, SubParser, SubResolver } from "../../../src";
+import { defaultContext } from "../../utils";
+import { vol } from "memfs";
 
-describe("GithubResolver", function () {
+describe("GithubResolver", function() {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
 
-  beforeAll(function () {
+  beforeAll(function() {
     nock.disableNetConnect();
     contentsResolver = FsParser();
     process.chdir(__dirname);
     vol.fromJSON({ "stub.file": "lol" }, "/tmp");
   });
 
-  beforeEach(function () {
+  beforeEach(function() {
     instance = GithubResolver();
   });
 
-  it("returns null on fs paths", async function () {
+  it("returns null on fs paths", async function() {
     vol.fromJSON({
       "./relative/path.file": "wrong",
       "/root/path.file": "wrong",
@@ -29,12 +29,12 @@ describe("GithubResolver", function () {
     expect(await instance("/root/path.file", defaultContext())).toBeNull();
   });
 
-  it("returns null on non-github links", async function () {
-    expect(await instance("http://captive.apple.com", defaultContext())).toBeNull()
+  it("returns null on non-github links", async function() {
+    expect(await instance("http://captive.apple.com", defaultContext())).toBeNull();
   });
 
-  describe("url testing", function () {
-    const checkUrl = function (url: string, expectedPath: string) {
+  describe("url testing", function() {
+    const checkUrl = function(url: string, expectedPath: string) {
       return async () => {
         const CONTENTS = "Success\n";
         nock("https://raw.githubusercontent.com:443")

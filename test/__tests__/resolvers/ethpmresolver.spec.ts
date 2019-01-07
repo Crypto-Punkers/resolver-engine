@@ -1,26 +1,26 @@
-jest.mock('fs');
+jest.mock("fs");
 import path from "path";
 import process from "process";
-import { EthPmResolver, SubResolver } from "../../src";
-import { defaultContext } from "../utils";
+import { EthPmResolver, SubResolver } from "../../../src";
+import { defaultContext } from "../../utils";
 import { vol } from "memfs";
 
-describe("EthPmResolver", function () {
+describe("EthPmResolver", function() {
   let instance: SubResolver;
 
-  beforeAll(function () {
+  beforeAll(function() {
     process.chdir(__dirname);
-  })
+  });
 
-  beforeEach(function () {
+  beforeEach(function() {
     instance = EthPmResolver();
   });
 
-  afterEach(function () {
+  afterEach(function() {
     vol.reset();
   });
 
-  it("works", async function () {
+  it("works", async function() {
     vol.fromJSON({
       "installed_contracts/package/file.test": "correct",
     });
@@ -30,7 +30,7 @@ describe("EthPmResolver", function () {
     );
   });
 
-  it("returns null on failure", async function () {
+  it("returns null on failure", async function() {
     vol.fromJSON({
       "package/file.test": "wrong",
     });
@@ -38,7 +38,7 @@ describe("EthPmResolver", function () {
     expect(await instance("package/file.test", defaultContext())).toBeNull();
   });
 
-  it("returns null on absolute paths", async function () {
+  it("returns null on absolute paths", async function() {
     vol.fromJSON({
       "installed_contracts/package/file.test": "wrong",
     });
@@ -46,7 +46,7 @@ describe("EthPmResolver", function () {
     expect(await instance("/package/file.test", defaultContext())).toBeNull();
   });
 
-  it("works above cwd", async function () {
+  it("works above cwd", async function() {
     vol.fromJSON({
       "../installed_contracts/package/file.test": "correct",
       "package/file.test": "wrong",
@@ -56,7 +56,7 @@ describe("EthPmResolver", function () {
     expect(await instance("package/file.test", defaultContext())).toEqual(expectedPath);
   });
 
-  it("works without contract/ folder", async function () {
+  it("works without contract/ folder", async function() {
     vol.fromJSON({
       "../installed_contracts/package/contracts/file.sol": "correct",
     });

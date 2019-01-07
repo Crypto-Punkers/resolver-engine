@@ -1,39 +1,36 @@
-jest.mock('fs');
+jest.mock("fs");
 import * as path from "path";
-import { FsParser, FsResolver, SubParser, SubResolver } from "../../src";
-import { defaultContext } from "../utils";
-import { vol } from 'memfs';
+import { FsParser, FsResolver, SubParser, SubResolver } from "../../../src";
+import { defaultContext } from "../../utils";
+import { vol } from "memfs";
 
-describe("FsResolver", function () {
+describe("FsResolver", function() {
   let instance: SubResolver;
   let contentsParser: SubParser<string>;
 
-  beforeAll(function () {
+  beforeAll(function() {
     contentsParser = FsParser();
+    instance = FsResolver();
     process.chdir(__dirname);
   });
 
-  afterEach(function () {
+  afterEach(function() {
     vol.reset();
   });
 
-  describe("without root prefix", function () {
-    beforeEach(function () {
-      instance = FsResolver();
-    });
-
-    it("finds absolute paths", async function () {
+  describe("without root prefix", function() {
+    it("finds absolute paths", async function() {
       vol.fromJSON({
         "/file.test": "correct",
         "./file.test": "wrong",
       });
 
-      const paf = await instance("/file.test", defaultContext());
-      expect(paf).toEqual("/file.test");
-      expect(await contentsParser(paf!)).toEqual("correct");
+      const resolved = await instance("/file.test", defaultContext());
+      expect(resolved).toEqual("/file.test");
+      expect(await contentsParser(resolved!)).toEqual("correct");
     });
 
-    it("finds relative paths", async function () {
+    it("finds relative paths", async function() {
       vol.fromJSON({
         "/relative/path/file.test": "wrong",
         "relative/path/file.test": "correct",
@@ -44,7 +41,7 @@ describe("FsResolver", function () {
       expect(await contentsParser(resolved!)).toEqual("correct");
     });
 
-    it("returns null on non-existent", async function () {
+    it("returns null on non-existent", async function() {
       vol.fromJSON({
         "a.test": "a",
         "b.test": "b",
@@ -54,13 +51,10 @@ describe("FsResolver", function () {
     });
   });
 
-  describe("with root prefix", function () {
+  describe("with root prefix", function() {
     const ctx = { ...defaultContext(), cwd: "root" };
-    beforeEach(function () {
-      instance = FsResolver();
-    });
 
-    it("appends root prefix", async function () {
+    it("appends root prefix", async function() {
       vol.fromJSON({
         "root/dir/file.test": "correct",
         "dir/file.test": "wrong",
@@ -69,7 +63,7 @@ describe("FsResolver", function () {
       expect(await instance("dir/file.test", ctx)).toEqual("root/dir/file.test");
     });
 
-    it("returns null on failure", async function () {
+    it("returns null on failure", async function() {
       vol.fromJSON({
         "a.test": "wrong",
         "root/b.test": "wrong",
