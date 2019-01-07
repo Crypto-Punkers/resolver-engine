@@ -32,26 +32,35 @@ export function solidifyName(fileName: string): string {
 
 export async function gatherSources(
   what: string,
-  workingDir?: string,
+  workingDir: string = process.cwd(),
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
-  let queue = [];
+  let queue: { cwd: string; file: string }[] = [];
   let alreadyImported = new Set();
 
-  queue.push({ cwd: workingDir, file: what });
-  alreadyImported.add(solidifyName(what));
+  const absoluteWhat = path.resolve(workingDir, what);
+  queue.push({ cwd: workingDir, file: absoluteWhat });
+  alreadyImported.add(solidifyName(absoluteWhat));
   while (queue.length > 0) {
     const fileData = queue.shift()!;
     const resolvedFile: ImportFile = await resolver.require(fileData.file, fileData.cwd);
     const foundImports = findImports(resolvedFile);
-    result.push(resolvedFile);
-    const filewd = path.dirname(resolvedFile.path);
+
+    // if imported path starts with '.' we assume it's relative and return it's absolute path
+    // if not - return the same name it was imported with
+    if (fileData.file[0] === ".") {
+      result.push(resolvedFile);
+    } else {
+      result.push({ path: fileData.file, source: resolvedFile.source });
+    }
+
+    const fileParentDir = path.dirname(resolvedFile.path);
     for (let i in foundImports) {
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {
         alreadyImported.add(solidifiedName);
-        queue.push({ cwd: filewd, file: foundImports[i] });
+        queue.push({ cwd: fileParentDir, file: foundImports[i] });
       }
     }
   }
