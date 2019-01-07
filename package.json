@@ -8,7 +8,7 @@
   "license": "LGPL-3.0-or-later",
   "scripts": {
     "build": "tsc",
-    "test": "yarn jest",
+    "test": "jest",
     "tsc": "tsc",
     "clean": "rimraf build/"
   },
@@ -21,17 +21,17 @@
     "@types/request": "^2.47.0",
     "@types/tmp": "^0.0.33",
     "jest": "^23.6.0",
+    "memfs": "^2.14.2",
     "nock": "^9.3.2",
     "rimraf": "^2.6.2",
+    "tmp": "^0.0.33",
     "ts-jest": "^23.10.5",
     "typescript": "^2.8.1"
   },
   "dependencies": {
     "debug": "^3.1.0",
     "hosted-git-info": "^2.6.0",
-    "memfs": "^2.14.2",
-    "request": "^2.85.0",
-    "tmp": "^0.0.33"
+    "request": "^2.85.0"
   },
   "engines": {
     "node": ">=10.0.0"
