@@ -1,2 +1,2 @@
-process.chdir('/');
-module.exports = require('memfs');
+process.chdir("/");
+module.exports = require("memfs");
