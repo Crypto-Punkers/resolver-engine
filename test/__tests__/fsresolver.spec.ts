@@ -4,7 +4,7 @@ import { FsParser, FsResolver, SubParser, SubResolver } from "../../src";
 import { defaultContext } from "../utils";
 import { vol } from 'memfs';
 
-describe.skip("FsResolver", function () {
+describe("FsResolver", function () {
   let instance: SubResolver;
   let contentsParser: SubParser<string>;
 
@@ -27,9 +27,6 @@ describe.skip("FsResolver", function () {
         "/file.test": "correct",
         "./file.test": "wrong",
       });
-
-      console.log(process.cwd())
-      console.log(vol.toJSON());
 
       const paf = await instance("/file.test", defaultContext());
       expect(paf).toEqual("/file.test");

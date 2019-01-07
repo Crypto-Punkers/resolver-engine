@@ -4,7 +4,7 @@ import { FsParser, SubParser, SubResolver, UrlResolver } from "../../src";
 import { defaultContext } from "../utils";
 import { vol } from 'memfs';
 
-describe.skip("UrlResolver", function () {
+describe("UrlResolver", function () {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
 
