@@ -1,10 +1,9 @@
-import Debug from "debug";
 import { vol } from "memfs";
 import nock from "nock";
 import { BrowserCompatibleUrlResolver, FsParser, SubParser, SubResolver } from "../../../src";
 import { defaultContext } from "../../utils";
 
-Debug.enable("resolverengine:main,resolverengine:urlresolver2,resolverengine:fsparser");
+// Debug.enable("resolverengine:main,resolverengine:urlresolver2,resolverengine:fsparser");
 
 describe.skip("UrlResolver", function() {
   let instance: SubResolver;

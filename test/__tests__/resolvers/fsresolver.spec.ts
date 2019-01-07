@@ -1,3 +1,8 @@
+jest.mock("fs"); // TODO: there is an issue I'd like to address
+// in my universum I require context to be passed with "node" or "browser" or "test"
+// - FSParser has to also depend on that setting
+// - there is a test in gatherSources that tests DEFAULT behaviour;
+//   default is now non-obvious!
 import { vol } from "memfs";
 import * as path from "path";
 import { FsParser, FsResolver, SubParser, SubResolver } from "../../../src";

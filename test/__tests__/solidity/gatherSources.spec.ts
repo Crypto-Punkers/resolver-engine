@@ -1,3 +1,4 @@
+jest.mock("fs");
 import { vol } from "memfs";
 import { gatherSources, ImportFile, ResolverEngine, SolidityImportResolver } from "../../../src";
 import deepequal = require("deep-equal");
@@ -30,6 +31,7 @@ describe("gatherSources function", function() {
   });
 
   afterEach(function() {
+    // console.log(`vol contents ${JSON.stringify(vol.toJSON(), null, 2)}`);
     vol.reset();
   });
 
@@ -42,6 +44,7 @@ describe("gatherSources function", function() {
     const EXPECTED_FILES = expectedOutput(FILES);
 
     vol.fromJSON(FILES);
+    console.log(`cwd ${process.cwd()}`);
     const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
     expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
