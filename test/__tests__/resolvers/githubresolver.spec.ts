@@ -1,16 +1,18 @@
-import { expect } from "chai";
+jest.mock("fs");
 import nock from "nock";
-import { FsParser, GithubResolver, SubParser, SubResolver } from "../../src";
-import { defaultContext } from "./utils";
-import mockFs = require("mock-fs");
+import { FsParser, GithubResolver, SubParser, SubResolver } from "../../../src";
+import { defaultContext } from "../../utils";
+import { vol } from "memfs";
 
 describe("GithubResolver", function() {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
 
-  before(function() {
+  beforeAll(function() {
     nock.disableNetConnect();
     contentsResolver = FsParser();
+    process.chdir(__dirname);
+    vol.fromJSON({ "stub.file": "lol" }, "/tmp");
   });
 
   beforeEach(function() {
@@ -18,20 +20,20 @@ describe("GithubResolver", function() {
   });
 
   it("returns null on fs paths", async function() {
-    mockFs({
-      "relative/path.file": "wrong",
+    vol.fromJSON({
+      "./relative/path.file": "wrong",
       "/root/path.file": "wrong",
     });
 
-    expect(await instance("relative/path.file", defaultContext())).to.be.null;
-    expect(await instance("/root/path.file", defaultContext())).to.be.null;
+    expect(await instance("relative/path.file", defaultContext())).toBeNull();
+    expect(await instance("/root/path.file", defaultContext())).toBeNull();
   });
 
   it("returns null on non-github links", async function() {
-    expect(await instance("http://captive.apple.com", defaultContext())).to.be.null;
+    expect(await instance("http://captive.apple.com", defaultContext())).toBeNull();
   });
 
-  context("url testing", function() {
+  describe("url testing", function() {
     const checkUrl = function(url: string, expectedPath: string) {
       return async () => {
         const CONTENTS = "Success\n";
@@ -40,8 +42,8 @@ describe("GithubResolver", function() {
           .reply(200, CONTENTS);
 
         const path = await instance(url, defaultContext());
-        expect(path).to.not.be.null;
-        expect(await contentsResolver(path!)).to.be.equal(CONTENTS);
+        expect(path).not.toBeNull();
+        expect(await contentsResolver(path!)).toEqual(CONTENTS);
       };
     };
 
