@@ -4,12 +4,14 @@ import { BrowserCompatibleUrlResolver, FsParser, SubParser, SubResolver } from "
 import { defaultContext } from "../../utils";
 
 // Debug.enable("resolverengine:main,resolverengine:urlresolver2,resolverengine:fsparser");
+console.log("DUPA");
 
-describe.skip("UrlResolver", function() {
+describe("UrlResolver", function() {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
 
   beforeAll(function() {
+    console.log(instance, contentsResolver);
     nock.disableNetConnect();
     contentsResolver = FsParser();
   });
@@ -20,7 +22,11 @@ describe.skip("UrlResolver", function() {
 
   afterEach(function() {
     vol.reset();
-    expect(nock.isDone()).toBe(true);
+    // expect(nock.isDone()).toBe(true);
+  });
+
+  it("DELETE THIS LATER, OKAY?", () => {
+    expect(true).toBeTruthy();
   });
 
   it("returns null on non-urls", async function() {
@@ -28,24 +34,23 @@ describe.skip("UrlResolver", function() {
       "relative/path.file": "wrong",
     });
 
-    expect(await instance("relative/path.file", defaultContext("node"))).toBeNull();
+    expect(await instance("relative/path.file", defaultContext("test"))).toBeNull();
   });
 
-  it("downloads the file", async () => {
+  it("downloads the file", async function() {
     const CONTENTS = "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>\n";
     nock("http://captive.apple.com:80")
       .get("/")
       .reply(200, CONTENTS);
 
-    console.log("Before");
-    const path = await instance("http://captive.apple.com/", defaultContext("node"));
-    console.log("After");
-    expect(path).not.toBeNull();
-    console.log("More after");
-    const contents = await contentsResolver(path!);
+    const resolved_url: string = (await instance("http://captive.apple.com/", defaultContext("test")))!; // mind the exclamation mark
+    expect(resolved_url).not.toBeNull();
+    // console.log(resolved_url);
+    console.log("kurwa mać", resolved_url);
+    const contents = await contentsResolver(resolved_url);
     expect("DUPA".toLowerCase()).toEqual("dupa");
     console.log("Got contents", contents, CONTENTS);
-    (global as any).asyncDump();
+    // (global as any).asyncDump();
     expect(contents).toEqual(CONTENTS);
     console.log("DONE?");
   });
@@ -56,7 +61,7 @@ describe.skip("UrlResolver", function() {
       .get("/")
       .replyWithError(ERROR);
 
-    await expect(instance("http://somewebsite.com", defaultContext("node"))).rejects.toThrowError(ERROR);
+    await expect(instance("http://somewebsite.com", defaultContext("test"))).rejects.toThrowError(ERROR);
   });
 
   it("throws on failure code", async function() {
@@ -64,6 +69,6 @@ describe.skip("UrlResolver", function() {
       .get("/")
       .reply(404);
 
-    await expect(instance("http://somewebsite.com", defaultContext("node"))).rejects.toThrow();
+    await expect(instance("http://somewebsite.com", defaultContext("test"))).rejects.toThrow();
   });
 });

@@ -1,12 +1,10 @@
 import Debug from "debug";
 import * as process from "process";
+import { FSWrapper } from "./context/fs";
 import { SubParser } from "./parsers/subparser";
 import { SubResolver } from "./resolvers/subresolver";
 import tmp = require("tmp");
-import fs = require("fs");
-import { fs as memfs } from "memfs";
-import http = require("http");
-import { FSWrapper } from "./context/fs";
+import request = require("request");
 
 const debug = Debug("resolverengine:main");
 
@@ -14,10 +12,10 @@ export type env_t = "node" | "browser" | "test"; // "test" implies "node"
 let environment: env_t = "node";
 
 (() => {
-  if (typeof window !== 'undefined' && typeof module === 'undefined') {
-    environment = "browser"
+  if (typeof window !== "undefined" && typeof module === "undefined") {
+    environment = "browser";
   }
-})()
+})();
 
 export interface ResolverContext {
   cwd: string;
@@ -44,42 +42,49 @@ function getContext(workingDir?: string): ResolverContext {
 }
 
 function getSystem(env: env_t): IResolverServiceLayer {
-  if (env === "browser") {
+  if (env === "browser" || env === "test") {
     return new BrowserService();
   } else {
-    return new NodeService(env);
+    return new NodeService();
   }
 }
 
 export class NodeService implements IResolverServiceLayer {
-  private maxBuffSize: number;
+  // private maxBuffSize: number;
   public fs: FSWrapper; // we will be using intersection of both
 
-  constructor(env: env_t) {
+  constructor() {
     tmp.setGracefulCleanup();
-    this.maxBuffSize = 69 * 1024; // 69kB
+    // this.maxBuffSize = 69 * 1024; // 69kB
 
-    this.fs = env === "node" ? fs : memfs;
-
+    this.fs = require("fs");
   }
 
   requestGet(url: string, error: (err: Error) => void, response: (data: any) => void, end: () => void): void {
     debug("Requesting %s", url);
-    http.get(url, (res) => {
-      // let buff = new Buffer("");
-      let buff = Buffer.alloc(this.maxBuffSize);
-      res
-        .on("error", error)
-        .on("data", (chunk) => {
-          debug("Writing data chunk %O", chunk);
-          buff.write(chunk.toString()); // I hope this works as I expect it to
-        })
-        .on("end", () => {
-          debug("Ending request");
-          response(buff);
-          end();
-        });
+    request.get(url, undefined, (err, resp, body) => {
+      if (err) {
+        error(err);
+        return end();
+      }
+      response(body);
+      return end();
     });
+    // http.get(url, res => {
+    //   // let buff = new Buffer("");
+    //   let buff = Buffer.alloc(this.maxBuffSize);
+    //   res
+    //     .on("error", error)
+    //     .on("data", chunk => {
+    //       debug("Writing data chunk %O", chunk);
+    //       buff.write(chunk.toString()); // I hope this works as I expect it to
+    //     })
+    //     .on("end", () => {
+    //       debug("Ending request");
+    //       response(buff);
+    //       end();
+    //     });
+    // });
   }
 
   tmpFile(cb: (error: any, path: string, sink: (data: any) => void) => void): void {
@@ -88,8 +93,11 @@ export class NodeService implements IResolverServiceLayer {
       const ws = this.fs.createWriteStream("", { autoClose: false, fd: fd });
       cb(err, path, (data: any) => {
         debug("Writing to stream");
-        ws.write(data, () => { debug("Closing stream"); ws.close() });
-      })
+        ws.write(data, () => {
+          debug("Closing stream");
+          ws.close();
+        });
+      });
     });
   }
 }
@@ -98,35 +106,33 @@ export class BrowserService implements IResolverServiceLayer {
   public fs: FSWrapper;
 
   constructor() {
-    this.fs = memfs;
+    this.fs = require("memfs");
   }
 
   requestGet(url: string, error: (err: Error) => void, response: (data: any) => void, end: () => void): void {
     let req = new XMLHttpRequest();
-    req.onerror = (evt) => {
+    req.onerror = evt => {
       error(new Error(evt.toString()));
-    }
-    req.onabort = (evt) => {
+    };
+    req.onabort = evt => {
       error(new Error(evt.toString()));
-    }
+    };
 
     req.onload = (/* ignore incoming event */) => {
       response(req.responseText);
       end();
-    }
+    };
     req.open("GET", url);
     req.send();
   }
 
   tmpFile(cb: (error: any, path: string, sink: (data: any) => void) => void): void {
-    const newFile = (new Date()).getTime().toString();
+    const newFile = new Date().getTime().toString();
 
     cb(null, newFile, (data: any) => {
-      (window['FS'] as Map<string, any>).set(newFile, data)
-    })
+      (window["FS"] as Map<string, any>).set(newFile, data);
+    });
   }
-
-
 }
 
 export interface Options {
@@ -140,7 +146,6 @@ export interface Explanation<R> {
   location?: string;
 
   parser?: SubParser<R>;
-
 }
 
 export class ResolverEngine<R> {
@@ -158,7 +163,7 @@ export class ResolverEngine<R> {
     debug(`Resolving "${what}"`);
     const ctx: ResolverContext = getContext(workingDir);
 
-    const [result,] = await ResolverEngine.firstResult(this.resolvers, resolver => resolver(what, ctx));
+    const [result] = await ResolverEngine.firstResult(this.resolvers, resolver => resolver(what, ctx));
 
     if (result === null) {
       throw new Error(`None of the sub-resolvers resolved "${what}" location.`);
@@ -174,7 +179,7 @@ export class ResolverEngine<R> {
 
     const path = await this.resolve(what, workingDir);
 
-    const [result,] = await ResolverEngine.firstResult(this.parsers, parser => parser(path));
+    const [result] = await ResolverEngine.firstResult(this.parsers, parser => parser(path));
 
     if (result === null) {
       throw new Error(`None of the sub-parsers resolved "${what}" into data. Please confirm your configuration.`);
@@ -212,7 +217,6 @@ export class ResolverEngine<R> {
       }
 
       explanation.parser = parser;
-
     })();
 
     // Debug.enable("resolverengine:*");
@@ -232,7 +236,10 @@ export class ResolverEngine<R> {
     return this;
   }
 
-  private static async firstResult<T, R>(things: T[], check: (thing: T) => Promise<R | null>): Promise<[R | null, T | null]> {
+  private static async firstResult<T, R>(
+    things: T[],
+    check: (thing: T) => Promise<R | null>,
+  ): Promise<[R | null, T | null]> {
     for (const thing of things) {
       try {
         const result = await check(thing);
@@ -243,7 +250,6 @@ export class ResolverEngine<R> {
         // treat exceptions as just failed check (in case of 404's)
         debug("Exception occured on check: %O", err.message);
       }
-
     }
     return [null, null];
   }
