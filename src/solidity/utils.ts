@@ -32,13 +32,16 @@ export function solidifyName(fileName: string): string {
 
 export async function gatherSources(
   what: string,
-  workingDir: string = process.cwd(),
+  workingDir: string,
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
   let queue: { cwd: string; file: string }[] = [];
   let alreadyImported = new Set();
 
+  // solc resolves relative paths starting from current file's path, so if we leave relative path then
+  // imported path "../../a/b/c.sol" from file "file.sol" resolves to a/b/c.sol, which is wrong.
+  // we start from file;s absolute path so relative path can resolve correctly
   const absoluteWhat = path.resolve(workingDir, what);
   queue.push({ cwd: workingDir, file: absoluteWhat });
   alreadyImported.add(solidifyName(absoluteWhat));
@@ -56,7 +59,7 @@ export async function gatherSources(
     }
 
     const fileParentDir = path.dirname(resolvedFile.path);
-    for (let i in foundImports) {
+    for (const i in foundImports) {
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {
         alreadyImported.add(solidifiedName);
