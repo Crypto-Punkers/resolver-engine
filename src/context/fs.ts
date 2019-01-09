@@ -110,8 +110,8 @@ export class MemFSWrapped implements FSWrapper {
   }
   stat(path: PathLike, callback: (err: NodeJS.ErrnoException | undefined, stats: Stats) => void): void {
     // shorthand for
-    let callbackRepackaged = callbackRepackagedShorthand(callback);
-    return this.fs.stat(path, callbackRepackaged);
+    let callbackRepack = callbackRepackagedShorthand(callback);
+    return this.fs.stat(path, callbackRepack);
   }
   open(
     path: PathLike,
@@ -119,8 +119,9 @@ export class MemFSWrapped implements FSWrapper {
     mode: string | number | null | undefined,
     callback: (err: NodeJS.ErrnoException | undefined, fd: number) => void,
   ): void {
-    let callbackRepackaged = callbackRepackagedShorthand(callback);
-    return this.fs.open(path, flags, callbackRepackaged);
+    let callbackRepack = callbackRepackagedShorthand(callback);
+    let modeRepack = !mode ? 438 : mode;
+    return this.fs.open(path, flags, modeRepack, callbackRepack);
   }
   write(
     fd: number,

@@ -1,4 +1,4 @@
-import { BrowserService, env_t, IResolverServiceLayer, ResolverContext, TestService } from "../src";
+import { BrowserService, env_t, IResolverServiceLayer, ResolverContext, TestService } from "../src/context";
 
 export function defaultContext(environment?: env_t): ResolverContext {
   return {

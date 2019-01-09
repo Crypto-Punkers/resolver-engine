@@ -1,19 +1,18 @@
 import { vol } from "memfs";
 import nock from "nock";
 import { BrowserCompatibleUrlResolver, FsParser, SubParser, SubResolver } from "../../../src";
+import { MemFSWrapped } from "../../../src/context";
 import { defaultContext } from "../../utils";
 
 // Debug.enable("resolverengine:main,resolverengine:urlresolver2,resolverengine:fsparser");
-console.log("DUPA");
 
 describe("UrlResolver", function() {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
 
   beforeAll(function() {
-    console.log(instance, contentsResolver);
     nock.disableNetConnect();
-    contentsResolver = FsParser();
+    contentsResolver = FsParser(new MemFSWrapped());
   });
 
   beforeEach(function() {
@@ -46,10 +45,11 @@ describe("UrlResolver", function() {
     const resolved_url: string = (await instance("http://captive.apple.com/", defaultContext("test")))!; // mind the exclamation mark
     expect(resolved_url).not.toBeNull();
     // console.log(resolved_url);
-    console.log("kurwa mać", resolved_url);
+    console.log("resolved_url: ", resolved_url);
+    console.log("'disk' contents: ", JSON.stringify(vol.toJSON(), undefined, 2));
     const contents = await contentsResolver(resolved_url);
     expect("DUPA".toLowerCase()).toEqual("dupa");
-    console.log("Got contents", contents, CONTENTS);
+    console.log("Computed", contents, "; Expected", CONTENTS);
     // (global as any).asyncDump();
     expect(contents).toEqual(CONTENTS);
     console.log("DONE?");

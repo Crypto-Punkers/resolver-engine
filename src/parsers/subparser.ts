@@ -1,1 +1,1 @@
-export type SubParser<R> = (path: string) => Promise<R | null>;
+export type SubParser<R> = (ctx: Context, path: string) => Promise<R | null>;

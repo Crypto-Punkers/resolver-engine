@@ -1,24 +1,22 @@
 import Debug from "debug";
-import * as fs from "fs";
-import { promisify } from "util";
 import { SubParser } from ".";
-
-const readFileAsync = promisify(fs.readFile);
+import { Cache } from "../context";
 
 const debug = Debug("resolverengine:fsparser");
 
-export function FsParser(): SubParser<string> {
-  return async (path: string): Promise<string | null> => {
-    try {
+export function FsParser(fs: Cache = require("fs")): SubParser<string> {
+  return async (path: string): Promise<string | null> =>
+    new Promise<string | null>(resolve => {
       debug("Reading file %s", path);
-      const contents = await readFileAsync(path, "utf-8");
-      debug("Read file! Length %d", contents.length);
-      const text = contents.toString();
-      debug("%s", text);
-      return text;
-    } catch (e) {
-      debug(`Error returned when trying to parse "${path}", returning null`, e);
-      return null;
-    }
-  };
+      // const contents = await readFileAsync(path, "utf-8");
+      fs.readFile(path, { encoding: "utf8" }, (err, contents) => {
+        if (err) {
+          debug(`Error returned when trying to parse "${path}", returning null`, err);
+          return resolve(null);
+        }
+        debug("Read file! Length %d", contents.length);
+
+        return resolve(contents.toString());
+      });
+    });
 }
