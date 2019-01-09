@@ -1,9 +1,9 @@
-import { Cache, MemFSWrapped } from "./fs";
+import { FSWrapper, MemFSWrapped } from "./fs";
 import request = require("request");
 import tmp = require("tmp");
+import uuid = require("uuid");
 
-export type TmpFile_t = (cb: (error: any, path: string, sink: (data: any) => void) => void) => void;
-export type TmpFileFD_t = (cb: (error: any, path: string, fd: number) => void) => void;
+export type TmpFile_t = (cb: (error: any, path: string, fd: number) => void) => void;
 export type RequestGet_t = (
   url: string,
   error: (err: Error) => void,
@@ -14,9 +14,9 @@ export type RequestGet_t = (
 export interface IResolverServiceLayer {
   // these two won't get their own wrappers because of cross-dependency in resolvers
   requestGet: RequestGet_t;
-  tmpFile: TmpFileFD_t;
+  tmpFile: TmpFile_t;
 
-  fs: Cache;
+  fs: FSWrapper;
 }
 
 export function requestGetViaRequest(
@@ -30,16 +30,21 @@ export function requestGetViaRequest(
       error(err);
       return end();
     }
-    response(body);
+
+    if (resp.statusCode && 200 <= resp.statusCode && resp.statusCode < 300) {
+      response(body);
+    } else {
+      error(new Error("Status code " + resp.statusCode));
+    }
     return end();
   });
 }
 
-export function tmpFileViaSomeFS(fs: Cache): TmpFileFD_t {
+export function tmpFileViaSomeFS(fs: FSWrapper): TmpFile_t {
   return (cb: (error: any, path: string, fd: number) => void) => {
-    const newFilename = new Date().getTime().toString();
+    const newFilename = uuid.v4();
     const tmpDir = "/tmp/";
-    const newFullPath = `${tmpDir}${newFilename}`;
+    const newFullPath = `${tmpDir}resolver_${newFilename}`;
 
     fs.open(newFullPath, "w", 384 /* 0600*/, (errOnOpen, fd) => {
       if (errOnOpen) {
@@ -52,7 +57,7 @@ export function tmpFileViaSomeFS(fs: Cache): TmpFileFD_t {
 }
 
 export class NodeService implements IResolverServiceLayer {
-  public fs: Cache;
+  public fs: FSWrapper;
   public requestGet: RequestGet_t;
 
   constructor() {
@@ -81,8 +86,8 @@ export class NodeService implements IResolverServiceLayer {
 }
 
 export class BrowserService implements IResolverServiceLayer {
-  public fs: Cache;
-  public tmpFile: TmpFileFD_t;
+  public fs: FSWrapper;
+  public tmpFile: TmpFile_t;
 
   constructor() {
     this.fs = new MemFSWrapped();

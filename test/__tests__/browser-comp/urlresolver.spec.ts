@@ -4,8 +4,6 @@ import { BrowserCompatibleUrlResolver, FsParser, SubParser, SubResolver } from "
 import { MemFSWrapped } from "../../../src/context";
 import { defaultContext } from "../../utils";
 
-// Debug.enable("resolverengine:main,resolverengine:urlresolver2,resolverengine:fsparser");
-
 describe("UrlResolver", function() {
   let instance: SubResolver;
   let contentsResolver: SubParser<string>;
@@ -45,14 +43,9 @@ describe("UrlResolver", function() {
     const resolved_url: string = (await instance("http://captive.apple.com/", defaultContext("test")))!; // mind the exclamation mark
     expect(resolved_url).not.toBeNull();
     // console.log(resolved_url);
-    console.log("resolved_url: ", resolved_url);
-    console.log("'disk' contents: ", JSON.stringify(vol.toJSON(), undefined, 2));
     const contents = await contentsResolver(resolved_url);
     expect("DUPA".toLowerCase()).toEqual("dupa");
-    console.log("Computed", contents, "; Expected", CONTENTS);
-    // (global as any).asyncDump();
     expect(contents).toEqual(CONTENTS);
-    console.log("DONE?");
   });
 
   it("throws on network error", async function() {
@@ -68,7 +61,6 @@ describe("UrlResolver", function() {
     nock("http://somewebsite.com:80")
       .get("/")
       .reply(404);
-
     await expect(instance("http://somewebsite.com", defaultContext("test"))).rejects.toThrow();
   });
 });

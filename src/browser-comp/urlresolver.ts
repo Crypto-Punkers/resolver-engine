@@ -12,8 +12,10 @@ export interface BrowserCompatibleUrlResolverContext extends ResolverContext {
 export function BrowserCompatibleUrlResolver(): SubResolver {
   return (what: string, ctx: BrowserCompatibleUrlResolverContext): Promise<string | null> =>
     new Promise((resolve, reject) => {
-      // TODO: url check
-      if (1 < 0) {
+      let url: URL;
+      try {
+        url = new URL(what);
+      } catch (err) {
         return resolve(null);
       }
 
@@ -23,16 +25,15 @@ export function BrowserCompatibleUrlResolver(): SubResolver {
         }
 
         ctx.system.requestGet(
-          what,
+          url.href,
           err => {
             debug("Received error", err);
-            resolve(null);
+            reject(err);
           },
           (data: any) => {
             debug("Received data %O", data);
             let ws = ctx.system.fs.createWriteStream("", { fd: fd });
             ws.write(data, () => {
-              ws.close();
               resolve(path);
             });
           },

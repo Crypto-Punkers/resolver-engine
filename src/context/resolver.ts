@@ -1,4 +1,3 @@
-import { TestService } from "../../test/TestService";
 import { BrowserService, IResolverServiceLayer, NodeService } from "./service";
 
 export type env_t = "node" | "browser" | "test";
@@ -28,11 +27,9 @@ export function getContext(workingDir?: string): ResolverContext {
 }
 
 function getSystem(env: env_t): IResolverServiceLayer {
-  if (env === "browser" || env === "test") {
+  if (env === "browser") {
     return new BrowserService();
-  } else if (env === "node") {
-    return new NodeService();
   } else {
-    return new TestService();
+    return new NodeService();
   }
 }

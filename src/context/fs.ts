@@ -72,7 +72,7 @@ export class MemFSWrapped implements FSWrapper {
         ? options
         : {
             encoding: options.encoding as IReadFileOptions["encoding"],
-            flag: options.flag,
+            flag: options.flag ? options.flag : "r",
           };
     let callbackRepackaged: TCallback<string | Buffer> = (err, data) => {
       if (typeof data === "undefined") {

@@ -47,7 +47,6 @@ describe("UrlResolver", function() {
       .get("/")
       .replyWithError(ERROR);
 
-    // expect(await instance("http://somewebsite.com", defaultContext("test"))).toThrowError(ERROR);
     await expect(instance("http://somewebsite.com", defaultContext("test"))).rejects.toThrowError(ERROR);
   });
 
