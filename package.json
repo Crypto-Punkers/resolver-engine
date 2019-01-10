@@ -13,7 +13,7 @@
     "clean": "rimraf build/"
   },
   "devDependencies": {
-    "@types/debug": "^0.0.30",
+    "@types/debug": "^0.0.31",
     "@types/deep-equal": "^1.0.1",
     "@types/jest": "^23.3.12",
     "@types/mock-fs": "^3.6.30",
