@@ -43,7 +43,7 @@ describe("gatherSources function", function() {
     const EXPECTED_FILES = expectedOutput(FILES);
 
     vol.fromJSON(FILES);
-    const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
+    const fileList = await gatherSources(["mainfile.sol"], process.cwd(), resolver);
     expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
@@ -56,7 +56,7 @@ describe("gatherSources function", function() {
     const EXPECTED_FILES = expectedOutput(FILES);
 
     vol.fromJSON(FILES);
-    const fileList = await gatherSources("mainfile.sol", process.cwd(), resolver);
+    const fileList = await gatherSources(["mainfile.sol"], process.cwd(), resolver);
     expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
@@ -69,7 +69,7 @@ describe("gatherSources function", function() {
     const EXPECTED_FILES = expectedOutput(FILES);
 
     vol.fromJSON(FILES);
-    const fileList = await gatherSources("mainfile.sol", process.cwd());
+    const fileList = await gatherSources(["mainfile.sol"], process.cwd());
     expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
@@ -81,7 +81,7 @@ describe("gatherSources function", function() {
     const EXPECTED_FILES = expectedOutput(FILES);
 
     vol.fromJSON(FILES);
-    const fileList = await gatherSources("mainfile.sol", process.cwd());
+    const fileList = await gatherSources(["mainfile.sol"], process.cwd());
     expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 });

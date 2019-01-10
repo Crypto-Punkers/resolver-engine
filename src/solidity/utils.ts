@@ -31,27 +31,41 @@ export function solidifyName(fileName: string): string {
 }
 
 export async function gatherSources(
-  what: string,
-  workingDir?: string,
+  whats: string[],
+  workingDir: string,
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
-  let queue = [];
+  let queue: { cwd: string; file: string }[] = [];
   let alreadyImported = new Set();
 
-  queue.push({ cwd: workingDir, file: what });
-  alreadyImported.add(solidifyName(what));
+  // solc resolves relative paths starting from current file's path, so if we leave relative path then
+  // imported path "../../a/b/c.sol" from file "file.sol" resolves to a/b/c.sol, which is wrong.
+  // we start from file;s absolute path so relative path can resolve correctly
+  const absoluteWhats = whats.map(what => path.resolve(workingDir, what));
+  for (const absWhat of absoluteWhats) {
+    queue.push({ cwd: workingDir, file: absWhat });
+    alreadyImported.add(solidifyName(absWhat));
+  }
   while (queue.length > 0) {
     const fileData = queue.shift()!;
     const resolvedFile: ImportFile = await resolver.require(fileData.file, fileData.cwd);
     const foundImports = findImports(resolvedFile);
-    result.push(resolvedFile);
-    const filewd = path.dirname(resolvedFile.path);
-    for (let i in foundImports) {
+
+    // if imported path starts with '.' we assume it's relative and return it's absolute path
+    // if not - return the same name it was imported with
+    if (fileData.file[0] === ".") {
+      result.push(resolvedFile);
+    } else {
+      result.push({ path: fileData.file, source: resolvedFile.source });
+    }
+
+    const fileParentDir = path.dirname(resolvedFile.path);
+    for (const i in foundImports) {
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {
         alreadyImported.add(solidifiedName);
-        queue.push({ cwd: filewd, file: foundImports[i] });
+        queue.push({ cwd: fileParentDir, file: foundImports[i] });
       }
     }
   }
