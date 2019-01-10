@@ -1,7 +1,7 @@
 import Debug from "debug";
-import * as process from "process";
 import { SubParser } from "./parsers/subparser";
 import { ResolverContext, SubResolver } from "./resolvers/subresolver";
+import { firstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
 
@@ -20,34 +20,34 @@ export class ResolverEngine<R> {
     }
   }
 
-  public async resolve(what: string, workingDir?: string): Promise<string> {
-    debug(`Resolving "${what}"`);
-    const cwd = workingDir || process.cwd();
+  // Takes a simplified name (URI) and converts into cannonical URL of the location
+  public async resolve(uri: string, workingDir?: string): Promise<string> {
+    debug(`Resolving "${uri}"`);
 
     const ctx: ResolverContext = {
-      cwd,
+      cwd: workingDir,
     };
 
-    const result = await ResolverEngine.firstResult(this.resolvers, resolver => resolver(what, ctx));
+    const result = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
 
     if (result === null) {
-      throw new Error(`None of the sub-resolvers resolved "${what}" location.`);
+      throw new Error(`None of the sub-resolvers resolved "${uri}" location.`);
     }
 
-    debug(`Resolved "${what}" into "${result}"`);
+    debug(`Resolved "${uri}" into "${result}"`);
 
     return result;
   }
 
-  public async require(what: string, workingDir?: string): Promise<R> {
-    debug(`Requiring "${what}"`);
+  public async require(uri: string, workingDir?: string): Promise<R> {
+    debug(`Requiring "${uri}"`);
 
-    const path = await this.resolve(what, workingDir);
+    const url = await this.resolve(uri, workingDir);
 
-    const result = await ResolverEngine.firstResult(this.parsers, parser => parser(path));
+    const result = await firstResult(this.parsers, parser => parser(url));
 
     if (result === null) {
-      throw new Error(`None of the sub-parsers resolved "${what}" into data. Please confirm your configuration.`);
+      throw new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);
     }
 
     return result;
@@ -61,15 +61,5 @@ export class ResolverEngine<R> {
   public addParser(parser: SubParser<R>): ResolverEngine<R> {
     this.parsers.push(parser);
     return this;
-  }
-
-  private static async firstResult<T, R>(things: T[], check: (thing: T) => Promise<R | null>): Promise<R | null> {
-    for (const thing of things) {
-      const result = await check(thing);
-      if (result) {
-        return result;
-      }
-    }
-    return null;
   }
 }

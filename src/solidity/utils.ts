@@ -1,6 +1,7 @@
-import { ImportFile, SolidityImportResolver } from "./importresolver";
-import { ResolverEngine } from "../resolverengine";
 import path from "path";
+import { ResolverEngine } from "../resolverengine";
+import { ImportFile } from "./importparser";
+import { SolidityImportResolver } from "./importresolver";
 
 export function findImports(data: ImportFile): string[] {
   let result: string[] = [];
@@ -57,10 +58,10 @@ export async function gatherSources(
     if (fileData.file[0] === ".") {
       result.push(resolvedFile);
     } else {
-      result.push({ path: fileData.file, source: resolvedFile.source });
+      result.push({ url: fileData.file, source: resolvedFile.source });
     }
 
-    const fileParentDir = path.dirname(resolvedFile.path);
+    const fileParentDir = path.dirname(resolvedFile.url);
     for (const i in foundImports) {
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {

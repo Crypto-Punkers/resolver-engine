@@ -1,7 +1,6 @@
 import Debug from "debug";
 import * as GitInfo from "hosted-git-info";
-import { SubResolver, UrlResolver } from ".";
-import { ResolverContext } from "./subresolver";
+import { SubResolver } from ".";
 
 const debug = Debug("resolverengine:githubresolver");
 
@@ -14,9 +13,7 @@ const FILE_LOCATION_REGEX = /^((?:.+:\/\/)?[^:/]+[/:][^/]+[/][^/]+)[/](.+?)(#.+)
 
 // TODO(ritave): Support private repositories
 export function GithubResolver(): SubResolver {
-  const urlResolver = UrlResolver();
-
-  return async (what: string, ctx: ResolverContext): Promise<string | null> => {
+  return async (what: string): Promise<string | null> => {
     const fileMatch = what.match(FILE_LOCATION_REGEX);
     if (!fileMatch) {
       return null;
@@ -27,8 +24,7 @@ export function GithubResolver(): SubResolver {
       return null;
     }
     const fileUrl = gitInfo.file(file);
-    debug("Parsed url to:", fileUrl);
-
-    return urlResolver(fileUrl, ctx);
+    debug("Resolved uri to:", fileUrl);
+    return fileUrl;
   };
 }
