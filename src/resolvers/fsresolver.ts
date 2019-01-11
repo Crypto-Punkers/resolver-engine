@@ -9,9 +9,11 @@ const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
   return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
+    const cwd: string = ctx.cwd || process.cwd();
+
     let myPath: string;
     if (!path.isAbsolute(resolvePath)) {
-      myPath = path.join(ctx.cwd, resolvePath);
+      myPath = path.join(cwd, resolvePath);
     } else {
       myPath = resolvePath;
     }

@@ -1,5 +1,6 @@
-import { FsParser, GithubResolver, ResolverEngine } from "../src";
+import { GithubResolver, ResolverEngine } from "../src";
+import { UrlParser } from "../src/parsers/urlparser";
 
-const resolver = new ResolverEngine<string>({ debug: true }).addParser(FsParser()).addResolver(GithubResolver());
+const resolver = new ResolverEngine<string>({ debug: true }).addParser(UrlParser()).addResolver(GithubResolver());
 
-resolver.require("github:ritave/resolver-engine/examples/github.ts").then(console.log);
+resolver.require("github:crypto-punkers/resolver-engine/examples/github.ts").then(console.log);

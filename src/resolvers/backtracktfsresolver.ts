@@ -11,7 +11,9 @@ export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
       return null;
     }
 
-    let previous: string = path.resolve(ctx.cwd, "./");
+    const cwd = ctx.cwd || process.cwd();
+
+    let previous: string = path.resolve(cwd, "./");
     let current: string = previous;
     do {
       const result = await fsResolver(path.join(current, pathPrefix, resolvePath), ctx);
