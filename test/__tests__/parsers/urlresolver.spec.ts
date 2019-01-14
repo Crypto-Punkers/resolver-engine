@@ -1,13 +1,13 @@
 import nock from "nock";
-import { UriResolver } from "../../../src";
+import { UrlParser } from "../../../src/parsers/urlparser";
 
 // input, output
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
 const data = incorrectUrls.concat(correctUrls);
 
-describe(UriResolver, () => {
-  const resolver = UriResolver(); // unintuitive af
+describe(UrlParser, () => {
+  const parser = UrlParser(); // unintuitive af
 
   beforeAll(() => {
     nock.disableNetConnect();
@@ -28,8 +28,8 @@ describe(UriResolver, () => {
     });
   });
 
-  it.each(data)("should resolve %o to %o", async (input, expected) => {
-    const output = await resolver(input);
+  it.each(data)("should parse %o into %o", async (input, expected) => {
+    const output = await parser(input);
     expect(output).toBe(expected);
   });
 });
