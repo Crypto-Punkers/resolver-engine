@@ -5,10 +5,10 @@ import { ResolverContext, SubResolver } from ".";
 const debug = Debug("resolverengine:noderesolver");
 
 export function NodeResolver(): SubResolver {
-  return async (what: string, ctx: ResolverContext): Promise<string | null> => {
+  return async (what: string, ctx?: ResolverContext): Promise<string | null> => {
     try {
       let requirePaths: string[] = [];
-      let currentPath = ctx.cwd || process.cwd();
+      let currentPath = ctx ? ctx.cwd || process.cwd() : process.cwd();
       let lastPath: string = "";
       do {
         requirePaths.push(currentPath);

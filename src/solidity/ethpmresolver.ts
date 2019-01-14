@@ -9,7 +9,7 @@ const FILE_LOCATION_REGEX = /^(.+?)\/(.+)$/;
 export function EthPmResolver(epmDirectory: string = "installed_contracts/"): SubResolver {
   const fsResolver = BacktrackFsResolver(epmDirectory);
 
-  return async (what: string, ctx: ResolverContext): Promise<string | null> => {
+  return async (what: string, ctx?: ResolverContext): Promise<string | null> => {
     const fileMatch = what.match(FILE_LOCATION_REGEX);
     if (!fileMatch) {
       return null;
