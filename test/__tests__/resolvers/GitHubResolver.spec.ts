@@ -20,7 +20,7 @@ const data = [
   ],
 ];
 
-describe.only("GitHubResolver", () => {
+describe("GitHubResolver", () => {
   const subject = GithubResolver();
 
   it.each(data)("testing %o", async (input, output) => {
