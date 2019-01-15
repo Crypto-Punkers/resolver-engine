@@ -1,10 +1,18 @@
 import * as fs from "fs";
 import * as path from "path";
-import { promisify } from "util";
 import { SubResolver } from ".";
 import { ResolverContext } from "./subresolver";
 
-const statAsync = promisify(fs.stat);
+const statAsync = (path: string): Promise<fs.Stats> =>
+  new Promise<fs.Stats>((resolve, reject) => {
+    fs.stat(path, (err, stats) => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(stats);
+    });
+  });
 const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
