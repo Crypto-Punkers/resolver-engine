@@ -17,5 +17,11 @@
     "noImplicitReturns": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "examples/**/*.ts", "test/__tests__/MockedFs.ts", "test/__tests__/resolvers/MockedFs.ts"]
+  "include": [
+    "src/**/*.ts",
+    "examples/**/*.ts",
+    "test/__tests__/MockedFs.ts",
+    "test/__tests__/resolvers/MockedFs.ts",
+    "test/__tests__/parsers/UrlParser.spec.ts"
+  ]
 }
