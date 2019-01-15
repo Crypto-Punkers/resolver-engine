@@ -1,5 +1,5 @@
 import { ResolverContext, SubResolver } from ".";
-import { BacktrackFsResolver } from "./backtracktfsresolver";
+import { BacktrackFsResolver } from "./backtrackfsresolver";
 
 export function NodeResolver(): SubResolver {
   const backtrack = BacktrackFsResolver("node_modules");

@@ -1,13 +1,18 @@
-import * as path from "path";
+import Debug from "debug";
 import { ResolverContext, SubResolver } from "../resolvers";
-import { BacktrackFsResolver } from "../resolvers/backtracktfsresolver";
+import { BacktrackFsResolver } from "../resolvers/backtrackfsresolver";
+const debug = Debug("resolverengine:ethpmresolver");
 
 // 1st group - package name
 // 2nd group - contract path
-const FILE_LOCATION_REGEX = /^(.+?)\/(.+)$/;
+const FILE_LOCATION_REGEX = /^([^/]+)\/(.+)$/;
 
-export function EthPmResolver(epmDirectory: string = "installed_contracts/"): SubResolver {
-  const fsResolver = BacktrackFsResolver(epmDirectory);
+const prefixT = "installed_contracts";
+const prefix0x = "contracts";
+
+export function EthPmResolver(): SubResolver {
+  const backtrackT = BacktrackFsResolver(prefixT);
+  const backtrack0x = BacktrackFsResolver(prefix0x);
 
   return async (what: string, ctx?: ResolverContext): Promise<string | null> => {
     const fileMatch = what.match(FILE_LOCATION_REGEX);
@@ -15,14 +20,22 @@ export function EthPmResolver(epmDirectory: string = "installed_contracts/"): Su
       return null;
     }
 
-    // In case it actually spells out the "contracts/" folder
-    let result = await fsResolver(what, ctx);
+    // const [, packageName, internalPath] = fileMatch;
+
+    // let result = backtrackT(path.join(packageName, prefixT + "/", internalPath), ctx);
+    let result = await backtrackT(what, ctx);
     if (result) {
+      debug("Resolved %s to %s", what, result);
       return result;
     }
 
-    const [, packageName, internalPath] = fileMatch;
+    // result = backtrack0x(path.join(packageName, prefix0x + "/", internalPath), ctx);
+    result = await backtrack0x(what, ctx);
+    if (result) {
+      debug("Resolved %s to %s", what, result);
+      return result;
+    }
 
-    return fsResolver(path.join(packageName, "contracts/", internalPath), ctx);
+    return null;
   };
 }
