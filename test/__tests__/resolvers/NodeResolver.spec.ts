@@ -1,4 +1,7 @@
+jest.mock("fs");
+import { vol } from "memfs";
 import { NodeResolver } from "../../../src/resolvers";
+import mockedFS from "../MockedFs";
 
 const data = [
   ["package/some/file.txt", { cwd: "/dir" }, "/dir/node_modules/package/some/file.txt"],
@@ -15,8 +18,14 @@ const data = [
 
 describe("NodeResolver", () => {
   const subject = NodeResolver();
+  beforeEach(() => {
+    vol.fromJSON(mockedFS);
+  });
+  afterEach(() => {
+    vol.reset();
+  });
 
-  it.each(data)("testing %o", async (input, context, output) => {
+  it.each(data)("testing %o in context %o", async (input, context, output) => {
     const actualOutput = await subject(input, context);
     expect(actualOutput).toBe(output);
 
