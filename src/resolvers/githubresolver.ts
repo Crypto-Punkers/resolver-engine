@@ -1,30 +1,47 @@
 import Debug from "debug";
-import * as GitInfo from "hosted-git-info";
 import { SubResolver } from ".";
 
 const debug = Debug("resolverengine:githubresolver");
 
-// hosted-git-info is a godsend, but it doesn't support specific files
-// use a hack to capture third slash a file skipping commitish
-// 1st group - protocol, location, owner, repo
-// 2nd group - file inside repo
-// 3rd group - comittish
-const FILE_LOCATION_REGEX = /^((?:.+:\/\/)?[^:/]+[/:][^/]+[/][^/]+)[/](.+?)(#.+)?$/;
+const BROWSER_LINK_REGEX = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/((?:[^/]+[/])*[^/]+)$/;
+const GITHUB_URI_REGEX = /^github:([^/]+)\/([^/]+)\/((?:[^/#]+[/])*[^/#]+?)(#\w+)?$/;
+const WEIRD_BROWSER_LINK_REGEX = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/((?:[^/]+[/])*[^/]+)$/; // remix
 
 // TODO(ritave): Support private repositories
 export function GithubResolver(): SubResolver {
   return async (what: string): Promise<string | null> => {
-    const fileMatch = what.match(FILE_LOCATION_REGEX);
-    if (!fileMatch) {
-      return null;
+    // GitInfo returned invalid results (ask me about this: %2F)
+
+    const fileMatchLink = what.match(BROWSER_LINK_REGEX);
+    if (fileMatchLink) {
+      const [, owner, repo, commitAndFile] = fileMatchLink;
+      const gitRawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${commitAndFile}`;
+      debug("Resolved uri to:", gitRawUrl);
+      return gitRawUrl;
     }
-    const [, url, file, comittish] = fileMatch;
-    const gitInfo = GitInfo.fromUrl(url + (comittish || ""));
-    if (!gitInfo) {
-      return null;
+
+    const fileMatchWeird = what.match(WEIRD_BROWSER_LINK_REGEX);
+    if (fileMatchWeird) {
+      const [, owner, repo, file] = fileMatchWeird;
+      const gitRawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master/${file}`;
+      debug("Resolved uri to:", gitRawUrl);
+      return gitRawUrl;
     }
-    const fileUrl = gitInfo.file(file);
-    debug("Resolved uri to:", fileUrl);
-    return fileUrl;
+
+    const fileMatchUri = what.match(GITHUB_URI_REGEX);
+    if (fileMatchUri) {
+      const [, owner, repo, file, hashCommit] = fileMatchUri;
+      let commit = "";
+      if (!hashCommit) {
+        commit = "master";
+      } else {
+        commit = hashCommit.substr(1);
+      }
+      const gitRawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${commit}/${file}`;
+      debug("Resolved uri to:", gitRawUrl);
+      return gitRawUrl;
+    }
+
+    return null;
   };
 }
