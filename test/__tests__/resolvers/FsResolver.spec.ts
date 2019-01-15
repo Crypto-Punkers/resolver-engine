@@ -1,7 +1,7 @@
 jest.mock("fs");
 import { vol } from "memfs";
 import { FsResolver } from "../../../src/resolvers";
-import mockedFS from "../MockedFs";
+import mockedFS from "../../MockedFs";
 
 const data = [
   ["/path/to/file.txt", { cwd: "/" }, "/path/to/file.txt"],
