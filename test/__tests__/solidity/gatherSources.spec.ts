@@ -16,6 +16,39 @@ function expectedOutput(filesObj: dictStringString): ImportFile[] {
   return result;
 }
 
+const data: [string, dictStringString, [string], string][] = [
+  [
+    "gathers files included by given file",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": "otherfilecontents",
+      "somethingelse.sol": "somethingelsecontents",
+    },
+    ["mainfile.sol"],
+    __dirname,
+  ],
+  [
+    "gathers files imported by imported files",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
+      "contracts/something.sol": "filecontents",
+    },
+    ["mainfile.sol"],
+    __dirname,
+  ],
+  [
+    "does not include the same file twice",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
+      "somethingelse.sol": "somethingelsecontents",
+    },
+    ["mainfile.sol"],
+    __dirname,
+  ],
+];
+
 /**
  * Checks if a is contained in b, using deep comparison on objects.
  * @param a
@@ -27,44 +60,11 @@ function deepSubset<T>(a: T[], b: T[]): boolean {
 
 describe("gatherSources function", function() {
   const resolver: ResolverEngine<ImportFile> = SolidityImportResolver();
-  let data: [string, dictStringString, [string], string][];
+
   beforeAll(function() {
     // when using mock fs, we are being thrown into the root of the filesystem
-    // we need to call it so process.cwd() makes sense
+    // we need to call it so __dirname makes sense
     process.chdir(__dirname);
-
-    data = [
-      [
-        "gathers files included by given file",
-        {
-          "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-          "otherfile.sol": "otherfilecontents",
-          "somethingelse.sol": "somethingelsecontents",
-        },
-        ["mainfile.sol"],
-        process.cwd(),
-      ],
-      [
-        "gathers files imported by imported files",
-        {
-          "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
-          "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
-          "contracts/something.sol": "filecontents",
-        },
-        ["mainfile.sol"],
-        process.cwd(),
-      ],
-      [
-        "does not include the same file twice",
-        {
-          "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-          "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
-          "somethingelse.sol": "somethingelsecontents",
-        },
-        ["mainfile.sol"],
-        process.cwd(),
-      ],
-    ];
   });
 
   afterEach(function() {
@@ -85,6 +85,6 @@ describe("gatherSources function", function() {
     };
 
     vol.fromJSON(test_fs);
-    await expect(gatherSources(["main.sol"], process.cwd(), resolver)).rejects.toThrowError();
+    await expect(gatherSources(["main.sol"], __dirname, resolver)).rejects.toThrowError();
   });
 });
