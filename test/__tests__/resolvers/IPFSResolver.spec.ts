@@ -14,7 +14,5 @@ describe.skip("IPFSResolver", () => {
   it.each(data)("testing %o", async (input, output) => {
     const actualOutput = await subject(input);
     expect(actualOutput).toBe(output);
-
-    // IMPLEMENT ME
   });
 });

@@ -1,13 +1,12 @@
 import nock from "nock";
 import { UrlParser } from "../../../src/parsers/urlparser";
 
-// input, output
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
 const data = incorrectUrls.concat(correctUrls);
 
 describe(UrlParser, () => {
-  const parser = UrlParser(); // unintuitive af
+  const parser = UrlParser();
 
   beforeAll(() => {
     nock.disableNetConnect();
