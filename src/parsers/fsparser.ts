@@ -1,11 +1,22 @@
 import Debug from "debug";
 import * as fs from "fs";
-import { promisify } from "util";
 import { SubParser } from ".";
 
-const readFileAsync = promisify(fs.readFile);
-
 const debug = Debug("resolverengine:fsparser");
+
+const readFileAsync = (
+  path: fs.PathLike | number,
+  options?: { encoding?: string | null; flag?: string } | string | null,
+): Promise<string | Buffer> =>
+  new Promise<string | Buffer>((resolve, reject) => {
+    fs.readFile(path, options, (err, data) => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(data);
+    });
+  });
 
 export function FsParser(): SubParser<string> {
   return async (path: string): Promise<string | null> => {
