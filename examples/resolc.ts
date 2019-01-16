@@ -20,7 +20,7 @@ glob(filesGlob, function(er: Error | null, fileList: Array<string>) {
   gatherSources(fileList, process.cwd()).then(function(input) {
     let sources: { [s: string]: {} } = {};
     for (let file of input) {
-      sources[file.path] = { content: file.source };
+      sources[file.url] = { content: file.source };
     }
     const inputJSON = {
       language: "Solidity",
