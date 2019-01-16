@@ -8,7 +8,7 @@ const data = [
   ["https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts", null],
 ];
 
-describe("IPFSResolver", () => {
+describe.skip("IPFSResolver", () => {
   const subject = IPFSResolver();
 
   it.each(data)("testing %o", async (input, output) => {
