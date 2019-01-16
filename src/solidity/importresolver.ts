@@ -1,27 +1,9 @@
-import { FsParser, SubParser } from "../parsers";
+import { FsParser } from "../parsers";
+import { UrlParser } from "../parsers/urlparser";
 import { ResolverEngine } from "../resolverengine";
-import { FsResolver, GithubResolver, NodeResolver, UrlResolver } from "../resolvers";
+import { FsResolver, GithubResolver, NodeResolver, UriResolver } from "../resolvers";
 import { EthPmResolver } from "./ethpmresolver";
-
-export interface ImportFile {
-  path: string;
-  source: string;
-}
-
-export function ImportParser(): SubParser<ImportFile> {
-  const fsParser = FsParser();
-
-  return async path => {
-    const source = await fsParser(path);
-    if (!source) {
-      return null;
-    }
-    return {
-      path,
-      source,
-    };
-  };
-}
+import { ImportFile, ImportParser } from "./importparser";
 
 export function SolidityImportResolver() {
   return new ResolverEngine<ImportFile>()
@@ -29,6 +11,6 @@ export function SolidityImportResolver() {
     .addResolver(EthPmResolver())
     .addResolver(NodeResolver())
     .addResolver(GithubResolver())
-    .addResolver(UrlResolver())
-    .addParser(ImportParser());
+    .addResolver(UriResolver())
+    .addParser(ImportParser([FsParser(), UrlParser()]));
 }

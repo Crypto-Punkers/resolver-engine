@@ -1,7 +1,7 @@
 import { findImports, ImportFile } from "../../../src";
 
 describe("findImports", function() {
-  let providedFile: ImportFile = { path: "", source: "" };
+  let providedFile: ImportFile = { url: "", source: "" };
 
   describe("Double quotes", function() {
     it('finds statements like: import "file";', function() {
