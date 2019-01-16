@@ -1,9 +1,7 @@
-import Debug from "debug";
 import * as path from "path";
 import { SubResolver } from ".";
 import { FsResolver } from "./fsresolver";
 import { ResolverContext } from "./subresolver";
-const debug = Debug("resolverengine:backtrackfsresolver");
 
 export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
   const fsResolver = FsResolver();
@@ -18,9 +16,7 @@ export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
     let previous: string = path.resolve(cwd, "./");
     let current: string = previous;
     do {
-      const shotInTheDark = path.join(current, pathPrefix, resolvePath);
-      debug("Trying %s as %s", resolvePath, shotInTheDark);
-      const result = await fsResolver(shotInTheDark, ctx);
+      const result = await fsResolver(path.join(current, pathPrefix, resolvePath), ctx);
 
       if (result) {
         return result;
