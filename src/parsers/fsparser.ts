@@ -20,10 +20,10 @@ const readFileAsync = (
 
 export function FsParser(): SubParser<string> {
   return async (path: string): Promise<string | null> => {
+    debug("Parsing %s", path);
     try {
       return (await readFileAsync(path, "utf-8")).toString();
     } catch (e) {
-      debug(`Error returned when trying to parse "${path}", returning null`, e);
       return null;
     }
   };
