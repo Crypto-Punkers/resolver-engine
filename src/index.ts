@@ -1,4 +1,5 @@
-export * from "./parsers";
-export * from "./resolverengine";
-export * from "./resolvers";
-export * from "./solidity";
+import { SolidityImportResolver } from "./solidity";
+
+const defaultResolver = SolidityImportResolver();
+
+export default defaultResolver;

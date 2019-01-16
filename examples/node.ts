@@ -1,4 +1,5 @@
-import { NodeResolver, ResolverEngine } from "../src";
+import { ResolverEngine } from "../src/resolverengine";
+import { NodeResolver } from "../src/resolvers";
 
 const resolver = new ResolverEngine<string>({ debug: true }).addResolver(NodeResolver());
 

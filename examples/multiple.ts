@@ -1,5 +1,7 @@
-import { FsParser, FsResolver, GithubResolver, NodeResolver, ResolverEngine, UriResolver } from "../src";
+import { FsParser } from "../src/parsers";
 import { UrlParser } from "../src/parsers/urlparser";
+import { ResolverEngine } from "../src/resolverengine";
+import { FsResolver, GithubResolver, NodeResolver, UriResolver } from "../src/resolvers";
 
 const resolver = new ResolverEngine<string>()
   .addResolver(FsResolver())

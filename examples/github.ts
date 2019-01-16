@@ -1,5 +1,6 @@
-import { GithubResolver, ResolverEngine } from "../src";
-import { UrlParser } from "../src/parsers/urlparser";
+import { UrlParser } from "../src/parsers";
+import { ResolverEngine } from "../src/resolverengine";
+import { GithubResolver } from "../src/resolvers";
 
 const resolver = new ResolverEngine<string>({ debug: true }).addParser(UrlParser()).addResolver(GithubResolver());
 

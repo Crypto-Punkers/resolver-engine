@@ -1,4 +1,4 @@
-import { SolidityImportResolver } from "../src";
+import { SolidityImportResolver } from "../src/solidity";
 
 const resolver = SolidityImportResolver();
 

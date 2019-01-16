@@ -1,4 +1,6 @@
-import { FsParser, FsResolver, ResolverEngine } from "../src";
+import { FsParser } from "../src/parsers";
+import { ResolverEngine } from "../src/resolverengine";
+import { FsResolver } from "../src/resolvers";
 
 const resolver = new ResolverEngine<string>({ debug: true }).addResolver(FsResolver()).addParser(FsParser());
 
