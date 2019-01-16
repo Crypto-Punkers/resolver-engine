@@ -10,6 +10,7 @@ const WEIRD_BROWSER_LINK_REGEX = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/((?
 // TODO(ritave): Support private repositories
 export function GithubResolver(): SubResolver {
   return async (what: string): Promise<string | null> => {
+    debug("Resolving %s", what);
     // GitInfo returned invalid results (ask me about this: %2F)
 
     const fileMatchLink = what.match(BROWSER_LINK_REGEX);

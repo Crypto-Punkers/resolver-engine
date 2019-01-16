@@ -17,6 +17,7 @@ export class ResolverEngine<R> {
     const opts: Options = { ...options };
     if (opts.debug) {
       Debug.enable("resolverengine:*");
+      Debug("resolverengine:otherchannel")("Debugging mode is now enabled");
     }
   }
 

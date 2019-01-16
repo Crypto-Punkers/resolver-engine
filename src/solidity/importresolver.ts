@@ -7,10 +7,10 @@ import { ImportFile, ImportParser } from "./importparser";
 
 export function SolidityImportResolver(options?: Options) {
   return new ResolverEngine<ImportFile>(options)
+    .addResolver(GithubResolver())
+    .addResolver(UriResolver())
     .addResolver(FsResolver())
     .addResolver(EthPmResolver())
     .addResolver(NodeResolver())
-    .addResolver(GithubResolver())
-    .addResolver(UriResolver())
     .addParser(ImportParser([FsParser(), UrlParser()]));
 }

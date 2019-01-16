@@ -1,7 +1,9 @@
+import Debug from "debug";
 import * as fs from "fs";
 import * as path from "path";
 import { SubResolver } from ".";
 import { ResolverContext } from "./subresolver";
+const debug = Debug("resolverengine:fsresolver");
 
 const statAsync = (path: string): Promise<fs.Stats> =>
   new Promise<fs.Stats>((resolve, reject) => {
@@ -17,6 +19,7 @@ const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
   return async (resolvePath: string, ctx?: ResolverContext): Promise<string | null> => {
+    debug("Resolving %s", resolvePath);
     const cwd: string = ctx ? ctx.cwd || process.cwd() : process.cwd();
 
     let myPath: string;
