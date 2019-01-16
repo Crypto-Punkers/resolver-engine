@@ -7,11 +7,11 @@ const debug = Debug("resolverengine:ethpmresolver");
 // 2nd group - contract path
 const FILE_LOCATION_REGEX = /^([^/]+)\/(.+)$/;
 
-const prefixT = "installed_contracts";
+const prefixTruffle = "installed_contracts";
 const prefix0x = "contracts";
 
 export function EthPmResolver(): SubResolver {
-  const backtrackT = BacktrackFsResolver(prefixT);
+  const backtrackT = BacktrackFsResolver(prefixTruffle);
   const backtrack0x = BacktrackFsResolver(prefix0x);
 
   return async (what: string, ctx?: ResolverContext): Promise<string | null> => {
@@ -20,16 +20,12 @@ export function EthPmResolver(): SubResolver {
       return null;
     }
 
-    // const [, packageName, internalPath] = fileMatch;
-
-    // let result = backtrackT(path.join(packageName, prefixT + "/", internalPath), ctx);
     let result = await backtrackT(what, ctx);
     if (result) {
       debug("Resolved %s to %s", what, result);
       return result;
     }
 
-    // result = backtrack0x(path.join(packageName, prefix0x + "/", internalPath), ctx);
     result = await backtrack0x(what, ctx);
     if (result) {
       debug("Resolved %s to %s", what, result);
