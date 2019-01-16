@@ -25,45 +25,47 @@ function deepSubset<T>(a: T[], b: T[]): boolean {
   return a.every(obj1 => b.some(obj2 => deepequal(obj1, obj2)));
 }
 
-// when using mock fs, we are being thrown into the root of the filesystem
-// we need to call it so process.cwd() makes sense
-process.chdir(__dirname);
-
-const data = [
-  [
-    "gathers files included by given file",
-    {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-      "otherfile.sol": "otherfilecontents",
-      "somethingelse.sol": "somethingelsecontents",
-    },
-    ["mainfile.sol"],
-    process.cwd(),
-  ],
-  [
-    "gathers files imported by imported files",
-    {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
-      "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
-      "contracts/something.sol": "filecontents",
-    },
-    ["mainfile.sol"],
-    process.cwd(),
-  ],
-  [
-    "does not include the same file twice",
-    {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-      "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
-      "somethingelse.sol": "somethingelsecontents",
-    },
-    ["mainfile.sol"],
-    process.cwd(),
-  ],
-];
-
 describe("gatherSources function", function() {
   const resolver: ResolverEngine<ImportFile> = SolidityImportResolver();
+  let data: [string, dictStringString, [string], string][];
+  beforeAll(function() {
+    // when using mock fs, we are being thrown into the root of the filesystem
+    // we need to call it so process.cwd() makes sense
+    process.chdir(__dirname);
+
+    data = [
+      [
+        "gathers files included by given file",
+        {
+          "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+          "otherfile.sol": "otherfilecontents",
+          "somethingelse.sol": "somethingelsecontents",
+        },
+        ["mainfile.sol"],
+        process.cwd(),
+      ],
+      [
+        "gathers files imported by imported files",
+        {
+          "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+          "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
+          "contracts/something.sol": "filecontents",
+        },
+        ["mainfile.sol"],
+        process.cwd(),
+      ],
+      [
+        "does not include the same file twice",
+        {
+          "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+          "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
+          "somethingelse.sol": "somethingelsecontents",
+        },
+        ["mainfile.sol"],
+        process.cwd(),
+      ],
+    ];
+  });
 
   afterEach(function() {
     vol.reset();
