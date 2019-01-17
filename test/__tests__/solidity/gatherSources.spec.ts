@@ -1,6 +1,7 @@
 jest.mock("fs");
 import { vol } from "memfs";
-import { gatherSources, ImportFile, ResolverEngine, SolidityImportResolver } from "../../../src";
+import { ResolverEngine } from "../../../src/resolverengine";
+import { gatherSources, ImportFile, SolidityImportResolver } from "../../../src/solidity";
 import deepequal = require("deep-equal");
 
 type dictionary = { [s: string]: string };
