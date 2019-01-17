@@ -3,9 +3,9 @@ import { vol } from "memfs";
 import { gatherSources, ImportFile, ResolverEngine, SolidityImportResolver } from "../../../src";
 import deepequal = require("deep-equal");
 
-type dictStringString = { [s: string]: string };
+type dictionary = { [s: string]: string };
 
-function expectedOutput(filesObj: dictStringString): ImportFile[] {
+function expectedOutput(filesObj: dictionary): ImportFile[] {
   let result: ImportFile[] = [];
   for (const k of Object.keys(filesObj)) {
     result.push({
@@ -16,7 +16,7 @@ function expectedOutput(filesObj: dictStringString): ImportFile[] {
   return result;
 }
 
-const data: [string, dictStringString, [string], string][] = [
+const data: [string, dictionary, [string], string][] = [
   [
     "gathers files included by given file",
     {
@@ -80,7 +80,7 @@ describe("gatherSources function", function() {
   });
 
   it("throws when imported file doesn't exist", async function() {
-    const test_fs: dictStringString = {
+    const test_fs: dictionary = {
       "main.sol": 'import "./otherfile.sol";\nrestoffileblahblah',
     };
 
