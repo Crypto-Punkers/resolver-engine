@@ -6,9 +6,13 @@ const data = [
   ["http://example.com", null],
   ["https://example.com", null],
   ["https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts", null],
+  [
+    "bzz-raw://406be87b72ce005d7f49e8fffce4e42c7b0f3da63c8218013d0a1fd994118772",
+    "https://swarm-gateways.net/bzz-raw:/406be87b72ce005d7f49e8fffce4e42c7b0f3da63c8218013d0a1fd994118772",
+  ],
 ];
 
-describe.skip("SwarmResolver", () => {
+describe("SwarmResolver", () => {
   const subject = SwarmResolver();
 
   it.each(data)("testing %o", async (input, output) => {

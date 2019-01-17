@@ -10,10 +10,10 @@ const debug = Debug("resolverengine:githubresolver");
 // 3rd group - commitish
 const GIT_HOSTED_INFO = /^((?:.+:\/\/)?[^:/]+[/:][^/]+[/][^/]+)[/](.+?)(#.+)?$/;
 
-// (owner), (repo), (commit/file)
+// 1. (owner), 2. (repo), 3. (commit/file)
 const BROWSER_LINK = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/((?:[^/]+[/])*[^/]+)$/;
 
-// (owner), (repo), (file); AFAIK no support for commits
+// 1. (owner), 2. (repo), 3. (file); AFAIK no support for commits
 const REMIX_GITHUB_LINK = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/((?:[^/]+[/])*[^/]+)$/;
 
 // TODO(ritave): Support private repositories
