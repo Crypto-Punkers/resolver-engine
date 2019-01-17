@@ -1,7 +1,7 @@
-import { SolidityImportResolver } from "./solidity";
+import { BrowserImportResolver, SolidityImportResolver } from "./solidity";
 
 const defaultResolver = SolidityImportResolver();
 
-export { SolidityImportResolver };
+export { SolidityImportResolver, BrowserImportResolver };
 
 export default defaultResolver;

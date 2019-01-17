@@ -14,3 +14,10 @@ export function SolidityImportResolver(options?: Options) {
     .addResolver(NodeResolver())
     .addParser(ImportParser([FsParser(), UrlParser()]));
 }
+
+export function BrowserImportResolver(options?: Options) {
+  return new ResolverEngine<ImportFile>(options)
+    .addResolver(GithubResolver())
+    .addResolver(UriResolver())
+    .addParser(ImportParser([UrlParser()]));
+}
