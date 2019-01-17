@@ -10,7 +10,8 @@
     "build": "tsc",
     "test": "jest",
     "tsc": "tsc",
-    "clean": "rimraf build/"
+    "clean": "rimraf build/",
+    "install": "yarn build"
   },
   "devDependencies": {
     "@types/debug": "^0.0.31",
