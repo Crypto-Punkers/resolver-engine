@@ -5,8 +5,8 @@ const solc = require("solc");
 const chalk = require("chalk");
 const yargs = require("yargs");
 
-import { gatherSources } from "../src";
 import glob = require("glob");
+import { gatherSources } from "../src/solidity";
 
 var argv = yargs.argv;
 var filesGlob: string = "{" + argv._.join() + ",}";
