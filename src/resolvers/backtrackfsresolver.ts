@@ -6,7 +6,7 @@ import { ResolverContext } from "./subresolver";
 export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
   const fsResolver = FsResolver();
 
-  return async (resolvePath: string, ctx?: ResolverContext): Promise<string | null> => {
+  return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
     if (path.isAbsolute(resolvePath)) {
       return null;
     }
