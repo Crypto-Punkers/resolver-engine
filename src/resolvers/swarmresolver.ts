@@ -1,11 +1,11 @@
-import { SubResolver } from ".";
+import { ResolverContext, SubResolver } from ".";
 
 // 1. (hash)
 const SWARM_URI = /^bzz-raw:\/\/(\w+)/;
 const SWARM_GATEWAY = "https://swarm-gateways.net/bzz-raw:/";
 
 export function SwarmResolver(): SubResolver {
-  return async (uri: string): Promise<string | null> => {
+  return async (uri: string, ctx: ResolverContext): Promise<string | null> => {
     const swarmMatch = uri.match(SWARM_URI);
     if (swarmMatch) {
       const [, hash] = swarmMatch;

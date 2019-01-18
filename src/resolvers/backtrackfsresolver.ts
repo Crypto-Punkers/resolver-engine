@@ -6,12 +6,12 @@ import { ResolverContext } from "./subresolver";
 export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
   const fsResolver = FsResolver();
 
-  return async (resolvePath: string, ctx?: ResolverContext): Promise<string | null> => {
+  return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
     if (path.isAbsolute(resolvePath)) {
       return null;
     }
 
-    const cwd = ctx ? ctx.cwd || process.cwd() : process.cwd();
+    const cwd = ctx.cwd || process.cwd();
 
     let previous: string = path.resolve(cwd, "./");
     let current: string = previous;
