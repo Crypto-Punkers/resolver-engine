@@ -17,7 +17,7 @@ const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
   return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
-    const cwd: string = ctx ? ctx.cwd || process.cwd() : process.cwd();
+    const cwd = ctx.cwd || process.cwd();
 
     let myPath: string;
     if (!path.isAbsolute(resolvePath)) {
