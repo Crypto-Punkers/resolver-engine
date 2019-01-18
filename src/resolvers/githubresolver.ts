@@ -19,7 +19,7 @@ const REMIX_GITHUB_LINK = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/((?:[^/]+[
 
 // TODO(ritave): Support private repositories
 export function GithubResolver(): SubResolver {
-  return async (what: string, ctx: ResolverContext): Promise<string | null> => {
+  return async function github(what: string, ctx: ResolverContext): Promise<string | null> {
     const fileMatchLink = what.match(BROWSER_LINK);
     if (fileMatchLink) {
       const [, owner, repo, commitAndFile] = fileMatchLink;

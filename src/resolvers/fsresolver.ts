@@ -18,7 +18,7 @@ const statAsync = (path: string): Promise<fs.Stats> =>
 const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
-  return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
+  return async function fs(resolvePath: string, ctx: ResolverContext): Promise<string | null> {
     debug("Resolving %s", resolvePath);
     const cwd = ctx.cwd || process.cwd();
 
