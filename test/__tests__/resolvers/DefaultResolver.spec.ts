@@ -1,4 +1,4 @@
-import { UriResolver } from "../../../src/resolvers";
+import { DefaultResolver } from "../../../src/resolvers";
 
 const data = [
   ["", null],
@@ -12,7 +12,7 @@ const data = [
 ];
 
 describe("UriResolver", () => {
-  const subject = UriResolver();
+  const subject = DefaultResolver();
 
   it.each(data)("testing %o", async (input, output) => {
     const actualOutput = await subject(input, {});

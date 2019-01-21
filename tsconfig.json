@@ -17,10 +17,5 @@
     "noImplicitReturns": true,
     "esModuleInterop": true
   },
-  "include": [
-    "src/**/*.ts",
-    "examples/**/*.ts",
-    "test/__tests__/solidity/withProvider.spec.ts",
-    "test/__tests__/solidity/WithProvider.spec.ts"
-  ]
+  "include": ["src/**/*.ts", "examples/**/*.ts"]
 }

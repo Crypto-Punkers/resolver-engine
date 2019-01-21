@@ -15,7 +15,7 @@ const data: [input_t, output_t][] = [
   [
     //            v
     ["https://githób.com/Crypto-Punkers/resolver-engine/examples/github.ts", undefined],
-    ["https://xn--githb-3ta.com/Crypto-Punkers/resolver-engine/examples/github.ts", "url"], // TODO, wtf
+    ["https://xn--githb-3ta.com/Crypto-Punkers/resolver-engine/examples/github.ts", "http"], // TODO, wtf
   ],
   [["package/some/file.txt", "/dir"], ["/dir/node_modules/package/some/file.txt", "node"]],
 ];

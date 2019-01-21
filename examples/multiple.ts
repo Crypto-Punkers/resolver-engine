@@ -1,13 +1,13 @@
 import { FsParser } from "../src/parsers";
 import { UrlParser } from "../src/parsers/urlparser";
 import { ResolverEngine } from "../src/resolverengine";
-import { FsResolver, GithubResolver, NodeResolver, UriResolver } from "../src/resolvers";
+import { DefaultResolver, FsResolver, GithubResolver, NodeResolver } from "../src/resolvers";
 
 const resolver = new ResolverEngine<string>()
   .addResolver(FsResolver())
   .addResolver(NodeResolver())
   .addResolver(GithubResolver())
-  .addResolver(UriResolver())
+  .addResolver(DefaultResolver())
   .addParser(UrlParser())
   .addParser(FsParser());
 
