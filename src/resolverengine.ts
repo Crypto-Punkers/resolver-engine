@@ -9,6 +9,15 @@ export interface Options {
   debug?: true;
 }
 
+export interface ResolveResult {
+  url: string;
+  resolverName: string;
+}
+
+export interface RequireResult<R> extends ResolveResult {
+  result: R;
+}
+
 export class ResolverEngine<R> {
   private resolvers: SubResolver[] = [];
   private parsers: SubParser<R>[] = [];
@@ -22,15 +31,7 @@ export class ResolverEngine<R> {
   }
 
   // Takes a simplified name (URI) and converts into cannonical URL of the location
-  public async resolve(uri: string, workingDir?: string): Promise<string> {
-    const [url] = await this.resolveWithProvider(uri, workingDir);
-
-    debug(`Resolved "${uri}" into "${url}"`);
-
-    return url;
-  }
-
-  public async resolveWithProvider(uri: string, workingDir?: string): Promise<[string, string]> {
+  public async resolve(uri: string, workingDir?: string): Promise<ResolveResult> {
     debug(`Resolving "${uri}"`);
 
     const ctx: ResolverContext = {
@@ -45,21 +46,28 @@ export class ResolverEngine<R> {
 
     debug(`Resolved "${uri}" into "${result[0]}" with ${result[1]}`);
 
-    return result;
+    return {
+      url: result[0],
+      resolverName: result[1],
+    };
   }
 
-  public async require(uri: string, workingDir?: string): Promise<R> {
+  public async require(uri: string, workingDir?: string): Promise<RequireResult<R>> {
     debug(`Requiring "${uri}"`);
 
-    const url = await this.resolve(uri, workingDir);
+    const resolved = await this.resolve(uri, workingDir);
 
-    const result = await firstResult(this.parsers, parser => parser(url));
+    const result = await firstResult(this.parsers, parser => parser(resolved.url));
 
     if (result === null) {
       throw new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);
     }
 
-    return result;
+    return {
+      url: resolved.url,
+      resolverName: resolved.resolverName,
+      result: result,
+    };
   }
 
   public addResolver(resolver: SubResolver): ResolverEngine<R> {

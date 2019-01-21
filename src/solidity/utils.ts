@@ -50,7 +50,7 @@ export async function gatherSources(
   }
   while (queue.length > 0) {
     const fileData = queue.shift()!;
-    const resolvedFile: ImportFile = await resolver.require(fileData.file, fileData.cwd);
+    const resolvedFile: ImportFile = (await resolver.require(fileData.file, fileData.cwd)).result;
     const foundImports = findImports(resolvedFile);
 
     // if imported path starts with '.' we assume it's relative and return it's absolute path

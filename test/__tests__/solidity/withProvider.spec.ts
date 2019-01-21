@@ -30,7 +30,8 @@ describe("NodeResolver", () => {
   });
 
   it.each(data)("testing %o in context %o", async (input: input_t, output: output_t) => {
-    const actualOutput = await subject.resolveWithProvider(...input);
-    expect(deepequal(actualOutput, output)).toBe(true);
+    const actualOutput = await subject.resolve(...input);
+    const arrayifiedOutput = [actualOutput.url, actualOutput.resolverName]; // it was either 'objectify' output or 'arrayify' actualOutput
+    expect(deepequal(arrayifiedOutput, output)).toBe(true);
   });
 });
