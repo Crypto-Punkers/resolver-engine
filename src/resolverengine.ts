@@ -15,7 +15,7 @@ export interface ResolveResult extends ResolverResult {
 }
 
 export interface RequireResult<R> extends ResolveResult {
-  result: R;
+  content: R;
 }
 
 export class ResolverEngine<R> {
@@ -65,9 +65,10 @@ export class ResolverEngine<R> {
     }
 
     return {
+      resourceName: resolved.resourceName,
       url: resolved.url,
       resolverName: resolved.resolverName,
-      result: result,
+      content: result,
     };
   }
 

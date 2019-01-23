@@ -4,4 +4,4 @@ import { FsResolver } from "../src/resolvers";
 
 const resolver = new ResolverEngine<string>({ debug: true }).addResolver(FsResolver()).addParser(FsParser());
 
-resolver.require(__filename).then(identity => console.log(identity.result.substr(0, 128)));
+resolver.require(__filename).then(identity => console.log(identity.content.substr(0, 128)));
