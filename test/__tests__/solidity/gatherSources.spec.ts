@@ -3,7 +3,9 @@ import { vol } from "memfs";
 import { gatherSources, ImportFile, ResolverEngine, SolidityImportResolver } from "../../../src";
 import deepequal = require("deep-equal");
 
-function expectedOutput(filesObj: { [s: string]: string }): ImportFile[] {
+type dictionary = { [s: string]: string };
+
+function expectedOutput(filesObj: dictionary): ImportFile[] {
   let result: ImportFile[] = [];
   for (const k of Object.keys(filesObj)) {
     result.push({
@@ -13,6 +15,39 @@ function expectedOutput(filesObj: { [s: string]: string }): ImportFile[] {
   }
   return result;
 }
+
+const data: [string, dictionary, [string], string][] = [
+  [
+    "gathers files included by given file",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": "otherfilecontents",
+      "somethingelse.sol": "somethingelsecontents",
+    },
+    ["mainfile.sol"],
+    __dirname,
+  ],
+  [
+    "gathers files imported by imported files",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
+      "contracts/something.sol": "filecontents",
+    },
+    ["mainfile.sol"],
+    __dirname,
+  ],
+  [
+    "does not include the same file twice",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
+      "somethingelse.sol": "somethingelsecontents",
+    },
+    ["mainfile.sol"],
+    __dirname,
+  ],
+];
 
 /**
  * Checks if a is contained in b, using deep comparison on objects.
@@ -27,6 +62,8 @@ describe("gatherSources function", function() {
   const resolver: ResolverEngine<ImportFile> = SolidityImportResolver();
 
   beforeAll(function() {
+    // when using mock fs, we are being thrown into the root of the filesystem
+    // we need to call it so __dirname makes sense
     process.chdir(__dirname);
   });
 
@@ -34,54 +71,20 @@ describe("gatherSources function", function() {
     vol.reset();
   });
 
-  it("gathers files included by given file", async function() {
-    const FILES: { [s: string]: string } = {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-      "otherfile.sol": "otherfilecontents",
-      "somethingelse.sol": "somethingelsecontents",
-    };
-    const EXPECTED_FILES = expectedOutput(FILES);
+  it.each(data)("%s", async function(message, test_fs, input, cwd) {
+    const EXPECTED_FILES = expectedOutput(test_fs);
 
-    vol.fromJSON(FILES);
-    const fileList = await gatherSources(["mainfile.sol"], process.cwd(), resolver);
+    vol.fromJSON(test_fs);
+    const fileList = await gatherSources(input, cwd, resolver);
     expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
   });
 
-  it("gathers files imported by imported files", async function() {
-    const FILES: { [s: string]: string } = {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
-      "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
-      "contracts/something.sol": "filecontents",
+  it("throws when imported file doesn't exist", async function() {
+    const test_fs: dictionary = {
+      "main.sol": 'import "./otherfile.sol";\nrestoffileblahblah',
     };
-    const EXPECTED_FILES = expectedOutput(FILES);
 
-    vol.fromJSON(FILES);
-    const fileList = await gatherSources(["mainfile.sol"], process.cwd(), resolver);
-    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
-  });
-
-  it("does not include the same file twice", async function() {
-    const FILES: { [s: string]: string } = {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-      "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
-      "somethingelse.sol": "somethingelsecontents",
-    };
-    const EXPECTED_FILES = expectedOutput(FILES);
-
-    vol.fromJSON(FILES);
-    const fileList = await gatherSources(["mainfile.sol"], process.cwd());
-    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
-  });
-
-  it("works without passing resolver to it", async function() {
-    const FILES: { [s: string]: string } = {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
-      "otherfile.sol": "herpderp",
-    };
-    const EXPECTED_FILES = expectedOutput(FILES);
-
-    vol.fromJSON(FILES);
-    const fileList = await gatherSources(["mainfile.sol"], process.cwd());
-    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
+    vol.fromJSON(test_fs);
+    await expect(gatherSources(["main.sol"], __dirname, resolver)).rejects.toThrowError();
   });
 });

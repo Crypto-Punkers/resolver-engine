@@ -4,12 +4,6 @@ import { SubParser } from ".";
 
 const debug = Debug("resolverengine:urlparser");
 
-/*
-export interface UrlResolverContext extends ResolverContext {
-  options?: request.Options;
-}
-*/
-
 export function UrlParser(): SubParser<string> {
   return (url: string): Promise<string | null> =>
     new Promise((resolve, reject) => {

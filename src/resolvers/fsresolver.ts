@@ -1,15 +1,23 @@
 import * as fs from "fs";
 import * as path from "path";
-import { promisify } from "util";
 import { SubResolver } from ".";
 import { ResolverContext } from "./subresolver";
 
-const statAsync = promisify(fs.stat);
+const statAsync = (path: string): Promise<fs.Stats> =>
+  new Promise<fs.Stats>((resolve, reject) => {
+    fs.stat(path, (err, stats) => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(stats);
+    });
+  });
 const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
   return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
-    const cwd: string = ctx.cwd || process.cwd();
+    const cwd = ctx.cwd || process.cwd();
 
     let myPath: string;
     if (!path.isAbsolute(resolvePath)) {
