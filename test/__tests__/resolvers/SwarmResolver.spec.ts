@@ -17,6 +17,10 @@ describe("SwarmResolver", () => {
 
   it.each(data)("testing %o", async (input, output) => {
     const actualOutput = await subject(input, {});
-    expect(actualOutput).toBe(output);
+    if (actualOutput === null) {
+      expect(actualOutput).toBe(output);
+    } else {
+      expect(actualOutput.url).toBe(output);
+    }
   });
 });

@@ -2,7 +2,7 @@ import Debug from "debug";
 import * as fs from "fs";
 import * as path from "path";
 import { SubResolver } from ".";
-import { ResolverContext } from "./subresolver";
+import { ResolverContext, ResolverResult } from "./subresolver";
 const debug = Debug("resolverengine:fsresolver");
 
 const statAsync = (path: string): Promise<fs.Stats> =>
@@ -18,7 +18,7 @@ const statAsync = (path: string): Promise<fs.Stats> =>
 const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
-  return async function fs(resolvePath: string, ctx: ResolverContext): Promise<string | null> {
+  return async function fs(resolvePath: string, ctx: ResolverContext): Promise<ResolverResult | null> {
     debug("Resolving %s", resolvePath);
     const cwd = ctx.cwd || process.cwd();
 
@@ -30,7 +30,7 @@ export function FsResolver(): SubResolver {
     }
     try {
       const stats = await statAsync(myPath);
-      return stats.isFile() ? myPath : null;
+      return stats.isFile() ? { url: myPath } : null;
     } catch (e) {
       if (e.code === NO_FILE) {
         return null;

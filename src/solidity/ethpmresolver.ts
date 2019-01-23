@@ -1,5 +1,5 @@
 import Debug from "debug";
-import { ResolverContext, SubResolver } from "../resolvers";
+import { ResolverContext, ResolverResult, SubResolver } from "../resolvers";
 import { BacktrackFsResolver } from "../resolvers/backtrackfsresolver";
 const debug = Debug("resolverengine:ethpmresolver");
 
@@ -14,7 +14,7 @@ export function EthPmResolver(): SubResolver {
   const backtrackT = BacktrackFsResolver(prefixTruffle);
   const backtrack0x = BacktrackFsResolver(prefix0x);
 
-  return async (what: string, ctx: ResolverContext): Promise<string | null> => {
+  return async (what: string, ctx: ResolverContext): Promise<ResolverResult | null> => {
     const fileMatch = what.match(FILE_LOCATION_REGEX);
     if (!fileMatch) {
       return null;

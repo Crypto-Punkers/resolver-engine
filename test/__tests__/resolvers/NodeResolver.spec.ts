@@ -27,6 +27,10 @@ describe("NodeResolver", () => {
 
   it.each(data)("testing %o in context %o", async (input, context, output) => {
     const actualOutput = await subject(input, context);
-    expect(actualOutput).toBe(output);
+    if (actualOutput === null) {
+      expect(actualOutput).toBe(output);
+    } else {
+      expect(actualOutput.url).toBe(output);
+    }
   });
 });

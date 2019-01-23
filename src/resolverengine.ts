@@ -1,6 +1,6 @@
 import Debug from "debug";
 import { SubParser } from "./parsers/subparser";
-import { ResolverContext, SubResolver } from "./resolvers/subresolver";
+import { ResolverContext, ResolverResult, SubResolver } from "./resolvers/subresolver";
 import { firstResult, namedFirstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
@@ -9,8 +9,8 @@ export interface Options {
   debug?: true;
 }
 
-export interface ResolveResult {
-  url: string;
+// TODO find a better name
+export interface ResolveResult extends ResolverResult {
   resolverName: string;
 }
 
@@ -47,7 +47,8 @@ export class ResolverEngine<R> {
     debug(`Resolved "${uri}" into "${result[0]}" with ${result[1]}`);
 
     return {
-      url: result[0],
+      resourceName: result[0].resourceName,
+      url: result[0].url,
       resolverName: result[1],
     };
   }
