@@ -24,11 +24,46 @@ export function findImports(data: ImportFile): string[] {
   return result;
 }
 
-// when importing files from parent directory solc requests sifferent file name
-// e.g. for "../dir/file" solc requests file named "dir/file"
-// solidifyName returns file name that will  be requested by solc
-export function solidifyName(fileName: string): string {
-  return fileName.split("./").pop()!;
+interface ImportTreeNode extends ImportFile {
+  uri: string;
+  imports: { uri: string; url: string }[];
+}
+
+async function traverseSources(
+  whats: string[],
+  workingDir: string,
+  resolver: ResolverEngine<ImportFile>,
+): Promise<ImportTreeNode[]> {
+  let result: ImportTreeNode[] = [];
+  let alreadyImported = new Set();
+
+  async function dfs(file: { searchCwd: string; uri: string }): Promise<string> {
+    const url = await resolver.resolve(file.uri, file.searchCwd);
+    if (alreadyImported.has(url)) {
+      return url;
+    }
+
+    const resolvedFile = await resolver.require(file.uri, file.searchCwd);
+
+    alreadyImported.add(url);
+
+    const foundImportURIs = findImports(resolvedFile);
+
+    const fileNode: ImportTreeNode = { uri: file.uri, imports: [], ...resolvedFile };
+
+    const resolvedCwd = path.dirname(url);
+    for (const importUri of foundImportURIs) {
+      const importUrl = await dfs({ searchCwd: resolvedCwd, uri: importUri });
+      fileNode.imports.push({ uri: importUri, url: importUrl });
+    }
+
+    result.push(fileNode);
+    return resolvedFile.url;
+  }
+
+  await Promise.all(whats.map(what => dfs({ searchCwd: workingDir, uri: what })));
+
+  return result;
 }
 
 export async function gatherSources(
@@ -36,40 +71,18 @@ export async function gatherSources(
   workingDir: string,
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
-  let result: ImportFile[] = [];
-  let queue: { cwd: string; file: string }[] = [];
-  let alreadyImported = new Set();
+  return (await traverseSources(whats, workingDir, resolver)).map(node => {
+    return { url: node.url, source: node.source };
+  });
+}
 
-  // solc resolves relative paths starting from current file's path, so if we leave relative path then
-  // imported path "../../a/b/c.sol" from file "file.sol" resolves to a/b/c.sol, which is wrong.
-  // we start from file;s absolute path so relative path can resolve correctly
-  const absoluteWhats = whats.map(what => path.resolve(workingDir, what));
-  for (const absWhat of absoluteWhats) {
-    queue.push({ cwd: workingDir, file: absWhat });
-    alreadyImported.add(solidifyName(absWhat));
+export async function gatherSourcesAndCanonizeImports(
+  whats: string[],
+  workingDir: string,
+  resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
+) {
+  function canonizeFile(file: ImportTreeNode) {
+    file.imports.forEach(i => (file.source = file.source.replace(i.uri, i.url)));
   }
-  while (queue.length > 0) {
-    const fileData = queue.shift()!;
-    const resolvedFile: ImportFile = await resolver.require(fileData.file, fileData.cwd);
-    const foundImports = findImports(resolvedFile);
-
-    // if imported path starts with '.' we assume it's relative and return it's absolute path
-    // if not - return the same name it was imported with
-    if (fileData.file[0] === ".") {
-      result.push(resolvedFile);
-    } else {
-      result.push({ url: fileData.file, source: resolvedFile.source });
-    }
-
-    const fileParentDir = path.dirname(resolvedFile.url);
-    for (const i in foundImports) {
-      const solidifiedName: string = solidifyName(foundImports[i]);
-      if (!alreadyImported.has(solidifiedName)) {
-        alreadyImported.add(solidifiedName);
-        queue.push({ cwd: fileParentDir, file: foundImports[i] });
-      }
-    }
-  }
-
-  return result;
+  return (await traverseSources(whats, workingDir, resolver)).map(canonizeFile);
 }
