@@ -2396,10 +2396,10 @@ mem@^1.1.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-memfs@^2.14.2:
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-2.14.2.tgz#c927a70e98588b7b803ccc326beeffe701bc57d3"
-  integrity sha512-y19j9L+b8nuDKwuwrrIOiDhDD2bi7pfL1/Z8kfCyPaoZzHxX2aRcI2Q5T6qdUzqVHWd3plAfxeDT3Crb2eCwUw==
+memfs@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-2.15.0.tgz#4bfc714bf95ea2e473354847d501e38ee41b462f"
+  integrity sha512-vktLqfHB1K4I9oiWlG4VjbztEreU5LqgnTnlVimr4bKNhJwjTmKg5+eYIimmNiKVUolTUrWSy2k/KEyqqLqZrQ==
   dependencies:
     fast-extend "0.0.2"
     fs-monkey "^0.3.3"
