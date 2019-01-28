@@ -1,40 +1,16 @@
 {
-  "name": "resolver-engine",
-  "version": "0.1.1",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
-  "repository": "git@github.com:ritave/resolver-engine.git",
-  "author": "Olaf Tomalka <olaf@tomalka.me>",
-  "license": "LGPL-3.0-or-later",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "tsc",
-    "test": "jest",
-    "tsc": "tsc",
-    "clean": "rimraf build/"
+    "build": "tsc -b tsproject.json",
+    "watch": "tsc -b --watch",
+    "clean": "wsrun clean",
+    "test": "wsrun --collect-logs test"
   },
   "devDependencies": {
-    "@types/debug": "^0.0.31",
-    "@types/deep-equal": "^1.0.1",
-    "@types/glob": "^7.1.1",
-    "@types/jest": "^23.3.13",
-    "@types/mock-fs": "^3.6.30",
-    "@types/nock": "^9.3.1",
-    "@types/node": "^10.12.19",
-    "@types/request": "^2.47.0",
-    "chalk": "^2.4.2",
-    "deep-equal": "^1.0.1",
-    "glob": "^7.1.3",
-    "jest": "^23.6.0",
-    "memfs": "^2.15.0",
-    "nock": "^10.0.6",
-    "rimraf": "^2.6.2",
-    "solc": "^0.5.3",
-    "ts-jest": "^23.10.5",
-    "typescript": "^3.2.4"
-  },
-  "dependencies": {
-    "debug": "^3.1.0",
-    "hosted-git-info": "^2.6.0",
-    "request": "^2.85.0"
+    "typescript": "^3.2.4",
+    "wsrun": "^3.6.2"
   }
 }
