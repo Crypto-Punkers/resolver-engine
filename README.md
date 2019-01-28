@@ -34,7 +34,7 @@ const resolver = new ResolverEngine<string>()
   .addParser(FsParser());
 
 resolver
-  .resolve("@zeppelin-solidity/contracts/Ownable.sol")
+  .resolve("@openzeppelin-solidity/contracts/ownership/Ownable.sol")
   .then(console.log)
   .catch(console.error);
 ```

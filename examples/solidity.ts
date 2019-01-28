@@ -3,6 +3,6 @@ import { SolidityImportResolver } from "../src";
 const resolver = SolidityImportResolver();
 
 resolver
-  .require("@zeppelin-solidity/contracts/Ownable.sol")
+  .require("@openzeppelin-solidity/contracts/ownership/Ownable.sol")
   .then(console.log)
   .catch(console.error);
