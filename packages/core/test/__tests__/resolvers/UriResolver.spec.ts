@@ -1,4 +1,4 @@
-import { UriResolver } from "../../../src/resolvers";
+import { UriResolver } from "../../../src";
 
 const data = [
   ["", null],

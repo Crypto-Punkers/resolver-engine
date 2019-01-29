@@ -1,5 +1,5 @@
 import nock from "nock";
-import { UrlParser } from "../../../src/parsers/urlparser";
+import { UrlParser } from "../../../src";
 
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
