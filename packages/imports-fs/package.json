@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/imports-fs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",
@@ -13,9 +13,9 @@
     "publish": "lerna publish"
   },
   "dependencies": {
-    "@resolver-engine/core": "^0.2.0",
-    "@resolver-engine/fs": "^0.2.0",
-    "@resolver-engine/imports": "^0.2.0",
+    "@resolver-engine/core": "^0.2.1",
+    "@resolver-engine/fs": "^0.2.1",
+    "@resolver-engine/imports": "^0.2.1",
     "debug": "^3.1.0"
   }
 }
