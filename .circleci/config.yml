@@ -22,3 +22,6 @@ jobs:
         - run:
             name: Tests
             command: yarn test
+        - run: # TODO(ritave): Move into seperate workspace that lints everything
+            name: Prettier
+            command: yarn prettier
