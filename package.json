@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "build": "tsc -b tsproject.json",
-    "watch": "tsc -b --watch",
+    "watch": "tsc -b --watch tsproject.json",
     "clean": "wsrun --exclude-missing clean",
     "test": "yarn workspace tests test",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'"
