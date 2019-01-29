@@ -4,7 +4,6 @@
     "module": "commonjs",
     "declaration": true,
     "sourceMap": true,
-    "outDir": "./build",
     "downlevelIteration": true,
     "strict": true,
     "noImplicitAny": true,
@@ -16,6 +15,5 @@
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "esModuleInterop": true
-  },
-  "include": ["src/**/*.ts", "examples/**/*.ts"]
+  }
 }

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/fs" },
+    { "path": "packages/imports" },
+    { "path": "packages/imports-fs" }
+  ],
+  "files": []
+}
