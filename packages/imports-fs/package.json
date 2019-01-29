@@ -9,18 +9,13 @@
   "scripts": {
     "build": "tsc",
     "tsc": "tsc",
-    "clean": "rimraf build/"
-  },
-  "devDependencies": {
-    "@types/debug": "^0.0.31",
-    "@types/node": "^10.12.18",
-    "rimraf": "^2.6.2",
-    "typescript": "^3.2.4"
+    "clean": "rimraf build/",
+    "publish": "lerna publish"
   },
   "dependencies": {
-    "@resolver-engine/core": "^0.1.1",
-    "@resolver-engine/fs": "^0.1.1",
-    "@resolver-engine/imports": "^0.1.1",
+    "@resolver-engine/core": "^0.2.0",
+    "@resolver-engine/fs": "^0.2.0",
+    "@resolver-engine/imports": "^0.2.0",
     "debug": "^3.1.0"
   }
 }
