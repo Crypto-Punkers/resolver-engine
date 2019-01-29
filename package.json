@@ -1,16 +1,16 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "tests"
   ],
   "scripts": {
     "build": "tsc -b tsproject.json",
     "watch": "tsc -b --watch",
-    "clean": "wsrun clean",
-    "test": "wsrun --collect-logs --report test"
+    "clean": "wsrun --exclude-missing clean",
+    "test": "yarn workspace tests test"
   },
   "devDependencies": {
-    "typescript": "^3.2.4",
     "wsrun": "^3.6.2"
   }
 }

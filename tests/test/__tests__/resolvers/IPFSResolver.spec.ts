@@ -1,4 +1,4 @@
-import { IPFSResolver } from "../../../src";
+import { IPFSResolver } from "@resolver-engine/imports";
 
 const data = [
   ["", null],

@@ -8,19 +8,13 @@
   "license": "LGPL-3.0-or-later",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
     "tsc": "tsc",
     "clean": "rimraf build/"
   },
   "devDependencies": {
     "@types/debug": "^0.0.31",
-    "@types/jest": "^23.3.13",
-    "@types/mock-fs": "^3.6.30",
     "@types/node": "^10.12.18",
-    "jest": "^23.6.0",
-    "memfs": "^2.15.0",
     "rimraf": "^2.6.2",
-    "ts-jest": "^23.10.5",
     "typescript": "^3.2.4"
   },
   "dependencies": {

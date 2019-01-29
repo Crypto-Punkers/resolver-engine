@@ -1,4 +1,4 @@
-import { GithubResolver } from "../../../src";
+import { GithubResolver } from "@resolver-engine/imports";
 
 const data = [
   ["", null],

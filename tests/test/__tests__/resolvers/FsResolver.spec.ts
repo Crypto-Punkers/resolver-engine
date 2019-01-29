@@ -1,6 +1,6 @@
 jest.mock("fs");
+import { FsResolver } from "@resolver-engine/fs";
 import { vol } from "memfs";
-import { FsResolver } from "../../../src";
 import mockedFS from "../../MockedFs";
 
 const data = [

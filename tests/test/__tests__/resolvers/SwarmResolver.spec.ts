@@ -1,4 +1,4 @@
-import { SwarmResolver } from "../../../src";
+import { SwarmResolver } from "@resolver-engine/imports";
 
 const data = [
   ["", null],

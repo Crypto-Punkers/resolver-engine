@@ -1,4 +1,4 @@
-import { UriResolver } from "../../../src";
+import { UriResolver } from "@resolver-engine/core";
 
 const data = [
   ["", null],

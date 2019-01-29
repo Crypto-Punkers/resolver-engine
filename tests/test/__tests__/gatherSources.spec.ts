@@ -1,8 +1,8 @@
 jest.mock("fs");
 import { ResolverEngine } from "@resolver-engine/core";
 import { gatherSources, ImportFile } from "@resolver-engine/imports";
+import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import { vol } from "memfs";
-import { ImportsFsEngine } from "../../src";
 import deepequal = require("deep-equal");
 
 type dictionary = { [s: string]: string };

@@ -1,4 +1,4 @@
-import { findImports, ImportFile } from "../../src";
+import { findImports, ImportFile } from "@resolver-engine/imports";
 
 describe("findImports", function() {
   let providedFile: ImportFile = { url: "", source: "" };
