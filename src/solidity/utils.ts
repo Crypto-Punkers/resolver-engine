@@ -37,7 +37,7 @@ export async function gatherSources(
   resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
-  let queue: { cwd: string; file: string; wzgledem: string }[] = [];
+  let queue: { cwd: string; file: string; retativeTo: string }[] = [];
   let alreadyImported = new Set();
 
   // solc resolves relative paths starting from current file's path, so if we leave relative path then
@@ -45,7 +45,7 @@ export async function gatherSources(
   // we start from file;s absolute path so relative path can resolve correctly
   const absoluteWhats = whats.map(what => path.resolve(workingDir, what));
   for (const absWhat of absoluteWhats) {
-    queue.push({ cwd: workingDir, file: absWhat, wzgledem: workingDir });
+    queue.push({ cwd: workingDir, file: absWhat, retativeTo: workingDir });
     alreadyImported.add(solidifyName(absWhat));
   }
   while (queue.length > 0) {
@@ -58,7 +58,7 @@ export async function gatherSources(
     let szastPrast: string;
     if (fileData.file[0] === ".") {
       // result.push(resolvedFile);
-      szastPrast = path.join(fileData.wzgledem, fileData.file);
+      szastPrast = path.join(fileData.retativeTo, fileData.file);
       result.push({ url: szastPrast, source: resolvedFile.source });
     } else {
       szastPrast = fileData.file;
@@ -70,7 +70,7 @@ export async function gatherSources(
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {
         alreadyImported.add(solidifiedName);
-        queue.push({ cwd: fileParentDir, file: foundImports[i], wzgledem: path.dirname(szastPrast) });
+        queue.push({ cwd: fileParentDir, file: foundImports[i], retativeTo: path.dirname(szastPrast) });
       }
     }
   }
