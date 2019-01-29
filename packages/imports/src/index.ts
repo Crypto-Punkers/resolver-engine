@@ -1,3 +1,4 @@
+export * from "@resolver-engine/core";
 export * from "./importsengine";
 export * from "./parsers/importparser";
 export * from "./resolvers/githubresolver";
