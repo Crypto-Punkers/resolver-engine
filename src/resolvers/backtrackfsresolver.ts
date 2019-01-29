@@ -1,12 +1,12 @@
 import * as path from "path";
 import { SubResolver } from ".";
 import { FsResolver } from "./fsresolver";
-import { ResolverContext, ResolverResult } from "./subresolver";
+import { ResolverContext, ResolverMetadata } from "./subresolver";
 
 export function BacktrackFsResolver(pathPrefix: string = ""): SubResolver {
   const fsResolver = FsResolver();
 
-  return async (resolvePath: string, ctx: ResolverContext): Promise<ResolverResult | null> => {
+  return async (resolvePath: string, ctx: ResolverContext): Promise<ResolverMetadata | null> => {
     if (path.isAbsolute(resolvePath)) {
       return null;
     }

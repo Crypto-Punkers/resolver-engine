@@ -1,6 +1,6 @@
 import Debug from "debug";
 import { SubParser } from "./parsers/subparser";
-import { ResolverContext, ResolverResult, SubResolver } from "./resolvers/subresolver";
+import { ResolverContext, ResolverMetadata, SubResolver } from "./resolvers/subresolver";
 import { firstResult, namedFirstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
@@ -10,12 +10,13 @@ export interface Options {
 }
 
 // TODO find a better name
-export interface ResolveResult extends ResolverResult {
+export interface ResolveResult extends ResolverMetadata {
   resolverName: string;
 }
 
-export interface RequireResult<R> extends ResolveResult {
+export interface RequireResult<R> {
   content: R;
+  metadata: ResolveResult;
 }
 
 export class ResolverEngine<R> {
@@ -65,9 +66,7 @@ export class ResolverEngine<R> {
     }
 
     return {
-      resourceName: resolved.resourceName,
-      url: resolved.url,
-      resolverName: resolved.resolverName,
+      metadata: resolved,
       content: result,
     };
   }
