@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/fs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",
