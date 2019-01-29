@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/imports",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",
@@ -17,8 +17,8 @@
     "typescript": "^3.2.4"
   },
   "dependencies": {
+    "@resolver-engine/core": "^0.1.1",
     "debug": "^3.1.0",
-    "hosted-git-info": "^2.6.0",
-    "@resolver-engine/core": "^0.1.1"
+    "hosted-git-info": "^2.6.0"
   }
 }
