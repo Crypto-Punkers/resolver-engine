@@ -1,8 +1,8 @@
 jest.mock("fs");
 import { vol } from "memfs";
-// TODO(ritave): Make it nicer
-import mockedFS from "../../../../fs/test/MockedFs";
 import { EthPmResolver } from "../../../src";
+// TODO(ritave): Make it nicer
+import mockedFS from "../../MockedFs";
 
 const data = [
   ["zeppelin/contract.sol", { cwd: "/eth" }, "/eth/contracts/zeppelin/contract.sol"],
