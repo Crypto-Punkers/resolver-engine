@@ -8,18 +8,18 @@ import { ImportFile, ImportParser } from "./importparser";
 export function SolidityImportResolver(options?: Options) {
   return new ResolverEngine<ImportFile>(options)
     .addResolver(GithubResolver())
-    .addResolver(DefaultResolver())
     .addResolver(FsResolver())
     .addResolver(EthPmResolver())
     .addResolver(NodeResolver())
+    .addResolver(DefaultResolver())
     .addParser(ImportParser([FsParser(), UrlParser()]));
 }
 
 export function BrowserImportResolver(options?: Options) {
   return new ResolverEngine<ImportFile>(options)
     .addResolver(GithubResolver())
-    .addResolver(DefaultResolver())
     .addResolver(IPFSResolver())
     .addResolver(SwarmResolver())
+    .addResolver(DefaultResolver())
     .addParser(ImportParser([UrlParser()]));
 }
