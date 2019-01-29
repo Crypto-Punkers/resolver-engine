@@ -1,7 +1,6 @@
 jest.mock("fs");
 import { EthPmResolver } from "@resolver-engine/imports-fs";
 import { vol } from "memfs";
-// TODO(ritave): Make it nicer
 import mockedFS from "../../MockedFs";
 
 const data = [

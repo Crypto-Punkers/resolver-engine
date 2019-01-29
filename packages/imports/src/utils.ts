@@ -94,7 +94,7 @@ function stripNodes(nodes: ImportTreeNode[]): ImportFile[] {
 export async function gatherSources(
   roots: string[],
   workingDir: string,
-  resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
+  resolver: ResolverEngine<ImportFile>,
 ): Promise<ImportFile[]> {
   return stripNodes(await gatherDepenencyTree(roots, workingDir, resolver));
 }
@@ -110,7 +110,7 @@ export async function gatherSources(
 export async function gatherSourcesAndCanonizeImports(
   roots: string[],
   workingDir: string,
-  resolver: ResolverEngine<ImportFile> = SolidityImportResolver(),
+  resolver: ResolverEngine<ImportFile>,
 ): Promise<ImportFile[]> {
   function canonizeFile(file: ImportTreeNode) {
     file.imports.forEach(i => (file.source = file.source.replace(i.uri, i.url)));
