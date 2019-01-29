@@ -2,7 +2,7 @@ import { ResolverEngine, UriResolver, UrlParser } from "@resolver-engine/core";
 import { ImportFile, ImportParser } from "./parsers/importparser";
 import { GithubResolver } from "./resolvers/githubresolver";
 
-export function ImportsEngine() {
+export function ImportsEngine(): ResolverEngine<ImportFile> {
   return (
     new ResolverEngine<ImportFile>()
       //.addResolver(FsResolver())

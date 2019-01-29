@@ -1,8 +1,8 @@
 import { FsParser, FsResolver, NodeResolver } from "@resolver-engine/fs";
-import { ImportParser, ImportsEngine } from "@resolver-engine/imports";
+import { ImportFile, ImportParser, ImportsEngine, ResolverEngine } from "@resolver-engine/imports";
 import { EthPmResolver } from "./resolvers/ethpmresolver";
 
-export function ImportsFsEngine() {
+export function ImportsFsEngine(): ResolverEngine<ImportFile> {
   return ImportsEngine()
     .addResolver(FsResolver())
     .addResolver(NodeResolver())
