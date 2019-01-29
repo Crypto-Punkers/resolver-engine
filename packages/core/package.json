@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",
@@ -10,12 +10,6 @@
     "build": "tsc",
     "tsc": "tsc",
     "clean": "rimraf build/"
-  },
-  "devDependencies": {
-    "@types/debug": "^0.0.31",
-    "@types/request": "^2.47.0",
-    "rimraf": "^2.6.2",
-    "typescript": "^3.2.4"
   },
   "dependencies": {
     "debug": "^3.1.0",

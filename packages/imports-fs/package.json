@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/imports-fs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",
@@ -9,18 +9,13 @@
   "scripts": {
     "build": "tsc",
     "tsc": "tsc",
-    "clean": "rimraf build/"
-  },
-  "devDependencies": {
-    "@types/debug": "^0.0.31",
-    "@types/node": "^10.12.18",
-    "rimraf": "^2.6.2",
-    "typescript": "^3.2.4"
+    "clean": "rimraf build/",
+    "publish": "lerna publish"
   },
   "dependencies": {
-    "debug": "^3.1.0",
-    "@resolver-engine/core": "^0.1.1",
-    "@resolver-engine/imports": "^0.1.1",
-    "@resolver-engine/fs": "^0.1.1"
+    "@resolver-engine/core": "^0.2.0",
+    "@resolver-engine/fs": "^0.2.0",
+    "@resolver-engine/imports": "^0.2.0",
+    "debug": "^3.1.0"
   }
 }
