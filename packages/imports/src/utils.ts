@@ -96,7 +96,51 @@ export async function gatherSources(
   workingDir: string,
   resolver: ResolverEngine<ImportFile>,
 ): Promise<ImportFile[]> {
-  return stripNodes(await gatherDepenencyTree(roots, workingDir, resolver));
+  let result: ImportFile[] = [];
+  let queue: { cwd: string; file: string; retativeTo: string }[] = [];
+  let alreadyImported = new Set();
+
+  // solc resolves relative paths starting from current file's path, so if we leave relative path then
+  // imported path "../../a/b/c.sol" from file "file.sol" resolves to a/b/c.sol, which is wrong.
+  // we start from file;s absolute path so relative path can resolve correctly
+  const absoluteRoots = roots.map(what => path.resolve(workingDir, what));
+  for (const absWhat of absoluteRoots) {
+    queue.push({ cwd: workingDir, file: absWhat, retativeTo: workingDir });
+    alreadyImported.add(absWhat);
+  }
+  while (queue.length > 0) {
+    const fileData = queue.shift()!;
+    const resolvedFile: ImportFile = await resolver.require(fileData.file, fileData.cwd);
+    const foundImports = findImports(resolvedFile);
+
+    // if imported path starts with '.' we assume it's relative and return it's
+    // path relative to resolved name of the file that imported it
+    // if not - return the same name it was imported with
+    let relativePath: string;
+    if (fileData.file[0] === ".") {
+      relativePath = path.join(fileData.retativeTo, fileData.file);
+      result.push({ url: relativePath, source: resolvedFile.source });
+    } else {
+      relativePath = fileData.file;
+      result.push({ url: relativePath, source: resolvedFile.source });
+    }
+
+    const fileParentDir = path.dirname(resolvedFile.url);
+    for (const i in foundImports) {
+      let hopsasaName: string;
+      if (i[0] === ".") {
+        hopsasaName = path.join(relativePath, i);
+      } else {
+        hopsasaName = foundImports[i];
+      }
+      if (!alreadyImported.has(hopsasaName)) {
+        alreadyImported.add(hopsasaName);
+        queue.push({ cwd: fileParentDir, file: foundImports[i], retativeTo: path.dirname(relativePath) });
+      }
+    }
+  }
+
+  return result;
 }
 
 /**
