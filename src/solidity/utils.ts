@@ -55,14 +55,14 @@ export async function gatherSources(
 
     // if imported path starts with '.' we assume it's relative and return it's absolute path
     // if not - return the same name it was imported with
-    let szastPrast: string;
+    let relativePath: string;
     if (fileData.file[0] === ".") {
       // result.push(resolvedFile);
-      szastPrast = path.join(fileData.retativeTo, fileData.file);
-      result.push({ url: szastPrast, source: resolvedFile.source });
+      relativePath = path.join(fileData.retativeTo, fileData.file);
+      result.push({ url: relativePath, source: resolvedFile.source });
     } else {
-      szastPrast = fileData.file;
-      result.push({ url: szastPrast, source: resolvedFile.source });
+      relativePath = fileData.file;
+      result.push({ url: relativePath, source: resolvedFile.source });
     }
 
     const fileParentDir = path.dirname(resolvedFile.url);
@@ -70,7 +70,7 @@ export async function gatherSources(
       const solidifiedName: string = solidifyName(foundImports[i]);
       if (!alreadyImported.has(solidifiedName)) {
         alreadyImported.add(solidifiedName);
-        queue.push({ cwd: fileParentDir, file: foundImports[i], retativeTo: path.dirname(szastPrast) });
+        queue.push({ cwd: fileParentDir, file: foundImports[i], retativeTo: path.dirname(relativePath) });
       }
     }
   }
