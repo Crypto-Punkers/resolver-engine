@@ -1,6 +1,6 @@
 jest.mock("fs");
 import { ResolverEngine } from "@resolver-engine/core";
-import { gatherSources, ImportFile } from "@resolver-engine/imports";
+import { gatherSources, ImportFile, UGLY_HACK } from "@resolver-engine/imports";
 import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import { vol } from "memfs";
 import deepequal = require("deep-equal");
@@ -13,6 +13,7 @@ function expectedOutput(filesObj: dictionary): ImportFile[] {
     result.push({
       url: process.cwd() + "/" + k,
       source: filesObj[k],
+      provider: UGLY_HACK,
     });
   }
   return result;
