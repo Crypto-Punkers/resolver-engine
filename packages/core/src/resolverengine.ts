@@ -1,7 +1,7 @@
 import Debug from "debug";
-import { SubParser } from "./parsers/subparser";
+import { ParserContext, SubParser } from "./parsers/subparser";
 import { ResolverContext, SubResolver } from "./resolvers/subresolver";
-import { firstResult } from "./utils";
+import { contextualizedFirstResult, firstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
 
@@ -24,7 +24,7 @@ export class ResolverEngine<R> {
   public async resolve(uri: string, workingDir?: string): Promise<string> {
     debug(`Resolving "${uri}"`);
 
-    const ctx: ResolverContext = {
+    let ctx: ResolverContext = {
       cwd: workingDir,
     };
 
@@ -42,9 +42,19 @@ export class ResolverEngine<R> {
   public async require(uri: string, workingDir?: string): Promise<R> {
     debug(`Requiring "${uri}"`);
 
-    const url = await this.resolve(uri, workingDir);
+    let ctx: ParserContext & ResolverContext = {
+      resolver: "",
+      cwd: workingDir,
+    };
 
-    const result = await firstResult(this.parsers, parser => parser(url));
+    // last context retrieves the resolver used for resolving the uri
+    const url = await contextualizedFirstResult(this.resolvers, resolver => resolver(uri, ctx), ctx);
+
+    if (url === null) {
+      throw new Error(`None of the sub-resolvers resolved "${uri}" location.`); // FIXME, code duplication
+    }
+
+    const result = await firstResult(this.parsers, parser => parser(url, ctx));
 
     if (result === null) {
       throw new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);

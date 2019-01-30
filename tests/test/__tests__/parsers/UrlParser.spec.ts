@@ -28,7 +28,7 @@ describe(UrlParser, () => {
   });
 
   it.each(data)("should parse %o into %o", async (input, expected) => {
-    const output = await parser(input);
+    const output = await parser(input, { resolver: "doesn't matter" });
     expect(output).toBe(expected);
   });
 });
