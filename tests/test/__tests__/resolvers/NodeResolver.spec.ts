@@ -1,5 +1,5 @@
 jest.mock("fs");
-import { NodeResolver } from "@resolver-engine/fs";
+import { resolvers } from "@resolver-engine/imports-fs";
 import { vol } from "memfs";
 import mockedFS from "../../MockedFs";
 
@@ -17,7 +17,7 @@ const data = [
 ];
 
 describe("NodeResolver", () => {
-  const subject = NodeResolver();
+  const subject = resolvers.NodeResolver();
   beforeEach(() => {
     vol.fromJSON(mockedFS);
   });

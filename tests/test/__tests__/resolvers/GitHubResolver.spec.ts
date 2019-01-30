@@ -1,4 +1,4 @@
-import { GithubResolver } from "@resolver-engine/imports";
+import { resolvers } from "@resolver-engine/imports-fs";
 
 const data = [
   ["", null],
@@ -49,7 +49,7 @@ const data = [
 ];
 
 describe("GitHubResolver", () => {
-  const subject = GithubResolver();
+  const subject = resolvers.GithubResolver();
 
   it.each(data)("testing %o", async (input, output) => {
     const actualOutput = await subject(input, { resolver: "" });

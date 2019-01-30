@@ -1,4 +1,4 @@
-import { SwarmResolver } from "@resolver-engine/imports";
+import { resolvers } from "@resolver-engine/imports-fs";
 
 const data = [
   ["", null],
@@ -13,7 +13,7 @@ const data = [
 ];
 
 describe("SwarmResolver", () => {
-  const subject = SwarmResolver();
+  const subject = resolvers.SwarmResolver();
 
   it.each(data)("testing %o", async (input, output) => {
     const actualOutput = await subject(input, { resolver: "" });

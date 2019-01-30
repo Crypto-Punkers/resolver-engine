@@ -1,12 +1,12 @@
-import { UrlParser } from "@resolver-engine/core/build/src/parsers";
+import { parsers } from "@resolver-engine/imports-fs";
 import nock from "nock";
 
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
 const data = incorrectUrls.concat(correctUrls);
 
-describe(UrlParser, () => {
-  const parser = UrlParser();
+describe("UrlParser", () => {
+  const parser = parsers.UrlParser();
 
   beforeAll(() => {
     nock.disableNetConnect();
