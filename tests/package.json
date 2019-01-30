@@ -2,8 +2,6 @@
   "name": "tests",
   "private": true,
   "version": "1.0.0",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",
   "author": "Olaf Tomalka <olaf@tomalka.me>",
   "license": "LGPL-3.0-or-later",
@@ -15,17 +13,11 @@
     "@types/jest": "^23.3.13",
     "@types/nock": "^9.3.1",
     "@types/node": "^10.12.18",
-    "jest": ">=22.0.0 <23.0.0",
+    "jest": "^24.0.0",
     "memfs": "^2.15.0",
     "nock": "^10.0.6",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.10.5",
     "typescript": "^3.2.4"
-  },
-  "dependencies": {
-    "@resolver-engine/core": "^0.2.0",
-    "@resolver-engine/fs": "^0.2.0",
-    "@resolver-engine/imports": "^0.2.0",
-    "@resolver-engine/imports-fs": "^0.2.0"
   }
 }

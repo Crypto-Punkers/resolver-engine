@@ -10,4 +10,5 @@ module.exports = {
       tsConfig: "./tsconfig.json",
     },
   },
+  testURL: "https://twojastara.com",
 };
