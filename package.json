@@ -20,7 +20,7 @@
     "@types/node": "^10.12.18",
     "@types/request": "^2.47.0",
     "lerna": "^3.10.7",
-    "prettier": "1.16.1",
+    "prettier": "1.16.2",
     "rimraf": "^2.6.2",
     "typescript": "^3.2.4",
     "wsrun": "^3.6.2"
