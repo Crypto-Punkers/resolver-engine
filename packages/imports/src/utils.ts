@@ -119,10 +119,10 @@ export async function gatherSources(
     let relativePath: string;
     if (fileData.file[0] === ".") {
       relativePath = path.join(fileData.retativeTo, fileData.file);
-      result.push({ url: relativePath, source: resolvedFile.source });
+      result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     } else {
       relativePath = fileData.file;
-      result.push({ url: relativePath, source: resolvedFile.source });
+      result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     }
 
     const fileParentDir = path.dirname(resolvedFile.url);
