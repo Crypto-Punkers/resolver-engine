@@ -10,6 +10,7 @@
     "build-fs": "tsc -p packages/fs/tsconfig.json",
     "build-imports": "tsc -p packages/imports/tsconfig.json",
     "build-imports-fs": "tsc -p packages/imports-fs/tsconfig.json",
+    "build-ordered": "yarn build-core && yarn build-fs && yarn build-imports && yarn build-imports-fs",
     "watch": "tsc -b --watch tsproject.json",
     "clean": "wsrun --exclude-missing clean",
     "test": "yarn workspace tests test",
