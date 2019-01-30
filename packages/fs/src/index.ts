@@ -9,9 +9,11 @@ export const resolvers = {
   FsResolver,
   NodeResolver,
   UriResolver: core_r.UriResolver,
+  // ...core_r,
 };
 
 export const parsers = {
   FsParser,
   UrlParser: core_p.UrlParser,
+  // ...core_p,
 };

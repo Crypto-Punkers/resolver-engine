@@ -11,9 +11,11 @@ export const resolvers = {
   IPFSResolver,
   SwarmResolver,
   UriResolver: core_r.UriResolver,
+  // ...core_r,
 };
 
 export const parsers = {
   ImportParser,
   UrlParser: core_p.UrlParser,
+  // ...core_p,
 };
