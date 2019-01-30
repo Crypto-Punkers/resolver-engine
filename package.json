@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "build": "tsc -b tsproject.json",
+    "build-core": "tsc -p packages/core/tsconfig.json",
     "watch": "tsc -b --watch tsproject.json",
     "clean": "wsrun --exclude-missing clean",
     "test": "yarn workspace tests test",
