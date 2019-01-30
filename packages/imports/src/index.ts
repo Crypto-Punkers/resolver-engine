@@ -10,10 +10,10 @@ export const resolvers = {
   GithubResolver,
   IPFSResolver,
   SwarmResolver,
-  ...core_r,
+  UriResolver: core_r.UriResolver,
 };
 
 export const parsers = {
   ImportParser,
-  ...core_p,
+  UrlParser: core_p.UrlParser,
 };

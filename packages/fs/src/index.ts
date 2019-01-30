@@ -8,10 +8,10 @@ export const resolvers = {
   BacktrackFsResolver,
   FsResolver,
   NodeResolver,
-  ...core_r,
+  UriResolver: core_r.UriResolver,
 };
 
 export const parsers = {
   FsParser,
-  ...core_p,
+  UrlParser: core_p.UrlParser,
 };
