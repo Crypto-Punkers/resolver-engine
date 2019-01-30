@@ -1,7 +1,7 @@
 export { ImportsFsEngine } from "./importsfsengine";
 import { parsers as fs_p, resolvers as fs_r } from "@resolver-engine/fs";
 import { parsers as imp_p, resolvers as imp_r } from "@resolver-engine/imports";
-import { EthPmResolver } from "./resolvers";
+import { EthPmResolver } from "./resolvers/ethpmresolver";
 
 export const resolvers = {
   EthPmResolver,
