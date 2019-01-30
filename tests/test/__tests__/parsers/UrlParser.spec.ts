@@ -1,4 +1,4 @@
-import { UrlParser } from "@resolver-engine/core";
+import { UrlParser } from "@resolver-engine/core/build/src/parsers";
 import nock from "nock";
 
 const incorrectUrls = [["", null], ["www.google.com", null]];
