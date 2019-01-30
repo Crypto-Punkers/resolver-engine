@@ -57,7 +57,6 @@ export async function gatherSources(
     // if not - return the same name it was imported with
     let relativePath: string;
     if (fileData.file[0] === ".") {
-      // result.push(resolvedFile);
       relativePath = path.join(fileData.retativeTo, fileData.file);
       result.push({ url: relativePath, source: resolvedFile.source });
     } else {
