@@ -1,4 +1,4 @@
-import { firstResult, ParserContext, SubParser } from "@resolver-engine/core";
+import { Context, firstResult, SubParser } from "@resolver-engine/core";
 import Debug from "debug";
 
 const debug = Debug("resolverengine:importparser");
@@ -11,7 +11,7 @@ export interface ImportFile {
 }
 
 export function ImportParser(sourceParsers: SubParser<string>[]): SubParser<ImportFile> {
-  return async (url: string, ctx: ParserContext): Promise<ImportFile | null> => {
+  return async (url: string, ctx: Context): Promise<ImportFile | null> => {
     const source = await firstResult(sourceParsers, parser => parser(url, ctx));
     if (!source) {
       debug(`Can't find source for ${url}`);

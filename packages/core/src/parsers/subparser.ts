@@ -1,5 +1,3 @@
-export interface ParserContext {
-  resolver: string;
-}
+import { Context } from "..";
 
-export type SubParser<R> = (url: string, ctx: ParserContext) => Promise<R | null>;
+export type SubParser<R> = (url: string, ctx: Context) => Promise<R | null>;

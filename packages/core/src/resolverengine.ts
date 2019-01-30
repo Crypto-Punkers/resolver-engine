@@ -1,12 +1,17 @@
 import Debug from "debug";
-import { ParserContext, SubParser } from "./parsers/subparser";
-import { ResolverContext, SubResolver } from "./resolvers/subresolver";
+import { SubParser } from "./parsers/subparser";
+import { SubResolver } from "./resolvers/subresolver";
 import { contextualizedFirstResult, firstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
 
 export interface Options {
   debug?: true;
+}
+
+export interface Context {
+  resolver: string;
+  cwd?: string;
 }
 
 export class ResolverEngine<R> {
@@ -24,8 +29,9 @@ export class ResolverEngine<R> {
   public async resolve(uri: string, workingDir?: string): Promise<string> {
     debug(`Resolving "${uri}"`);
 
-    let ctx: ResolverContext = {
+    let ctx: Context = {
       cwd: workingDir,
+      resolver: "unknown",
     };
 
     const result = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
@@ -42,8 +48,8 @@ export class ResolverEngine<R> {
   public async require(uri: string, workingDir?: string): Promise<R> {
     debug(`Requiring "${uri}"`);
 
-    let ctx: ParserContext & ResolverContext = {
-      resolver: "",
+    let ctx: Context = {
+      resolver: "unknown",
       cwd: workingDir,
     };
 

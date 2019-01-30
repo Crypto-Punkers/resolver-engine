@@ -81,7 +81,7 @@ async function gatherDepenencyTree(
 
 function stripNodes(nodes: ImportTreeNode[]): ImportFile[] {
   return nodes.map(node => {
-    return { url: node.url, source: node.source, provider: UGLY_HACK };
+    return { url: node.url, source: node.source, provider: node.provider };
   });
 }
 
@@ -120,5 +120,3 @@ export async function gatherSourcesAndCanonizeImports(
   sources.forEach(canonizeFile);
   return stripNodes(sources);
 }
-
-export const UGLY_HACK = "quick-fix-for-now";

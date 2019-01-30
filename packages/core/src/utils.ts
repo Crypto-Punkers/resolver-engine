@@ -1,5 +1,4 @@
-import { ParserContext } from "./parsers";
-import { ResolverContext } from "./resolvers";
+import { Context } from ".";
 
 export async function firstResult<T, R>(things: T[], check: (thing: T) => Promise<R | null>): Promise<R | null> {
   for (const thing of things) {
@@ -14,7 +13,7 @@ export async function firstResult<T, R>(things: T[], check: (thing: T) => Promis
 export async function contextualizedFirstResult<T, R>(
   things: T[],
   check: (thing: T) => Promise<R | null>,
-  ctx: Partial<ParserContext & ResolverContext>,
+  ctx: Context,
 ): Promise<R | null> {
   for (const thing of things) {
     const result = await check(thing);

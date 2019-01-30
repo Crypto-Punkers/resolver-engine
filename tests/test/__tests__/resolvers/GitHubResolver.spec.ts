@@ -52,7 +52,7 @@ describe("GitHubResolver", () => {
   const subject = GithubResolver();
 
   it.each(data)("testing %o", async (input, output) => {
-    const actualOutput = await subject(input, {});
+    const actualOutput = await subject(input, { resolver: "" });
     expect(actualOutput).toBe(output);
   });
 });

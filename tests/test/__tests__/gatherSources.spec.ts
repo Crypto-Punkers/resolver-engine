@@ -1,25 +1,24 @@
 jest.mock("fs");
 import { ResolverEngine } from "@resolver-engine/core";
-import { gatherSources, ImportFile, UGLY_HACK } from "@resolver-engine/imports";
+import { gatherSources, ImportFile } from "@resolver-engine/imports";
 import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import { vol } from "memfs";
-import deepequal = require("deep-equal");
 
 type dictionary = { [s: string]: string };
 
-function expectedOutput(filesObj: dictionary): ImportFile[] {
+function expectedOutput(filesObj: dictionary, provider: string): ImportFile[] {
   let result: ImportFile[] = [];
   for (const k of Object.keys(filesObj)) {
     result.push({
       url: process.cwd() + "/" + k,
       source: filesObj[k],
-      provider: UGLY_HACK,
+      provider: provider,
     });
   }
   return result;
 }
 
-const data: [string, dictionary, [string], string][] = [
+const data: [string, dictionary, [string], string, string][] = [
   [
     "gathers files included by given file",
     {
@@ -29,6 +28,7 @@ const data: [string, dictionary, [string], string][] = [
     },
     ["mainfile.sol"],
     __dirname,
+    "fs",
   ],
   [
     "gathers files imported by imported files",
@@ -39,6 +39,7 @@ const data: [string, dictionary, [string], string][] = [
     },
     ["mainfile.sol"],
     __dirname,
+    "fs",
   ],
   [
     "does not include the same file twice",
@@ -49,17 +50,9 @@ const data: [string, dictionary, [string], string][] = [
     },
     ["mainfile.sol"],
     __dirname,
+    "fs",
   ],
 ];
-
-/**
- * Checks if a is contained in b, using deep comparison on objects.
- * @param a
- * @param b
- */
-function deepSubset<T>(a: T[], b: T[]): boolean {
-  return a.every(obj1 => b.some(obj2 => deepequal(obj1, obj2)));
-}
 
 describe("gatherSources function", function() {
   const resolver: ResolverEngine<ImportFile> = ImportsFsEngine();
@@ -74,12 +67,14 @@ describe("gatherSources function", function() {
     vol.reset();
   });
 
-  it.each(data)("%s", async function(message, test_fs, input, cwd) {
-    const EXPECTED_FILES = expectedOutput(test_fs);
+  it.each(data)("%s", async function(message, test_fs, input, cwd, provider) {
+    const EXPECTED_FILES = expectedOutput(test_fs, provider);
 
     vol.fromJSON(test_fs);
     const fileList = await gatherSources(input, cwd, resolver);
-    expect(deepSubset(EXPECTED_FILES, fileList)).toBe(true);
+    fileList.forEach(file => {
+      expect(EXPECTED_FILES).toContainEqual(file);
+    });
   });
 
   it("throws when imported file doesn't exist", async function() {

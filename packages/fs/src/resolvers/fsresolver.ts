@@ -1,4 +1,4 @@
-import { ResolverContext, SubResolver } from "@resolver-engine/core";
+import { Context, SubResolver } from "@resolver-engine/core";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -15,7 +15,7 @@ const statAsync = (path: string): Promise<fs.Stats> =>
 const NO_FILE = "ENOENT";
 
 export function FsResolver(): SubResolver {
-  return async (resolvePath: string, ctx: ResolverContext): Promise<string | null> => {
+  return async function fs(resolvePath: string, ctx: Context): Promise<string | null> {
     const cwd = ctx.cwd || process.cwd();
 
     let myPath: string;
