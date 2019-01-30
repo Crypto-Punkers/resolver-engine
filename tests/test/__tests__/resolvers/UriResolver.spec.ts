@@ -1,4 +1,4 @@
-import { resolvers } from "@resolver-engine/imports-fs";
+import { resolvers } from "../../../../packages/imports-fs/src";
 
 const data = [
   ["", null],

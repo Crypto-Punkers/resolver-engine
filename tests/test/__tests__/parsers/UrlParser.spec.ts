@@ -1,5 +1,5 @@
-import { parsers } from "@resolver-engine/imports-fs";
 import nock from "nock";
+import { parsers } from "../../../../packages/imports-fs/src";
 
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
