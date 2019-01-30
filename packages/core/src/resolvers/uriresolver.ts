@@ -1,5 +1,5 @@
-import { SubResolver } from ".";
 import { Context } from "..";
+import { SubResolver } from "./subresolver";
 
 export function UriResolver(): SubResolver {
   // TODO: make a resolver that actually checks if something is a valid http link

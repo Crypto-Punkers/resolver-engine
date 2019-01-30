@@ -1,6 +1,6 @@
 import Debug from "debug";
 import request from "request";
-import { SubParser } from ".";
+import { SubParser } from "./subparser";
 
 const debug = Debug("resolverengine:urlparser");
 
