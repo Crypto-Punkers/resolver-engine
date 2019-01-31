@@ -1,12 +1,12 @@
-import { UrlParser } from "@resolver-engine/core";
 import nock from "nock";
+import { parsers } from "@resolver-engine/imports-fs";
 
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
 const data = incorrectUrls.concat(correctUrls);
 
-describe(UrlParser, () => {
-  const parser = UrlParser();
+describe("UrlParser", () => {
+  const parser = parsers.UrlParser();
 
   beforeAll(() => {
     nock.disableNetConnect();
@@ -28,7 +28,7 @@ describe(UrlParser, () => {
   });
 
   it.each(data)("should parse %o into %o", async (input, expected) => {
-    const output = await parser(input);
+    const output = await parser(input, { resolver: "doesn't matter" });
     expect(output).toBe(expected);
   });
 });

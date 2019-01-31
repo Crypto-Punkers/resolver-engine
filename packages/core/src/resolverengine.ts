@@ -1,9 +1,12 @@
 import Debug from "debug";
+import { Context } from "./context";
 import { SubParser } from "./parsers/subparser";
-import { ResolverContext, SubResolver } from "./resolvers/subresolver";
+import { SubResolver } from "./resolvers/subresolver";
 import { firstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
+
+const UNKNOWN_RESOLVER = "unknown";
 
 export interface Options {
   debug?: true;
@@ -24,33 +27,48 @@ export class ResolverEngine<R> {
   public async resolve(uri: string, workingDir?: string): Promise<string> {
     debug(`Resolving "${uri}"`);
 
-    const ctx: ResolverContext = {
+    const ctx: Context = {
       cwd: workingDir,
+      resolver: UNKNOWN_RESOLVER,
     };
 
     const result = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
 
     if (result === null) {
-      throw new Error(`None of the sub-resolvers resolved "${uri}" location.`);
+      throw resolverError(uri);
     }
 
     debug(`Resolved "${uri}" into "${result}"`);
 
-    return result;
+    return result.result;
   }
 
   public async require(uri: string, workingDir?: string): Promise<R> {
     debug(`Requiring "${uri}"`);
 
-    const url = await this.resolve(uri, workingDir);
+    const ctx: Context = {
+      resolver: UNKNOWN_RESOLVER,
+      cwd: workingDir,
+    };
 
-    const result = await firstResult(this.parsers, parser => parser(url));
+    const url = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
 
-    if (result === null) {
-      throw new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);
+    if (url === null) {
+      throw resolverError(uri);
     }
 
-    return result;
+    // Through the context we extract information about execution details like the resolver that actually succeeded
+    const resolver: any = this.resolvers[url.index];
+    const name = typeof resolver === "function" ? resolver.name : resolver.toString();
+    ctx.resolver = name;
+
+    const result = await firstResult(this.parsers, parser => parser(url.result, ctx));
+
+    if (result === null) {
+      throw parserError(uri);
+    }
+
+    return result.result;
   }
 
   public addResolver(resolver: SubResolver): ResolverEngine<R> {
@@ -63,3 +81,7 @@ export class ResolverEngine<R> {
     return this;
   }
 }
+
+const resolverError = (uri: string) => new Error(`None of the sub-resolvers resolved "${uri}" location.`);
+const parserError = (uri: string) =>
+  new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);

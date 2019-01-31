@@ -1,1 +1,2 @@
-export type SubParser<R> = (url: string) => Promise<R | null>;
+import { Context } from "../context";
+export type SubParser<R> = (url: string, ctx: Context) => Promise<R | null>;

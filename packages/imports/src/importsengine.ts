@@ -1,6 +1,8 @@
-import { ResolverEngine, UriResolver, UrlParser } from "@resolver-engine/core";
+import { parsers, ResolverEngine, resolvers } from "@resolver-engine/core";
 import { ImportFile, ImportParser } from "./parsers/importparser";
 import { GithubResolver } from "./resolvers/githubresolver";
+import { IPFSResolver } from "./resolvers/ipfsresolver";
+import { SwarmResolver } from "./resolvers/swarmresolver";
 
 export function ImportsEngine(): ResolverEngine<ImportFile> {
   return (
@@ -9,7 +11,9 @@ export function ImportsEngine(): ResolverEngine<ImportFile> {
       //.addResolver(EthPmResolver())
       //.addResolver(NodeResolver())
       .addResolver(GithubResolver())
-      .addResolver(UriResolver())
-      .addParser(ImportParser([UrlParser()]))
+      .addResolver(SwarmResolver())
+      .addResolver(IPFSResolver())
+      .addResolver(resolvers.UriResolver())
+      .addParser(ImportParser([parsers.UrlParser()]))
   );
 }

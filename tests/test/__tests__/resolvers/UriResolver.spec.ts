@@ -1,4 +1,4 @@
-import { UriResolver } from "@resolver-engine/core";
+import { resolvers } from "@resolver-engine/core";
 
 const data = [
   ["", null],
@@ -12,10 +12,10 @@ const data = [
 ];
 
 describe("UriResolver", () => {
-  const subject = UriResolver();
+  const subject = resolvers.UriResolver();
 
   it.each(data)("testing %o", async (input, output) => {
-    const actualOutput = await subject(input, {});
+    const actualOutput = await subject(input, { resolver: "" });
     expect(actualOutput).toBe(output);
   });
 });
