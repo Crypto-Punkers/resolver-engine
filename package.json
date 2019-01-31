@@ -12,7 +12,7 @@
     "build:imports-fs": "tsc -p packages/imports-fs/tsconfig.json",
     "watch": "tsc -b --watch tsproject.json",
     "clean": "wsrun --exclude-missing clean",
-    "test": "yarn workspace tests test",
+    "test": "wsrun -p tests --stages test",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'"
   },
   "devDependencies": {
