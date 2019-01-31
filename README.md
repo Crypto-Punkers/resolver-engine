@@ -8,30 +8,51 @@
   </p>
 </p>
 
-## Usage
+## Example usage
 
-We provide a pre-built complete engine with sane defaults.
+We provide a pre-built complete engine with _sane_ defaults.
+Resolver-engine is a common importing interface for _all_ the Ethereum inventions out there.
 
 ```typescript
-import { SolidityImportResolver } from "resolver-engine";
+import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 
-const resolver = SolidityImportResolver();
+const resolver = ImportsFsEngine();
 
+// these all resolve the same resource
 resolver
   .require("@zeppelin-solidity/contracts/Ownable.sol")
+  .then(console.log)
+  .require("github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol")
+  .then(console.log)
+  .require("https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/ownership/Secondary.sol")
+  .then(console.log)
+  .require("https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Secondary.sol")
+  .then(console.log)
+  .catch(console.error);
+
+// first contract released, compatible with solidity ^0.4.24
+resolver
+  .require(
+    "https://github.com/OpenZeppelin/openzeppelin-solidity/blob/f12817e446fcd3d7212fe307bb17424ceb28f0b9/contracts/ownership/Ownable.sol",
+  )
+  .then(console.log)
+  .require(
+    "github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol#f12817e446fcd3d7212fe307bb17424ceb28f0b9",
+  )
   .then(console.log)
   .catch(console.error);
 ```
 
-Otherwise, you can build your own engines
+Otherwise, you can build your own engines, suited to your needs.
 
 ```typescript
-import { ResolverEngine, NodeResolver, FsResolver, FsParser } from "resolver-engine";
+import { ResolverEngine } from "@resolver-engine/core";
+import { parsers, resolvers } from "@resolver-engine/imports-fs";
 
 const resolver = new ResolverEngine<string>()
-  .addResolver(FsResolver("contracts/"))
-  .addResolver(NodeResolver())
-  .addParser(FsParser());
+  .addResolver(resolvers.FsResolver())
+  .addResolver(resolvers.NodeResolver())
+  .addParser(parsers.FsParser());
 
 resolver
   .resolve("@openzeppelin-solidity/contracts/ownership/Ownable.sol")
@@ -39,9 +60,26 @@ resolver
   .catch(console.error);
 ```
 
-In the [`examples/` folder](examples/) more granular examples can be found
+```typescript
+import { parsers, resolvers, ResolverEngine } from "@resolver-engine/core";
 
-## Why
+const resolver = new ResolverEngine<string>().addResolver(resolvers.UriResolver()).addParser(parsers.UrlParser());
+
+resolver.resolve("https://pastebin.com/raw/D8ziKX0a").then(console.log);
+```
+
+In the [`examples/` folder](examples/) more granular examples can be found.
+
+### Published packages
+
+| Package                                               | NPM                                                                                                                                   | Description                                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [`@resolver-engine/core`](packages/core)              | [![npm link](https://img.shields.io/badge/npm-core-blue.svg)](https://www.npmjs.com/package/@resolver-engine/core)                    | Core of the object consisting of the core engine and interfaces              |
+| [`@resolver-engine/fs`](packages/fs)                  | [![npm link](https://img.shields.io/badge/npm-tslint--rules-blue.svg)](https://www.npmjs.com/package/@resolver-engine/fs)             | Filesystem abstractions, basis for future artifacts resolver and many others |
+| [`@resolver-engine/imports`](/packages/imports)       | [![npm link](https://img.shields.io/badge/npm-utils-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports)                | Browser-friendly version of the resolver                                     |
+| [`@resolver-engine/imports-fs`](/packages/imports-fs) | [![npm link](https://img.shields.io/badge/npm-typescript--types-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports-fs) | Light-weight, but still capable of doing everything mentioned above          |
+
+## Long description
 
 Each Solidity framework has different logic concerning Solidity import statements as well as creating different format of artifacts. This becomes problematic when target developers want to use multiple tools on the same codebase.
 
