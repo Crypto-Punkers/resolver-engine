@@ -6,6 +6,8 @@ import { contextualizedFirstResult, firstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
 
+const UNKNOWN_RESOLVER = "unknown";
+
 export interface Options {
   debug?: true;
 }
@@ -27,7 +29,7 @@ export class ResolverEngine<R> {
 
     const ctx: Context = {
       cwd: workingDir,
-      resolver: "unknown",
+      resolver: UNKNOWN_RESOLVER,
     };
 
     const result = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
@@ -45,7 +47,7 @@ export class ResolverEngine<R> {
     debug(`Requiring "${uri}"`);
 
     const ctx: Context = {
-      resolver: "unknown",
+      resolver: UNKNOWN_RESOLVER,
       cwd: workingDir,
     };
 
