@@ -40,7 +40,7 @@ export class ResolverEngine<R> {
 
     debug(`Resolved "${uri}" into "${result}"`);
 
-    return result;
+    return result.result;
   }
 
   public async require(uri: string, workingDir?: string): Promise<R> {
@@ -51,20 +51,24 @@ export class ResolverEngine<R> {
       cwd: workingDir,
     };
 
-    // through the context we extract information about execution details like the resolver that actually succeeded
-    const url = await firstResult(this.resolvers, resolver => resolver(uri, ctx), ctx);
+    const url = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
 
     if (url === null) {
       throw resolverError(uri);
     }
 
-    const result = await firstResult(this.parsers, parser => parser(url, ctx));
+    // Through the context we extract information about execution details like the resolver that actually succeeded
+    const resolver: any = this.resolvers[url.index];
+    const name = typeof resolver === "function" ? resolver.name : resolver.toString();
+    ctx.resolver = name;
+
+    const result = await firstResult(this.parsers, parser => parser(url.result, ctx));
 
     if (result === null) {
       throw parserError(uri);
     }
 
-    return result;
+    return result.result;
   }
 
   public addResolver(resolver: SubResolver): ResolverEngine<R> {

@@ -20,7 +20,7 @@ export function ImportParser(sourceParsers: SubParser<string>[]): SubParser<Impo
     const provider = ctx.resolver;
     return {
       url,
-      source,
+      source: source.result,
       provider,
     };
   };
