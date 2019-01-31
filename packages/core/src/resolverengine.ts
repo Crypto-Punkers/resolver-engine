@@ -2,7 +2,7 @@ import Debug from "debug";
 import { Context } from "./context";
 import { SubParser } from "./parsers/subparser";
 import { SubResolver } from "./resolvers/subresolver";
-import { contextualizedFirstResult, firstResult } from "./utils";
+import { firstResult } from "./utils";
 
 const debug = Debug("resolverengine:main");
 
@@ -52,7 +52,7 @@ export class ResolverEngine<R> {
     };
 
     // through the context we extract information about execution details like the resolver that actually succeeded
-    const url = await contextualizedFirstResult(this.resolvers, resolver => resolver(uri, ctx), ctx);
+    const url = await firstResult(this.resolvers, resolver => resolver(uri, ctx), ctx);
 
     if (url === null) {
       throw resolverError(uri);
