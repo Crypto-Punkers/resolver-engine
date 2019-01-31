@@ -1,13 +1,13 @@
-import { FsParser, FsResolver, GithubResolver, NodeResolver, ResolverEngine, UriResolver } from "../src";
-import { UrlParser } from "../src/parsers/urlparser";
+import { ResolverEngine } from "@resolver-engine/core";
+import { resolvers, parsers} from "@resolver-engine/imports-fs";
 
 const resolver = new ResolverEngine<string>()
-  .addResolver(FsResolver())
-  .addResolver(NodeResolver())
-  .addResolver(GithubResolver())
-  .addResolver(UriResolver())
-  .addParser(UrlParser())
-  .addParser(FsParser());
+  .addResolver(resolvers.FsResolver())
+  .addResolver(resolvers.NodeResolver())
+  .addResolver(resolvers.GithubResolver())
+  .addResolver(resolvers.UriResolver())
+  .addParser(parsers.UrlParser())
+  .addParser(parsers.FsParser());
 
 async function print(path: string) {
   console.log(path);
