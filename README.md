@@ -13,14 +13,11 @@
 We provide a pre-built complete engine with sane defaults.
 
 ```typescript
-import { SolidityImportResolver } from "resolver-engine";
+import { ImportFsEngine } from "@resolver-engine/import-fs";
 
-const resolver = SolidityImportResolver();
-
-resolver
-  .require("@zeppelin-solidity/contracts/Ownable.sol")
-  .then(console.log)
-  .catch(console.error);
+ImportFsEngine()
+  .require("github:OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol#v2.1.2")
+  .then(file => console.log(`Loaded url ${file.url} with source: ${file.source}`);
 ```
 
 Otherwise, you can build your own engines
@@ -35,7 +32,7 @@ const resolver = new ResolverEngine<string>()
 
 resolver
   .resolve("@openzeppelin-solidity/contracts/ownership/Ownable.sol")
-  .then(console.log)
+  .then(fileSource => console.log(fileSource))
   .catch(console.error);
 ```
 
