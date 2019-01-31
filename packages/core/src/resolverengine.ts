@@ -29,7 +29,7 @@ export class ResolverEngine<R> {
   public async resolve(uri: string, workingDir?: string): Promise<string> {
     debug(`Resolving "${uri}"`);
 
-    let ctx: Context = {
+    const ctx: Context = {
       cwd: workingDir,
       resolver: "unknown",
     };
@@ -48,7 +48,7 @@ export class ResolverEngine<R> {
   public async require(uri: string, workingDir?: string): Promise<R> {
     debug(`Requiring "${uri}"`);
 
-    let ctx: Context = {
+    const ctx: Context = {
       resolver: "unknown",
       cwd: workingDir,
     };

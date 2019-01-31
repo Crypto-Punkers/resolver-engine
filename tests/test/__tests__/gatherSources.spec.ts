@@ -1,7 +1,7 @@
 jest.mock("fs");
 import { vol } from "memfs";
-import { ImportsFsEngine } from "../../../packages/imports-fs/src";
-import { gatherSources, ImportFile } from "../../../packages/imports/src";
+import { ImportsFsEngine } from "@resolver-engine/imports-fs";
+import { gatherSources, ImportFile } from "@resolver-engine/imports";
 
 type dictionary = { [s: string]: string };
 
@@ -54,7 +54,7 @@ const data: [string, dictionary, [string], string, string][] = [
 ];
 
 describe("gatherSources function", function() {
-  const resolvr = ImportsFsEngine();
+  const resolver = ImportsFsEngine();
 
   beforeAll(function() {
     // when using mock fs, we are being thrown into the root of the filesystem
@@ -70,7 +70,7 @@ describe("gatherSources function", function() {
     const EXPECTED_FILES = expectedOutput(test_fs, provider);
 
     vol.fromJSON(test_fs);
-    const fileList = await gatherSources(input, cwd, resolvr);
+    const fileList = await gatherSources(input, cwd, resolver);
     fileList.forEach(file => {
       expect(EXPECTED_FILES).toContainEqual(file);
     });
@@ -82,6 +82,6 @@ describe("gatherSources function", function() {
     };
 
     vol.fromJSON(test_fs);
-    await expect(gatherSources(["main.sol"], __dirname, resolvr)).rejects.toThrowError();
+    await expect(gatherSources(["main.sol"], __dirname, resolver)).rejects.toThrowError();
   });
 });

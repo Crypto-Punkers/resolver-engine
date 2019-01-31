@@ -1,4 +1,4 @@
-import { parsers as core_p, resolvers as core_r } from "@resolver-engine/core";
+import { parsers as coreParsers, resolvers as coreResolvers } from "@resolver-engine/core";
 import { FsParser } from "./parsers/fsparser";
 import { BacktrackFsResolver } from "./resolvers/backtrackfsresolver";
 import { FsResolver } from "./resolvers/fsresolver";
@@ -8,12 +8,12 @@ export const resolvers = {
   BacktrackFsResolver,
   FsResolver,
   NodeResolver,
-  UriResolver: core_r.UriResolver,
-  // ...core_r,
+  UriResolver: coreResolvers.UriResolver,
+  // ...coreResolvers,
 };
 
 export const parsers = {
   FsParser,
-  UrlParser: core_p.UrlParser,
-  // ...core_p,
+  UrlParser: coreParsers.UrlParser,
+  // ...coreParsers,
 };

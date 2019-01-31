@@ -97,7 +97,7 @@ export async function gatherSources(
   resolver: ResolverEngine<ImportFile>,
 ): Promise<ImportFile[]> {
   let result: ImportFile[] = [];
-  let queue: { cwd: string; file: string; retativeTo: string }[] = [];
+  let queue: { cwd: string; file: string; relativeTo: string }[] = [];
   let alreadyImported = new Set();
 
   // solc resolves relative paths starting from current file's path, so if we leave relative path then
@@ -105,7 +105,7 @@ export async function gatherSources(
   // we start from file;s absolute path so relative path can resolve correctly
   const absoluteRoots = roots.map(what => path.resolve(workingDir, what));
   for (const absWhat of absoluteRoots) {
-    queue.push({ cwd: workingDir, file: absWhat, retativeTo: workingDir });
+    queue.push({ cwd: workingDir, file: absWhat, relativeTo: workingDir });
     alreadyImported.add(absWhat);
   }
   while (queue.length > 0) {
@@ -118,7 +118,7 @@ export async function gatherSources(
     // if not - return the same name it was imported with
     let relativePath: string;
     if (fileData.file[0] === ".") {
-      relativePath = path.join(fileData.retativeTo, fileData.file);
+      relativePath = path.join(fileData.relativeTo, fileData.file);
       result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     } else {
       relativePath = fileData.file;
@@ -127,15 +127,15 @@ export async function gatherSources(
 
     const fileParentDir = path.dirname(resolvedFile.url);
     for (const i in foundImports) {
-      let hopsasaName: string;
+      let importName: string;
       if (i[0] === ".") {
-        hopsasaName = path.join(relativePath, i);
+        importName = path.join(relativePath, i);
       } else {
-        hopsasaName = foundImports[i];
+        importName = foundImports[i];
       }
-      if (!alreadyImported.has(hopsasaName)) {
-        alreadyImported.add(hopsasaName);
-        queue.push({ cwd: fileParentDir, file: foundImports[i], retativeTo: path.dirname(relativePath) });
+      if (!alreadyImported.has(importName)) {
+        alreadyImported.add(importName);
+        queue.push({ cwd: fileParentDir, file: foundImports[i], relativeTo: path.dirname(relativePath) });
       }
     }
   }
