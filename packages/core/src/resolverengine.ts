@@ -1,4 +1,5 @@
 import Debug from "debug";
+import { Context } from "./context";
 import { SubParser } from "./parsers/subparser";
 import { SubResolver } from "./resolvers/subresolver";
 import { contextualizedFirstResult, firstResult } from "./utils";
@@ -7,11 +8,6 @@ const debug = Debug("resolverengine:main");
 
 export interface Options {
   debug?: true;
-}
-
-export interface Context {
-  resolver: string;
-  cwd?: string;
 }
 
 export class ResolverEngine<R> {
