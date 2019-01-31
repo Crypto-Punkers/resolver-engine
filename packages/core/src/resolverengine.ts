@@ -35,7 +35,7 @@ export class ResolverEngine<R> {
     const result = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
 
     if (result === null) {
-      throw new Error(`None of the sub-resolvers resolved "${uri}" location.`);
+      throw resolverError(uri);
     }
 
     debug(`Resolved "${uri}" into "${result}"`);
@@ -51,17 +51,17 @@ export class ResolverEngine<R> {
       cwd: workingDir,
     };
 
-    // last context retrieves the resolver used for resolving the uri
+    // through the context we extract information about execution details like the resolver that actually succeeded
     const url = await contextualizedFirstResult(this.resolvers, resolver => resolver(uri, ctx), ctx);
 
     if (url === null) {
-      throw new Error(`None of the sub-resolvers resolved "${uri}" location.`); // FIXME, code duplication
+      throw resolverError(uri);
     }
 
     const result = await firstResult(this.parsers, parser => parser(url, ctx));
 
     if (result === null) {
-      throw new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);
+      throw parserError(uri);
     }
 
     return result;
@@ -77,3 +77,7 @@ export class ResolverEngine<R> {
     return this;
   }
 }
+
+const resolverError = (uri: string) => new Error(`None of the sub-resolvers resolved "${uri}" location.`);
+const parserError = (uri: string) =>
+  new Error(`None of the sub-parsers resolved "${uri}" into data. Please confirm your configuration.`);
