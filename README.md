@@ -18,23 +18,8 @@ import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 
 const resolver = ImportsFsEngine();
 
-// these all resolve the same resource
 resolver
-  .require("@zeppelin-solidity/contracts/Ownable.sol")
-  .then(console.log)
   .require("github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol")
-  .then(console.log)
-  .require("https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/ownership/Secondary.sol")
-  .then(console.log)
-  .require("https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Secondary.sol")
-  .then(console.log)
-  .catch(console.error);
-
-// first contract released, compatible with solidity ^0.4.24
-resolver
-  .require("https://github.com/OpenZeppelin/openzeppelin-solidity/blob/f12817e446fcd3d7212fe307bb17424ceb28f0b9/contracts/ownership/Ownable.sol")
-  .then(console.log)
-  .require("github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol#f12817e446fcd3d7212fe307bb17424ceb28f0b9")
   .then(console.log)
   .catch(console.error);
 ```
