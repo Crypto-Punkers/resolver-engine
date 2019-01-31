@@ -21,9 +21,9 @@
     "typescript": "^3.2.4"
   },
   "dependencies": {
-    "@resolver-engine/core": "^0.2.1",
-    "@resolver-engine/fs": "^0.2.1",
-    "@resolver-engine/imports": "^0.2.2",
-    "@resolver-engine/imports-fs": "^0.2.2"
+    "@resolver-engine/core": "^0.3.0",
+    "@resolver-engine/fs": "^0.3.0",
+    "@resolver-engine/imports": "^0.3.0",
+    "@resolver-engine/imports-fs": "^0.3.0"
   }
 }
