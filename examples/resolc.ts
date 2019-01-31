@@ -1,11 +1,13 @@
 //Example usage of ResoverEngine in solcjs-like wrapper for solc
 //Prints only compiled contracts ABI
+//Eg usage: ./resolc contracts/**/*.sol
 
 const solc = require("solc");
 const chalk = require("chalk");
 const yargs = require("yargs");
 
-import { gatherSources } from "../src";
+import { gatherSources } from "@resolver-engine/imports";
+import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import glob = require("glob");
 
 var argv = yargs.argv;
@@ -17,7 +19,7 @@ function missingImport(p: string) {
 }
 
 glob(filesGlob, function(er: Error | null, fileList: Array<string>) {
-  gatherSources(fileList, process.cwd()).then(function(input) {
+  gatherSources(fileList, process.cwd(), ImportsFsEngine()).then(function(input) {
     let sources: { [s: string]: {} } = {};
     for (let file of input) {
       sources[file.url] = { content: file.source };

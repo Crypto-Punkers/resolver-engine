@@ -1,7 +1,7 @@
-import { FsParser, ResolverEngine, UriResolver } from "../src";
+import { ResolverEngine, resolvers, parsers } from "@resolver-engine/core";
 
-const resolver = new ResolverEngine<string>({ debug: true }).addParser(FsParser()).addResolver(UriResolver());
+const resolver = new ResolverEngine<string>({ debug: true }).addParser(parsers.UrlParser()).addResolver(resolvers.UriResolver());
 
 resolver
-  .require("https://raw.githubusercontent.com/ritave/resolver-engine/master/examples/network.ts")
+  .require("https://www.apple.com/library/test/success.html")
   .then(console.log);
