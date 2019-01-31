@@ -44,25 +44,21 @@ resolver
 ```typescript
 import { parsers, resolvers, ResolverEngine } from "@resolver-engine/core";
 
-const resolver = new ResolverEngine<string>()
-  .addResolver(resolvers.UriResolver())
-  .addParser(parsers.UrlParser());
+const resolver = new ResolverEngine<string>().addResolver(resolvers.UriResolver()).addParser(parsers.UrlParser());
 
-resolver
-  .resolve("https://pastebin.com/raw/D8ziKX0a")
-  .then(console.log);
+resolver.resolve("https://pastebin.com/raw/D8ziKX0a").then(console.log);
 ```
 
 In the [`examples/` folder](examples/) more granular examples can be found.
 
 ### Published packages
 
-| Package                                               | NPM                                                                                                                                   | Description                                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [`@resolver-engine/core`](packages/core)              | [![npm link](https://img.shields.io/badge/npm-core-blue.svg)](https://www.npmjs.com/package/@resolver-engine/core)                    | Core of the object consisting of the core engine and interfaces              |
-| [`@resolver-engine/fs`](packages/fs)                  | [![npm link](https://img.shields.io/badge/npm-tslint--rules-blue.svg)](https://www.npmjs.com/package/@resolver-engine/fs)             | Filesystem abstractions, basis for future artifacts resolver and many others |
-| [`@resolver-engine/imports`](/packages/imports)       | [![npm link](https://img.shields.io/badge/npm-utils-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports)                | Browser-friendly version of the resolver                                     |
-| [`@resolver-engine/imports-fs`](/packages/imports-fs) | [![npm link](https://img.shields.io/badge/npm-typescript--types-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports-fs) | Light-weight, but still capable of doing everything mentioned above          |
+| Package                                               | NPM                                                                                                                            | Description                                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| [`@resolver-engine/imports-fs`](/packages/imports-fs) | [![npm link](https://img.shields.io/badge/npm-imports-fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports-fs) | Solidity imports with filesystem support                                     |
+| [`@resolver-engine/imports`](/packages/imports)       | [![npm link](https://img.shields.io/badge/npm-imports-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports)       | Browser-friendly version of Solidity imports                                 |
+| [`@resolver-engine/core`](packages/core)              | [![npm link](https://img.shields.io/badge/npm-core-blue.svg)](https://www.npmjs.com/package/@resolver-engine/core)             | Core of the project consisting of the engine and interfaces                  |
+| [`@resolver-engine/fs`](packages/fs)                  | [![npm link](https://img.shields.io/badge/npm-fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/fs)                 | Filesystem abstractions, basis for future artifacts resolver and many others |
 
 ## Long description
 
