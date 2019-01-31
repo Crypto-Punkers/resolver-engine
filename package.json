@@ -12,14 +12,16 @@
     "build:imports-fs": "tsc -p packages/imports-fs/tsconfig.json",
     "watch": "tsc -b --watch tsproject.json",
     "clean": "wsrun --exclude-missing clean",
-    "test": "wsrun -p tests --stages test",
-    "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'"
+    "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
+    "test": "run-s build test:execute",
+    "test:execute": "wsrun -p tests --stages test"
   },
   "devDependencies": {
     "@types/debug": "^0.0.31",
     "@types/node": "^10.12.18",
     "@types/request": "^2.47.0",
     "lerna": "^3.10.7",
+    "npm-run-all": "^4.1.5",
     "prettier": "1.16.2",
     "rimraf": "^2.6.2",
     "typescript": "^3.2.4",
