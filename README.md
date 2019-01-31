@@ -44,7 +44,9 @@ resolver
 ```typescript
 import { parsers, resolvers, ResolverEngine } from "@resolver-engine/core";
 
-const resolver = new ResolverEngine<string>().addResolver(resolvers.UriResolver()).addParser(parsers.UrlParser());
+const resolver = new ResolverEngine<string>()
+  .addResolver(resolvers.UriResolver())
+  .addParser(parsers.UrlParser());
 
 resolver.resolve("https://pastebin.com/raw/D8ziKX0a").then(console.log);
 ```
