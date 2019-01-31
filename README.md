@@ -32,13 +32,9 @@ resolver
 
 // first contract released, compatible with solidity ^0.4.24
 resolver
-  .require(
-    "https://github.com/OpenZeppelin/openzeppelin-solidity/blob/f12817e446fcd3d7212fe307bb17424ceb28f0b9/contracts/ownership/Ownable.sol",
-  )
+  .require("https://github.com/OpenZeppelin/openzeppelin-solidity/blob/f12817e446fcd3d7212fe307bb17424ceb28f0b9/contracts/ownership/Ownable.sol")
   .then(console.log)
-  .require(
-    "github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol#f12817e446fcd3d7212fe307bb17424ceb28f0b9",
-  )
+  .require("github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol#f12817e446fcd3d7212fe307bb17424ceb28f0b9")
   .then(console.log)
   .catch(console.error);
 ```
@@ -63,9 +59,13 @@ resolver
 ```typescript
 import { parsers, resolvers, ResolverEngine } from "@resolver-engine/core";
 
-const resolver = new ResolverEngine<string>().addResolver(resolvers.UriResolver()).addParser(parsers.UrlParser());
+const resolver = new ResolverEngine<string>()
+  .addResolver(resolvers.UriResolver())
+  .addParser(parsers.UrlParser());
 
-resolver.resolve("https://pastebin.com/raw/D8ziKX0a").then(console.log);
+resolver
+  .resolve("https://pastebin.com/raw/D8ziKX0a")
+  .then(console.log);
 ```
 
 In the [`examples/` folder](examples/) more granular examples can be found.
