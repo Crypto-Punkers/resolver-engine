@@ -1,8 +1,8 @@
-import { SolidityImportResolver } from "../src";
+import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 
-const resolver = SolidityImportResolver();
+const resolver = ImportsFsEngine();
 
 resolver
-  .require("@openzeppelin-solidity/contracts/ownership/Ownable.sol")
+  .require("github:openZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol")
   .then(console.log)
   .catch(console.error);
