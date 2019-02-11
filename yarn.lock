@@ -6409,9 +6409,9 @@ ws@^5.2.0:
     async-limiter "~1.0.0"
 
 wsrun@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/wsrun/-/wsrun-3.6.2.tgz#750211e5f0f6c777a0add181c78f2cc520691e2e"
-  integrity sha512-UgT+ND3byff0V4V7UBkwvPdwYRk04jTSMaK2b7ar7asUNlI+opYm7WuLbnGpe8d7yDY1/Y2c0v1Bt7v4KPUfMg==
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/wsrun/-/wsrun-3.6.4.tgz#05cfcc5bfaf3056c3eecb0762fdc1038cb3db0bc"
+  integrity sha512-lOWQ7Oo+PPuiJ3ggUETrYoqEmGCJyvnnSDY2TAXR5IcV2HlAIjhcNKTK0u8rzz9+CTiEe/n46UR7fKK2PeAHEg==
   dependencies:
     bluebird "^3.5.1"
     chalk "^2.3.0"
