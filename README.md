@@ -19,7 +19,6 @@ import { ImportFsEngine } from "@resolver-engine/import-fs";
 ImportFsEngine()
   .require("github:OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol#v2.1.2")
   .then(file => console.log(`Loaded url ${file.url} with source: ${file.source}`);
->>>>>>> a180b2ed267a321e45e9aaec265d712301f580d5
 ```
 
 Otherwise, you can build your own engines, suited to your needs.
@@ -55,7 +54,7 @@ In the [`examples/` folder](examples/) more granular examples can be found.
 
 | Package                                               | NPM                                                                                                                            | Description                                                                  |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| [`@resolver-engine/imports-fs`](/packages/imports-fs) | [![npm link](https://img.shields.io/badge/npm-imports-fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports-fs) | Solidity imports with filesystem support                                     |
+| [`@resolver-engine/imports-fs`](/packages/imports-fs) | [![npm link](https://img.shields.io/badge/npm-imports--fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports-fs) | Solidity imports with filesystem support                                     |
 | [`@resolver-engine/imports`](/packages/imports)       | [![npm link](https://img.shields.io/badge/npm-imports-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports)       | Browser-friendly version of Solidity imports                                 |
 | [`@resolver-engine/core`](packages/core)              | [![npm link](https://img.shields.io/badge/npm-core-blue.svg)](https://www.npmjs.com/package/@resolver-engine/core)             | Core of the project consisting of the engine and interfaces                  |
 | [`@resolver-engine/fs`](packages/fs)                  | [![npm link](https://img.shields.io/badge/npm-fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/fs)                 | Filesystem abstractions, basis for future artifacts resolver and many others |
