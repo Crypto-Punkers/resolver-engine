@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/imports",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "repository": "git@github.com:ritave/resolver-engine.git",

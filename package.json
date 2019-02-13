@@ -5,6 +5,7 @@
     "tests"
   ],
   "scripts": {
+    "prepare": "run-s clean build",
     "build": "tsc -b tsproject.json",
     "build:core": "wsrun -p core --stages build",
     "build:fs": "wsrun -p fs --stages build",
