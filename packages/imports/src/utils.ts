@@ -100,10 +100,7 @@ export async function gatherSources(
   let queue: { cwd: string; file: string; relativeTo: string }[] = [];
   let alreadyImported = new Set();
 
-  // solc resolves relative paths starting from current file's path, so if we leave relative path then
-  // imported path "../../a/b/c.sol" from file "file.sol" resolves to a/b/c.sol, which is wrong.
-  // we start from file;s absolute path so relative path can resolve correctly
-  const absoluteRoots = roots.map(what => path.resolve(workingDir, what));
+  const absoluteRoots = roots.map(what => path.join(workingDir, what));
   for (const absWhat of absoluteRoots) {
     queue.push({ cwd: workingDir, file: absWhat, relativeTo: workingDir });
     alreadyImported.add(absWhat);
