@@ -9,7 +9,14 @@
   "scripts": {
     "build": "tsc",
     "tsc": "tsc",
-    "clean": "rimraf build/"
+    "clean": "rimraf build/",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "memfs": "^2.15.0",
+    "@types/jest": "^23.3.13",
+    "jest": "<24.0.0",
+    "ts-jest": "^23.10.5"
   },
   "dependencies": {
     "@resolver-engine/core": "^0.3.0",
