@@ -2,7 +2,7 @@ jest.mock("fs");
 import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import { vol } from "memfs";
 import nock from "nock";
-import mockedFS from "../MockedFs";
+import mockedFS from "../__mocks__/MockedFs";
 
 type input_t = [string, string | undefined];
 type output_t = [string, string];

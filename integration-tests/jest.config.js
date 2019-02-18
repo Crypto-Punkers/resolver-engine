@@ -1,5 +1,5 @@
 module.exports = {
-  roots: ["./test"],
+  roots: ["./src"],
   transform: { "^.+\\.tsx?$": "ts-jest" },
   // Note: '*.test.ts' intentionally omitted; '*.spec.ts' stands out in VSCode as it is yellow
   // Also, no tsx files.

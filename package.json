@@ -2,7 +2,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "tests"
+    "integration-tests"
   ],
   "scripts": {
     "prepare": "run-s clean build",
@@ -15,7 +15,7 @@
     "clean": "wsrun --exclude-missing clean",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
     "test": "run-s build test:execute",
-    "test:execute": "wsrun -p tests --stages test"
+    "test:execute": "wsrun --stages test"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",

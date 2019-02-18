@@ -1,5 +1,5 @@
 {
-  "name": "tests",
+  "name": "integration-tests",
   "private": true,
   "version": "1.0.0",
   "repository": "git@github.com:ritave/resolver-engine.git",
