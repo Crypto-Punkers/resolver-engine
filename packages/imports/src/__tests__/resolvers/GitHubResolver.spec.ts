@@ -1,4 +1,4 @@
-import { resolvers } from "@resolver-engine/imports";
+import { resolvers } from "../..";
 
 const data = [
   ["", null],

@@ -1,5 +1,5 @@
 {
-  "name": "tests",
+  "name": "integration-tests",
   "private": true,
   "version": "1.0.0",
   "repository": "git@github.com:ritave/resolver-engine.git",
@@ -10,14 +10,14 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",
-    "@types/jest": "^23.3.13",
     "@types/nock": "^9.3.1",
     "@types/node": "^11.9.4",
+    "@types/jest": "^23.3.13",
     "jest": "<24.0.0",
+    "ts-jest": "^23.10.5",
     "memfs": "^2.15.0",
     "nock": "^10.0.6",
     "rimraf": "^2.6.2",
-    "ts-jest": "^23.10.5",
     "typescript": "^3.2.4"
   },
   "dependencies": {

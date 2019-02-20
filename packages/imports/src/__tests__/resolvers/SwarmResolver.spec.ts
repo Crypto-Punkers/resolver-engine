@@ -1,4 +1,4 @@
-import { resolvers } from "@resolver-engine/imports";
+import { resolvers } from "../..";
 
 const data = [
   ["", null],
@@ -6,11 +6,14 @@ const data = [
   ["http://example.com", null],
   ["https://example.com", null],
   ["https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts", null],
-  ["ipfs://123/path/to/resource", "https://gateway.ipfs.io/ipfs/123/path/to/resource"],
+  [
+    "bzz-raw://406be87b72ce005d7f49e8fffce4e42c7b0f3da63c8218013d0a1fd994118772",
+    "https://swarm-gateways.net/bzz-raw:/406be87b72ce005d7f49e8fffce4e42c7b0f3da63c8218013d0a1fd994118772",
+  ],
 ];
 
-describe("IPFSResolver", () => {
-  const subject = resolvers.IPFSResolver();
+describe("SwarmResolver", () => {
+  const subject = resolvers.SwarmResolver();
 
   it.each(data)("testing %o", async (input, output) => {
     const actualOutput = await subject(input, { resolver: "" });

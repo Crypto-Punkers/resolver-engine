@@ -2,7 +2,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "tests"
+    "integration-tests"
   ],
   "scripts": {
     "prepare": "run-s clean build",
@@ -15,16 +15,21 @@
     "clean": "wsrun --exclude-missing clean",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
     "test": "run-s build test:execute",
-    "test:execute": "wsrun -p tests --stages test"
+    "test:execute": "wsrun --parallel --collect-logs test"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",
+    "@types/jest": "^23.3.13",
     "@types/node": "^11.9.4",
     "@types/request": "^2.47.0",
+    "jest": "<24.0.0",
     "lerna": "^3.10.7",
+    "memfs": "^2.15.0",
+    "nock": "^10.0.6",
     "npm-run-all": "^4.1.5",
     "prettier": "1.16.2",
     "rimraf": "^2.6.2",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.2.4",
     "wsrun": "^3.6.2"
   },

@@ -1,7 +1,7 @@
 jest.mock("fs");
 import { vol } from "memfs";
-import { resolvers } from "@resolver-engine/imports-fs";
-import mockedFS from "../../MockedFs";
+import { resolvers } from "../..";
+import mockedFS from "../../__mocks__/MockedFs";
 
 const data = [
   ["zeppelin/contract.sol", { cwd: "/eth" }, "/eth/contracts/zeppelin/contract.sol"],
