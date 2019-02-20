@@ -1,6 +1,6 @@
 module.exports = {
   roots: ["./src"],
-  transform: { "^.+\\.tsx?$": "ts-jest" },
+  transform: { "^.+\\.ts?$": "ts-jest" },
   // Note: '*.test.ts' intentionally omitted; '*.spec.ts' stands out in VSCode as it is yellow
   // Also, no tsx files.
   testRegex: "(/__tests__/.*|(\\.|/)(spec))\\.ts$",
