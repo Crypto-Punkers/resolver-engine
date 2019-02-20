@@ -33,11 +33,5 @@
     "typescript": "^3.2.4",
     "wsrun": "^3.6.2"
   },
-  "name": "resolver-engine",
-  "dependencies": {
-    "@resolver-engine/core": "file:packages/core",
-    "@resolver-engine/fs": "file:packages/fs",
-    "@resolver-engine/imports": "file:packages/imports",
-    "@resolver-engine/imports-fs": "file:packages/imports-fs"
-  }
+  "name": "resolver-engine"
 }
