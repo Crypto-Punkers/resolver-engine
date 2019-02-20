@@ -19,14 +19,25 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",
+    "@types/jest": "^23.3.13",
     "@types/node": "^11.9.4",
     "@types/request": "^2.47.0",
+    "jest": "<24.0.0",
     "lerna": "^3.10.7",
+    "memfs": "^2.15.0",
+    "nock": "^10.0.6",
     "npm-run-all": "^4.1.5",
     "prettier": "1.16.2",
     "rimraf": "^2.6.2",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.2.4",
     "wsrun": "^3.6.2"
   },
-  "name": "resolver-engine"
+  "name": "resolver-engine",
+  "dependencies": {
+    "@resolver-engine/core": "file:packages/core",
+    "@resolver-engine/fs": "file:packages/fs",
+    "@resolver-engine/imports": "file:packages/imports",
+    "@resolver-engine/imports-fs": "file:packages/imports-fs"
+  }
 }

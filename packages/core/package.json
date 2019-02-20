@@ -12,12 +12,6 @@
     "clean": "rimraf build/",
     "test": "jest"
   },
-  "devDependencies": {
-    "@types/jest": "^23.3.13",
-    "jest": "<24.0.0",
-    "ts-jest": "^23.10.5",
-    "nock": "^10.0.6"
-  },
   "dependencies": {
     "debug": "^3.1.0",
     "request": "^2.85.0"
