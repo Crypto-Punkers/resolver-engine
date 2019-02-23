@@ -1,5 +1,4 @@
-import { ResolverEngine } from "@resolver-engine/core";
-import { parsers, resolvers } from "@resolver-engine/imports";
+import { parsers, ResolverEngine, resolvers } from "@resolver-engine/imports";
 
 const resolver = new ResolverEngine<string>({ debug: true })
   .addParser(parsers.UrlParser())
