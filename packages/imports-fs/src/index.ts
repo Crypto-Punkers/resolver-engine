@@ -1,3 +1,11 @@
+export { Context, firstResult, Options, ResolverEngine, SubParser, SubResolver } from "@resolver-engine/core";
+export {
+  findImports,
+  gatherSources,
+  gatherSourcesAndCanonizeImports,
+  ImportFile,
+  ImportsEngine,
+} from "@resolver-engine/imports";
 export { ImportsFsEngine } from "./importsfsengine";
 import { parsers as coreParsers, resolvers as coreResolvers } from "@resolver-engine/core";
 import { parsers as fsParsers, resolvers as fsResolvers } from "@resolver-engine/fs";
