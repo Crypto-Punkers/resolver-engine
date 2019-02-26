@@ -249,8 +249,9 @@ def prettier(files_to_check=None):
     if files_to_check is not None:
         command.extend(files_to_check)
 
-    out = subprocess.run(command)
+    out = subprocess.run(command, capture_output=True)
     debug_verbose("\"{}\" returned {}", " ".join(command), out.returncode)
+    debug_verbose("{}", out.stdout.decode("utf-8"))
 
 
 def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
