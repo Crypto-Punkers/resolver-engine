@@ -1,5 +1,4 @@
-import { ResolverEngine } from "@resolver-engine/core";
-import { resolvers, parsers} from "@resolver-engine/imports-fs";
+import { parsers, ResolverEngine, resolvers } from "@resolver-engine/imports-fs";
 
 const resolver = new ResolverEngine<string>()
   .addResolver(resolvers.FsResolver())
