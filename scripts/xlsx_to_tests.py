@@ -103,7 +103,7 @@ class RawSheetEntry:
         return SheetEntry(pt, pn, inp, outp, trans)
 
 
-def generate_data_from_sheet_entries(data: List[SheetEntry]) -> str:
+def generate_stringified_data_from_sheet_entries(data: List[SheetEntry]) -> str:
     indentation = "    "
     data_lines = []
     for _datum in data:
@@ -126,7 +126,7 @@ def write_new_test_file(filepath: str, data: List[SheetEntry]):
         parent_dir.mkdir(parents=True)
 
     with open(filepath, "w") as fp:
-        fp.write(generate_data_from_sheet_entries(data))
+        fp.write(generate_stringified_data_from_sheet_entries(data))
 
 
 def write_existing_test_file(filepath: str, data: List[SheetEntry]):
@@ -141,12 +141,12 @@ def write_existing_test_file(filepath: str, data: List[SheetEntry]):
     new_contents = file_contents
     if pat_o.match(file_contents):
         new_contents = pat_o.sub(
-            generate_data_from_sheet_entries(data), file_contents)
+            generate_stringified_data_from_sheet_entries(data), file_contents)
     else:
         # if pattern failed, then the new data will be inserted at the top of the file
         # we are prettierizing the code anyways
         new_contents = "{}\n{}".format(
-            generate_data_from_sheet_entries(data), file_contents)
+            generate_stringified_data_from_sheet_entries(data), file_contents)
 
     fw = open(filepath, "w")
     fw.write(new_contents)
@@ -254,6 +254,8 @@ def prettier(files_to_check=None):
 
 
 def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
+    always_exec_relative_to_package_json()
+
     # this flags gets the evaluation of the cells (but does not evaluate them! those values are cached somewhere in .xlsx)
     wb = op.load_workbook(input_file, data_only=True)
     existing_test_files = set(traverse_files_for_suffix(_test_file_suffix))
@@ -335,7 +337,6 @@ if __name__ == "__main__":
 
     debug("func_args: {}", func_args)
 
-    always_exec_relative_to_package_json()
     main(**func_args)
 
 
