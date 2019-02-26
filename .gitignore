@@ -60,3 +60,6 @@ typings/
 
 build/
 .DS_Store
+
+.vscode
+!.vscode/launch.json
