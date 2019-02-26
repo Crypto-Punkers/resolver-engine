@@ -245,7 +245,7 @@ def prettier(files_to_check=None):
     if which("yarn") is None:
         return
 
-    command = ["yarn", "prettier", "--config", config_file, "--write"]
+    command = ["yarn", "exec", "prettier", "--config", config_file, "--write"]
     if files_to_check is not None:
         command.extend(files_to_check)
 
