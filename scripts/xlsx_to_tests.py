@@ -6,6 +6,7 @@ import openpyxl as op
 import json
 import argparse
 import re
+import glob
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Callable, Union, List, Any, Optional, Tuple
@@ -159,20 +160,10 @@ def parse_xlsx_sheet(sheet: op.worksheet.Worksheet) -> Tuple[List[RawSheetEntry]
     return rows[1:], dict([(k, v) for k, v in lambs.items() if k is not None and v is not None])
 
 
-def traverse_file_tree(cwd=".", file_suffix=_file_suffix):
-    test_files = []
-    for root, _, files in os.walk(cwd):
-        for f in files:
-            sufs = Path(f).suffixes
-            try:
-                ext = sufs[-1]
-                inf = sufs[-2]
-                if inf + ext == file_suffix:  # I can do better than that
-                    path_to_f = (Path(root) / Path(f)).as_posix()
-                    test_files.append(path_to_f)
-            except IndexError:
-                continue
-    return test_files
+def traverse_files_for_suffix(cwd=".", file_suffix=_file_suffix):
+    search_pattern = "{}/**/*{}".format(cwd, file_suffix)
+    debug("Searching for {}", search_pattern)
+    return glob.glob(search_pattern, recursive=True)
 
 
 _prettier_confs = [
@@ -213,7 +204,7 @@ def prettier(files_to_check=None):
 def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
     # this flags gets the evaluation of the cells (but does not evaluate them! those values are cached somewhere in .xlsx)
     wb = op.load_workbook(input_file, data_only=True)
-    existing_test_files = set(traverse_file_tree())
+    existing_test_files = set(traverse_files_for_suffix())
     all_test_files = set(existing_test_files)
 
     for sheetname in wb.sheetnames:
@@ -240,7 +231,8 @@ def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
             planned_test_files.add(file_path)
             files_to_data[file_path].append(row)
 
-        missing_test_files = planned_test_files.difference(existing_test_files)
+        missing_test_files = planned_test_files.difference(
+            existing_test_files)  # TODO: use .update()
         rest_of_test_files = planned_test_files.difference(missing_test_files)
 
         all_test_files = all_test_files.union(planned_test_files)
@@ -249,7 +241,10 @@ def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
             write_new_test_file(file_p, files_to_data[file_p])
 
         for file_p in rest_of_test_files:
-            write_existing_test_file(file_p, files_to_data[file_p])
+            try:
+                write_existing_test_file(file_p, files_to_data[file_p])
+            except KeyError:
+                continue
 
     # do some extra magic
     # if prettier exists, run it at the root of the project
