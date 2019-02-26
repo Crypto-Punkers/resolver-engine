@@ -75,11 +75,12 @@ class SheetEntry:
                 self.__setattr__(target, transmorphed)
 
     def predict_location(self, package_name: str):
-        return _test_file_location_template.format(**{
+        raw_path = _test_file_location_template.format(**{
             "package": package_name,
             "type_plural": self.PartType.lower() + "s",
             "test_file": self.PartName + self.PartType + _test_file_suffix,
         })
+        return Path(raw_path).as_posix()  # consistency
 
 
 @dataclass
@@ -129,7 +130,7 @@ def write_new_test_file(filepath: str, data: List[SheetEntry]):
 
 
 def write_existing_test_file(filepath: str, data: List[SheetEntry]):
-    debug("Writing to existing file{}", filepath)
+    debug("Writing to existing file {}", filepath)
     if _noop:
         return
     fr = open(filepath, "r")
@@ -208,11 +209,14 @@ def parse_xlsx_workbook(wb: op.Workbook, sheets=None) -> Tuple[dict, List[str]]:
 def traverse_files_for_suffix(file_suffix, cwd="."):
     search_pattern = "{}/**/*{}".format(cwd, file_suffix)
     debug("Searching for {}", search_pattern)
-    return glob.glob(search_pattern, recursive=True)
+    # for consistency
+    return [Path(p).as_posix() for p in glob.glob(search_pattern, recursive=True)]
 
 
 _prettier_confs = [
-    "\.prettierrc\.(yaml|yml|json|toml)", "\.?prettier(\.config|rc)\.js"]
+    r"\.prettierrc\.(yaml|yml|json|toml)",
+    r"\.?prettier(\.config|rc)\.js"
+]
 
 
 def prettier(files_to_check=None):
@@ -279,7 +283,7 @@ def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
 
     # do some extra magic
     # if prettier exists, run it at the root of the project
-    prettier(all_test_files)
+    prettier(files_to_data.keys())
 
 
 _package_json = "package.json"
