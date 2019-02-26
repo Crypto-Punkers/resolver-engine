@@ -16,6 +16,8 @@ from itertools import product
 from shutil import which
 
 _debug = False
+_noop = False
+_verbose = False
 
 
 def debug(format_string, *args):
@@ -23,10 +25,16 @@ def debug(format_string, *args):
         print(format_string.format(*args))
 
 
+def debug_verbose(format_string, *args):
+    if _verbose:
+        debug(format_string, *args)
+
+
 _test_file_location_template = "packages/{package}/src/__tests__/{type_plural}/{test_file}"
 # TODO not implemented
 _mock_file_location_template = "packages/{package}/src/__mocks__/{mock_file}"
-_file_suffix = ".spec.ts"
+_test_file_suffix = ".spec.ts"
+_mock_file_name = "MockedFs.ts"
 _expected_packages = [
     "core",
     "fs",
@@ -70,7 +78,7 @@ class SheetEntry:
         return _test_file_location_template.format(**{
             "package": package_name,
             "type_plural": self.PartType.lower() + "s",
-            "test_file": self.PartName + self.PartType + _file_suffix,
+            "test_file": self.PartName + self.PartType + _test_file_suffix,
         })
 
 
@@ -108,6 +116,10 @@ def generate_data_from_sheet_entries(data: List[SheetEntry]) -> str:
 
 
 def write_new_test_file(filepath: str, data: List[SheetEntry]):
+    debug("Writing to new file {}", filepath)
+    if _noop:
+        return
+
     parent_dir = Path(Path(filepath).parent)
     if not parent_dir.exists():
         parent_dir.mkdir(parents=True)
@@ -117,6 +129,9 @@ def write_new_test_file(filepath: str, data: List[SheetEntry]):
 
 
 def write_existing_test_file(filepath: str, data: List[SheetEntry]):
+    debug("Writing to existing file{}", filepath)
+    if _noop:
+        return
     fr = open(filepath, "r")
     file_contents = fr.read()
     fr.close()
@@ -160,7 +175,37 @@ def parse_xlsx_sheet(sheet: op.worksheet.Worksheet) -> Tuple[List[RawSheetEntry]
     return rows[1:], dict([(k, v) for k, v in lambs.items() if k is not None and v is not None])
 
 
-def traverse_files_for_suffix(cwd=".", file_suffix=_file_suffix):
+def parse_xlsx_workbook(wb: op.Workbook, sheets=None) -> Tuple[dict, List[str]]:
+    "Takes a workbook as an arguments, returns dictionary of filepath-data pairs and a list of files that will be modified"
+    files_to_data = defaultdict(list)
+    planned_test_files = set()
+
+    for sheetname in wb.sheetnames:
+        if sheets is not None and sheetname.lower() not in sheets:
+            continue
+
+        if sheetname not in _expected_packages:
+            continue
+
+        raw_rows, lambdas = parse_xlsx_sheet(wb[sheetname])
+        value_rows = [row.parse() for row in raw_rows]
+        # evaluating both, because keys are strings describing a string, e.g. '"cwd"'
+        evaluated_lambdas = dict([(eval(k), eval(v))
+                                  for k, v in lambdas.items()])
+        for k, v in evaluated_lambdas.items():
+            # fuck computer resources; electricity is cheap anyways
+            for row in value_rows:
+                row.transform(k, v)
+
+        for row in value_rows:
+            file_path = row.predict_location(sheetname)
+            planned_test_files.add(file_path)
+            files_to_data[file_path].append(row)
+
+    return (files_to_data, planned_test_files)
+
+
+def traverse_files_for_suffix(file_suffix, cwd="."):
     search_pattern = "{}/**/*{}".format(cwd, file_suffix)
     debug("Searching for {}", search_pattern)
     return glob.glob(search_pattern, recursive=True)
@@ -172,7 +217,10 @@ _prettier_confs = [
 
 def prettier(files_to_check=None):
     if files_to_check is not None:
-        debug("Prettierizing {}", files_to_check)
+        debug_verbose("Prettierizing {}", files_to_check)
+
+    if _noop:
+        return
 
     checkers = [re.compile(pattern) for pattern in _prettier_confs]
     here = "."
@@ -198,53 +246,36 @@ def prettier(files_to_check=None):
         command.extend(files_to_check)
 
     out = subprocess.run(command)
-    debug("\"{}\" returned {}", " ".join(command), out.returncode)
+    debug_verbose("\"{}\" returned {}", " ".join(command), out.returncode)
 
 
 def main(input_file, output_dir=None, only_data=False, sheets=None, **kwargs):
     # this flags gets the evaluation of the cells (but does not evaluate them! those values are cached somewhere in .xlsx)
     wb = op.load_workbook(input_file, data_only=True)
-    existing_test_files = set(traverse_files_for_suffix())
+    existing_test_files = set(traverse_files_for_suffix(_test_file_suffix))
     all_test_files = set(existing_test_files)
 
-    for sheetname in wb.sheetnames:
-        if sheets is not None and sheetname.lower() not in sheets:
+    debug("Found {} existing test files", len(existing_test_files))
+
+    files_to_data, planned_test_files = parse_xlsx_workbook(wb)
+    all_test_files.update(planned_test_files)
+
+    missing_test_files = planned_test_files.difference(existing_test_files)
+    rest_of_test_files = planned_test_files.difference(missing_test_files)
+
+    debug("{} files are missing", len(missing_test_files))
+    debug("Gathered data for {} files", len(files_to_data.keys()))
+    debug_verbose("Missing {}", missing_test_files)
+    debug_verbose("The rest {}", rest_of_test_files)
+
+    for file_p in missing_test_files:
+        write_new_test_file(file_p, files_to_data[file_p])
+
+    for file_p in rest_of_test_files:
+        try:
+            write_existing_test_file(file_p, files_to_data[file_p])
+        except KeyError:
             continue
-
-        if sheetname not in _expected_packages:
-            continue
-
-        raw_rows, lambdas = parse_xlsx_sheet(wb[sheetname])
-        value_rows = [row.parse() for row in raw_rows]
-        # evaluating both, because keys are strings describing a string, e.g. '"cwd"'
-        evaluated_lambdas = dict([(eval(k), eval(v))
-                                  for k, v in lambdas.items()])
-        for k, v in evaluated_lambdas.items():
-            # fuck computer resources; electricity is cheap anyways
-            for row in value_rows:
-                row.transform(k, v)
-
-        files_to_data = defaultdict(list)
-        planned_test_files = set()
-        for row in value_rows:
-            file_path = row.predict_location(sheetname)
-            planned_test_files.add(file_path)
-            files_to_data[file_path].append(row)
-
-        missing_test_files = planned_test_files.difference(
-            existing_test_files)  # TODO: use .update()
-        rest_of_test_files = planned_test_files.difference(missing_test_files)
-
-        all_test_files = all_test_files.union(planned_test_files)
-
-        for file_p in missing_test_files:
-            write_new_test_file(file_p, files_to_data[file_p])
-
-        for file_p in rest_of_test_files:
-            try:
-                write_existing_test_file(file_p, files_to_data[file_p])
-            except KeyError:
-                continue
 
     # do some extra magic
     # if prettier exists, run it at the root of the project
@@ -280,11 +311,19 @@ if __name__ == "__main__":
         "--sheets", help="choose sheets only from given comma-delimited list (standard, unix one)", type=str)
     parser.add_argument(
         "--debug", help="print extra information", action="store_true")
+    parser.add_argument(
+        "--noop", help="don't do anything to files", action="store_true")
+    parser.add_argument(
+        "--verbose", help="be very verbose on what is going on", action="store_true")
 
     args = parser.parse_args()
     func_args = {}
     if getattr(args, "debug"):
         _debug = True
+    if getattr(args, "noop"):
+        _noop = True
+    if getattr(args, "verbose"):
+        _verbose = True
     func_args["input_file"] = getattr(args, "file")
     if getattr(args, "sheets"):
         csl: str = getattr(args, "sheets")
