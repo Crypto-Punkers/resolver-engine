@@ -17,7 +17,7 @@ function expectedOutput(filesObj: dictionary, provider: string): ImportFile[] {
   return result;
 }
 
-const data: [string, dictionary, [string], string, string][] = [
+const data: [string, dictionary, string[], string, string][] = [
   [
     "gathers files included by given file",
     {
@@ -51,6 +51,19 @@ const data: [string, dictionary, [string], string, string][] = [
     __dirname,
     "fs",
   ],
+  [
+    "finds all files imported by multiple starting files",
+    {
+      "othermain.sol": 'bla;\nimport "./somethingelse.sol";\nimport "./anotherfile.sol";\netcetc',
+      "mainfile.sol": 'blahblah;\nimport "./folder/otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "folder/otherfile.sol": 'otherfilecontents;\nimport "../somethingelse.sol";\nsmthsmth',
+      "somethingelse.sol": "somethingelsecontents",
+      "anotherfile.sol": "shiny!",
+    },
+    ["mainfile.sol", "othermain.sol"],
+    __dirname,
+    "fs",
+  ],
 ];
 
 describe("gatherSources function", function() {
@@ -71,7 +84,8 @@ describe("gatherSources function", function() {
 
     vol.fromJSON(test_fs);
     const fileList = await gatherSources(input, cwd, resolver);
-    expect(fileList.sort()).toEqual(EXPECTED_FILES.sort());
+    expect(fileList.sort((a, b) => a.url.localeCompare(b.url)))
+      .toEqual(EXPECTED_FILES.sort((a, b) => a.url.localeCompare(b.url)));
   });
 
   it("throws when imported file doesn't exist", async function() {
