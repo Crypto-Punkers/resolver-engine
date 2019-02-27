@@ -43,8 +43,8 @@ const data: [string, dictionary, [string], string, string][] = [
   [
     "does not include the same file twice",
     {
-      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
-      "otherfile.sol": 'otherfilecontents;\nimport "./somethingelse.sol";\nsmthsmth',
+      "mainfile.sol": 'blahblah;\nimport "./folder/otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "folder/otherfile.sol": 'otherfilecontents;\nimport "../somethingelse.sol";\nsmthsmth',
       "somethingelse.sol": "somethingelsecontents",
     },
     ["mainfile.sol"],
@@ -71,9 +71,7 @@ describe("gatherSources function", function() {
 
     vol.fromJSON(test_fs);
     const fileList = await gatherSources(input, cwd, resolver);
-    fileList.forEach(file => {
-      expect(EXPECTED_FILES).toContainEqual(file);
-    });
+    expect(fileList.sort()).toEqual(EXPECTED_FILES.sort());
   });
 
   it("throws when imported file doesn't exist", async function() {
