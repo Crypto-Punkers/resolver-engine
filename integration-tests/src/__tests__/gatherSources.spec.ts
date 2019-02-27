@@ -5,11 +5,15 @@ import { gatherSources, ImportFile } from "@resolver-engine/imports";
 
 type dictionary = { [s: string]: string };
 
-function expectedOutput(filesObj: dictionary, provider: string): ImportFile[] {
+function expectedOutput(filesObj: dictionary, provider: string, namePrefix: string): ImportFile[] {
   let result: ImportFile[] = [];
+  let prefix = namePrefix;
+  if (namePrefix !== "") {
+    prefix += "/";
+  }
   for (const k of Object.keys(filesObj)) {
     result.push({
-      url: process.cwd() + "/" + k,
+      url: prefix + k,
       source: filesObj[k],
       provider: provider,
     });
@@ -64,6 +68,52 @@ const data: [string, dictionary, string[], string, string][] = [
     __dirname,
     "fs",
   ],
+  [
+    "gathers files included by given file without absolute path",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "otherfile.sol": "otherfilecontents",
+      "somethingelse.sol": "somethingelsecontents",
+    },
+    ["mainfile.sol"],
+    "",
+    "fs",
+  ],
+  [
+    "gathers files imported by imported files without absolute path",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./otherfile.sol";\nrestoffileblahblah',
+      "otherfile.sol": 'hurrdurr;\nimport "./contracts/something.sol";\nblahblah',
+      "contracts/something.sol": "filecontents",
+    },
+    ["mainfile.sol"],
+    "",
+    "fs",
+  ],
+  [
+    "does not include the same file twice without absolute path",
+    {
+      "mainfile.sol": 'blahblah;\nimport "./folder/otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "folder/otherfile.sol": 'otherfilecontents;\nimport "../somethingelse.sol";\nsmthsmth',
+      "somethingelse.sol": "somethingelsecontents",
+    },
+    ["mainfile.sol"],
+    "",
+    "fs",
+  ],
+  [
+    "finds all files imported by multiple starting files without absolute path",
+    {
+      "othermain.sol": 'bla;\nimport "./somethingelse.sol";\nimport "./anotherfile.sol";\netcetc',
+      "mainfile.sol": 'blahblah;\nimport "./folder/otherfile.sol";\nimport "./somethingelse.sol";\nrestoffileblahblah',
+      "folder/otherfile.sol": 'otherfilecontents;\nimport "../somethingelse.sol";\nsmthsmth',
+      "somethingelse.sol": "somethingelsecontents",
+      "anotherfile.sol": "shiny!",
+    },
+    ["mainfile.sol", "othermain.sol"],
+    "",
+    "fs",
+  ],
 ];
 
 describe("gatherSources function", function() {
@@ -80,7 +130,7 @@ describe("gatherSources function", function() {
   });
 
   it.each(data)("%s", async function(message, test_fs, input, cwd, provider) {
-    const EXPECTED_FILES = expectedOutput(test_fs, provider);
+    const EXPECTED_FILES = expectedOutput(test_fs, provider, cwd);
 
     vol.fromJSON(test_fs);
     const fileList = await gatherSources(input, cwd, resolver);
