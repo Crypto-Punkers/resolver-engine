@@ -1,4 +1,5 @@
 jest.mock("fs");
+import nock from "nock";
 import { vol } from "memfs";
 import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import { gatherSources, ImportFile } from "@resolver-engine/imports";
@@ -134,8 +135,9 @@ describe("gatherSources function", function() {
 
     vol.fromJSON(test_fs);
     const fileList = await gatherSources(input, cwd, resolver);
-    expect(fileList.sort((a, b) => a.url.localeCompare(b.url)))
-      .toEqual(EXPECTED_FILES.sort((a, b) => a.url.localeCompare(b.url)));
+    expect(fileList.sort((a, b) => a.url.localeCompare(b.url))).toEqual(
+      EXPECTED_FILES.sort((a, b) => a.url.localeCompare(b.url)),
+    );
   });
 
   it("throws when imported file doesn't exist", async function() {
@@ -145,5 +147,25 @@ describe("gatherSources function", function() {
 
     vol.fromJSON(test_fs);
     await expect(gatherSources(["main.sol"], __dirname, resolver)).rejects.toThrowError();
+  });
+
+  describe("URLs", function() {
+    const FILE_GITHUB_NO_IMPORTS = "github something";
+    const FILE_URL_NO_IMPORTS = "something something";
+
+    beforeAll(function() {
+      nock.disableNetConnect();
+    });
+
+    beforeEach(function() {
+      const githubScope = nock("https://github.com");
+      githubScope.get("/user/repo/blob/master/path/to/file/file_no_imports.sol").reply(200, FILE_GITHUB_NO_IMPORTS);
+      const someScope = nock("http://somepage.tv");
+      someScope.get("/some/path/file.sol").reply(200, FILE_URL_NO_IMPORTS);
+    });
+
+    afterEach(function() {
+      nock.cleanAll();
+    });
   });
 });
