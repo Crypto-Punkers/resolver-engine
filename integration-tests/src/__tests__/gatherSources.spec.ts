@@ -167,5 +167,33 @@ describe("gatherSources function", function() {
     afterEach(function() {
       nock.cleanAll();
     });
+
+    it("downloads single importless file from URL (without absolute path given)", async function() {
+      const fileList = await gatherSources(["http://somepage.tv/some/path/file.sol"], "", resolver);
+      const EXPECTED_RESULT = [
+        {
+          url: "http://somepage.tv/some/path/file.sol",
+          source: FILE_URL_NO_IMPORTS,
+          provider: "http",
+        },
+      ];
+      expect(fileList).toEqual(EXPECTED_RESULT);
+    });
+
+    it("downloads single importless file from GitHub (without absolute path given)", async function() {
+      const fileList = await gatherSources(
+        ["https://github.com/user/repo/blob/master/path/to/file/file_no_imports.sol"],
+        "",
+        resolver,
+      );
+      const EXPECTED_RESULT = [
+        {
+          url: "https://github.com/user/repo/blob/master/path/to/file/file_no_imports.sol",
+          source: FILE_GITHUB_NO_IMPORTS,
+          provider: "github",
+        },
+      ];
+      expect(fileList).toEqual(EXPECTED_RESULT);
+    });
   });
 });
