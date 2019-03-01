@@ -162,6 +162,9 @@ describe("gatherSources function", function() {
       const githubScope = nock("https://github.com");
       githubScope.get("/user/repo/blob/master/path/to/file/file_no_imports.sol").reply(200, FILE_GITHUB_NO_IMPORTS);
       githubScope.get("/user/repo/blob/master/path/to/file/file_with_url.sol").reply(200, FILE_GITHUB_IMPORT_URL);
+      const rawGithubScope = nock("https://raw.githubusercontent.com:443");
+      rawGithubScope.get("/user/repo/master/path/to/file/file_no_imports.sol").reply(200, FILE_GITHUB_NO_IMPORTS);
+      rawGithubScope.get("/user/repo/master/path/to/file/file_with_url.sol").reply(200, FILE_GITHUB_IMPORT_URL);
       const someScope = nock("http://somepage.tv");
       someScope.get("/some/path/file.sol").reply(200, FILE_URL_NO_IMPORTS);
     });

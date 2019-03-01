@@ -1,5 +1,6 @@
 import { ResolverEngine } from "@resolver-engine/core";
 import path from "path";
+import url from "url";
 import { ImportFile } from "./parsers/importparser";
 
 export function findImports(data: ImportFile): string[] {
@@ -100,7 +101,10 @@ export async function gatherSources(
   let queue: { cwd: string; file: string; relativeTo: string }[] = [];
   let alreadyImported = new Set();
 
-  const absoluteRoots = roots.map(what => path.join(workingDir, what));
+  if (workingDir !== "") {
+    workingDir += "/";
+  }
+  const absoluteRoots = roots.map(what => url.resolve(workingDir, what));
   for (const absWhat of absoluteRoots) {
     queue.push({ cwd: workingDir, file: absWhat, relativeTo: workingDir });
     alreadyImported.add(absWhat);
