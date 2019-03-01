@@ -223,5 +223,11 @@ describe("gatherSources function", function() {
         EXPECTED_RESULT.sort((a, b) => a.url.localeCompare(b.url)),
       );
     });
+
+    it.todo("downloads file from GitHub with local import");
+
+    it.todo("downloads file from URL containing import via GitHub");
+
+    it.todo("downloads filr from URL with local import");
   });
 });
