@@ -151,6 +151,7 @@ describe("gatherSources function", function() {
 
   describe("URLs", function() {
     const FILE_GITHUB_NO_IMPORTS = "github something";
+    const FILE_GITHUB_IMPORT_URL = 'a\nimport "http://somepage.tv/some/path/file.sol";\nrestoffile';
     const FILE_URL_NO_IMPORTS = "something something";
 
     beforeAll(function() {
@@ -160,6 +161,7 @@ describe("gatherSources function", function() {
     beforeEach(function() {
       const githubScope = nock("https://github.com");
       githubScope.get("/user/repo/blob/master/path/to/file/file_no_imports.sol").reply(200, FILE_GITHUB_NO_IMPORTS);
+      githubScope.get("/user/repo/blob/master/path/to/file/file_with_url.sol").reply(200, FILE_GITHUB_IMPORT_URL);
       const someScope = nock("http://somepage.tv");
       someScope.get("/some/path/file.sol").reply(200, FILE_URL_NO_IMPORTS);
     });
@@ -194,6 +196,29 @@ describe("gatherSources function", function() {
         },
       ];
       expect(fileList).toEqual(EXPECTED_RESULT);
+    });
+
+    it("downloads file from GitHub containig import via URL", async function() {
+      const fileList = await gatherSources(
+        ["https://github.com/user/repo/blob/master/path/to/file/file_with_url.sol"],
+        "",
+        resolver,
+      );
+      const EXPECTED_RESULT = [
+        {
+          url: "https://github.com/user/repo/blob/master/path/to/file/file_with_url.sol",
+          source: FILE_GITHUB_IMPORT_URL,
+          provider: "github",
+        },
+        {
+          url: "http://somepage.tv/some/path/file.sol",
+          source: FILE_URL_NO_IMPORTS,
+          provider: "http",
+        },
+      ];
+      expect(fileList.sort((a, b) => a.url.localeCompare(b.url))).toEqual(
+        EXPECTED_RESULT.sort((a, b) => a.url.localeCompare(b.url)),
+      );
     });
   });
 });
