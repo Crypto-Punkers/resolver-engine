@@ -152,7 +152,11 @@ describe("gatherSources function", function() {
   describe("URLs", function() {
     const FILE_GITHUB_NO_IMPORTS = "github something";
     const FILE_GITHUB_IMPORT_URL = 'a\nimport "http://somepage.tv/some/path/file.sol";\nrestoffile';
+    const FILE_GITHUB_LOCAL_IMPORT = 'file\nimport "./file_no_imports.sol";plplplpl';
     const FILE_URL_NO_IMPORTS = "something something";
+    const FILE_URL_IMPORT_GITHUB =
+      'qwer\nimport "https://github.com/user/repo/blob/master/path/to/file/file_no_imports.sol";\nrest';
+    const FILE_URL_LOCAL_IMPORT = 'reeeee!\nimport "./file.sol";fuuuu';
 
     beforeAll(function() {
       nock.disableNetConnect();
@@ -162,11 +166,15 @@ describe("gatherSources function", function() {
       const githubScope = nock("https://github.com");
       githubScope.get("/user/repo/blob/master/path/to/file/file_no_imports.sol").reply(200, FILE_GITHUB_NO_IMPORTS);
       githubScope.get("/user/repo/blob/master/path/to/file/file_with_url.sol").reply(200, FILE_GITHUB_IMPORT_URL);
+      githubScope.get("/user/repo/blob/master/path/to/file/file_with_local.sol").reply(200, FILE_GITHUB_LOCAL_IMPORT);
       const rawGithubScope = nock("https://raw.githubusercontent.com:443");
       rawGithubScope.get("/user/repo/master/path/to/file/file_no_imports.sol").reply(200, FILE_GITHUB_NO_IMPORTS);
       rawGithubScope.get("/user/repo/master/path/to/file/file_with_url.sol").reply(200, FILE_GITHUB_IMPORT_URL);
+      rawGithubScope.get("/user/repo/master/path/to/file/file_with_local.sol").reply(200, FILE_GITHUB_LOCAL_IMPORT);
       const someScope = nock("http://somepage.tv");
       someScope.get("/some/path/file.sol").reply(200, FILE_URL_NO_IMPORTS);
+      someScope.get("/other/path/file_with_g.sol").reply(200, FILE_URL_IMPORT_GITHUB);
+      someScope.get("/some/path/file_local.sol").reply(200, FILE_URL_LOCAL_IMPORT);
     });
 
     afterEach(function() {
@@ -224,10 +232,65 @@ describe("gatherSources function", function() {
       );
     });
 
-    it.todo("downloads file from GitHub with local import");
+    it("downloads file from GitHub with local import", async function() {
+      const fileList = await gatherSources(
+        ["https://github.com/user/repo/blob/master/path/to/file/file_with_local.sol"],
+        "",
+        resolver,
+      );
+      const EXPECTED_RESULT = [
+        {
+          url: "https://github.com/user/repo/blob/master/path/to/file/file_with_local.sol",
+          source: FILE_GITHUB_LOCAL_IMPORT,
+          provider: "github",
+        },
+        {
+          url: "https://github.com/user/repo/blob/master/path/to/file/file_no_imports.sol",
+          source: FILE_GITHUB_NO_IMPORTS,
+          provider: "github",
+        },
+      ];
+      expect(fileList.sort((a, b) => a.url.localeCompare(b.url))).toEqual(
+        EXPECTED_RESULT.sort((a, b) => a.url.localeCompare(b.url)),
+      );
+    });
 
-    it.todo("downloads file from URL containing import via GitHub");
+    it("downloads file from URL containing import via GitHub", async function() {
+      const fileList = await gatherSources(["http://somepage.tv/other/path/file_with_g.sol"], "", resolver);
+      const EXPECTED_RESULT = [
+        {
+          url: "http://somepage.tv/other/path/file_with_g.sol",
+          source: FILE_URL_IMPORT_GITHUB,
+          provider: "http",
+        },
+        {
+          url: "https://github.com/user/repo/blob/master/path/to/file/file_no_imports.sol",
+          source: FILE_GITHUB_NO_IMPORTS,
+          provider: "github",
+        },
+      ];
+      expect(fileList.sort((a, b) => a.url.localeCompare(b.url))).toEqual(
+        EXPECTED_RESULT.sort((a, b) => a.url.localeCompare(b.url)),
+      );
+    });
 
-    it.todo("downloads filr from URL with local import");
+    it("downloads filr from URL with local import", async function() {
+      const fileList = await gatherSources(["http://somepage.tv/some/path/file_local.sol"], "", resolver);
+      const EXPECTED_RESULT = [
+        {
+          url: "http://somepage.tv/some/path/file_local.sol",
+          source: FILE_URL_LOCAL_IMPORT,
+          provider: "http",
+        },
+        {
+          url: "http://somepage.tv/some/path/file.sol",
+          source: FILE_URL_NO_IMPORTS,
+          provider: "http",
+        },
+      ];
+      expect(fileList.sort((a, b) => a.url.localeCompare(b.url))).toEqual(
+        EXPECTED_RESULT.sort((a, b) => a.url.localeCompare(b.url)),
+      );
+    });
   });
 });
