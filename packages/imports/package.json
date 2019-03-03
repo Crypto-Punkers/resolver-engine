@@ -15,6 +15,8 @@
   "dependencies": {
     "@resolver-engine/core": "0.3.0",
     "debug": "^3.1.0",
-    "hosted-git-info": "^2.6.0"
+    "hosted-git-info": "^2.6.0",
+    "path-browserify": "^1.0.0",
+    "url": "^0.11.0"
   }
 }
