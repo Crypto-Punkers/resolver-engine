@@ -119,7 +119,7 @@ export async function gatherSources(
     // if not - return the same name it was imported with
     let relativePath: string;
     if (fileData.file[0] === ".") {
-      relativePath = path.join(fileData.relativeTo, fileData.file);
+      relativePath = url.resolve(fileData.relativeTo, fileData.file);
       result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     } else {
       relativePath = fileData.file;
@@ -130,13 +130,13 @@ export async function gatherSources(
     for (const foundImport of foundImports) {
       let importName: string;
       if (foundImport[0] === ".") {
-        importName = path.join(fileParentDir, foundImport);
+        importName = url.resolve(relativePath, foundImport);
       } else {
         importName = foundImport;
       }
       if (!alreadyImported.has(importName)) {
         alreadyImported.add(importName);
-        queue.push({ cwd: fileParentDir, file: foundImport, relativeTo: path.dirname(relativePath) });
+        queue.push({ cwd: fileParentDir, file: foundImport, relativeTo: relativePath });
       }
     }
   }
