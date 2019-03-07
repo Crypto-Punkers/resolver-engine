@@ -1,6 +1,6 @@
 export { ImportsEngine } from "./importsengine";
 export { ImportFile } from "./parsers/importparser";
-export * from "./utils";
+export { findImports, gatherSources, gatherSourcesAndCanonizeImports } from "./utils";
 import { parsers as core_p, resolvers as core_r } from "@resolver-engine/core";
 import { ImportParser } from "./parsers/importparser";
 import { GithubResolver } from "./resolvers/githubresolver";

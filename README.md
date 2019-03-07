@@ -52,12 +52,12 @@ In the [`examples/` folder](examples/) more granular examples can be found.
 
 ### Published packages
 
-| Package                                               | NPM                                                                                                                            | Description                                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Package                                               | NPM                                                                                                                             | Description                                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | [`@resolver-engine/imports-fs`](/packages/imports-fs) | [![npm link](https://img.shields.io/badge/npm-imports--fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports-fs) | Solidity imports with filesystem support                                     |
-| [`@resolver-engine/imports`](/packages/imports)       | [![npm link](https://img.shields.io/badge/npm-imports-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports)       | Browser-friendly version of Solidity imports                                 |
-| [`@resolver-engine/core`](packages/core)              | [![npm link](https://img.shields.io/badge/npm-core-blue.svg)](https://www.npmjs.com/package/@resolver-engine/core)             | Core of the project consisting of the engine and interfaces                  |
-| [`@resolver-engine/fs`](packages/fs)                  | [![npm link](https://img.shields.io/badge/npm-fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/fs)                 | Filesystem abstractions, basis for future artifacts resolver and many others |
+| [`@resolver-engine/imports`](/packages/imports)       | [![npm link](https://img.shields.io/badge/npm-imports-blue.svg)](https://www.npmjs.com/package/@resolver-engine/imports)        | Browser-friendly version of Solidity imports                                 |
+| [`@resolver-engine/core`](packages/core)              | [![npm link](https://img.shields.io/badge/npm-core-blue.svg)](https://www.npmjs.com/package/@resolver-engine/core)              | Core of the project consisting of the engine and interfaces                  |
+| [`@resolver-engine/fs`](packages/fs)                  | [![npm link](https://img.shields.io/badge/npm-fs-blue.svg)](https://www.npmjs.com/package/@resolver-engine/fs)                  | Filesystem abstractions, basis for future artifacts resolver and many others |
 
 ## Long description
 

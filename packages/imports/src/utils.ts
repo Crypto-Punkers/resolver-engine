@@ -123,16 +123,16 @@ export async function gatherSources(
     }
 
     const fileParentDir = path.dirname(resolvedFile.url);
-    for (const i in foundImports) {
+    for (const foundImport of foundImports) {
       let importName: string;
-      if (i[0] === ".") {
-        importName = path.join(relativePath, i);
+      if (foundImport[0] === ".") {
+        importName = path.join(fileParentDir, foundImport);
       } else {
-        importName = foundImports[i];
+        importName = foundImport;
       }
       if (!alreadyImported.has(importName)) {
         alreadyImported.add(importName);
-        queue.push({ cwd: fileParentDir, file: foundImports[i], relativeTo: path.dirname(relativePath) });
+        queue.push({ cwd: fileParentDir, file: foundImport, relativeTo: path.dirname(relativePath) });
       }
     }
   }
