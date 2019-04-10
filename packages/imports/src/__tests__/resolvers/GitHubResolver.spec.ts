@@ -1,6 +1,6 @@
 import { resolvers } from "../..";
 
-const data = [
+const data: [string, string][] = [
   ["", null],
   [
     "https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts",
@@ -51,7 +51,7 @@ const data = [
 describe("GitHubResolver", () => {
   const subject = resolvers.GithubResolver();
 
-  it.each(data)("testing %o", async (input, output) => {
+  it.each(data)("testing %o", async (input: string, output: string | null) => {
     const actualOutput = await subject(input, { resolver: "" });
     expect(actualOutput).toBe(output);
   });

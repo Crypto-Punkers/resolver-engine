@@ -3,7 +3,7 @@ import { vol } from "memfs";
 import { resolvers } from "../..";
 import mockedFS from "../../__mocks__/MockedFs";
 
-const data = [
+const data: [string, any, string | null][] = [
   ["zeppelin/contract.sol", { cwd: "/eth" }, "/eth/contracts/zeppelin/contract.sol"],
   ["zeppelin/contract.sol", { cwd: "/" }, null],
   ["zeppelin/contract.sol", { cwd: "/eth/contracts" }, "/eth/contracts/zeppelin/contract.sol"],
@@ -38,7 +38,7 @@ describe("EthPmResolver", () => {
     vol.reset();
   });
 
-  it.each(data)("testing %o in context %o", async (input, context, output) => {
+  it.each(data)("testing %o in context %o", async (input: string, context: any, output: string | null) => {
     const actualOutput = await subject(input, context);
     expect(actualOutput).toBe(output);
   });
