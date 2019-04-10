@@ -1,6 +1,6 @@
 import { resolvers } from "../..";
 
-const data: [string, string][] = [
+const data: [string, string | null][] = [
   ["", null],
   [
     "https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts",
