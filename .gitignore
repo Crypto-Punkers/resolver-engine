@@ -60,3 +60,5 @@ typings/
 
 build/
 .DS_Store
+
+*.tsbuildinfo

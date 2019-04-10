@@ -1,6 +1,6 @@
 import { resolvers } from "../..";
 
-const data = [
+const data: [string, string | null][] = [
   ["", null],
   ["www.google.com", null],
   ["http://example.com", null],
@@ -12,7 +12,7 @@ const data = [
 describe("IPFSResolver", () => {
   const subject = resolvers.IPFSResolver();
 
-  it.each(data)("testing %o", async (input, output) => {
+  it.each(data)("testing %o", async (input: string, output: string | null) => {
     const actualOutput = await subject(input, { resolver: "" });
     expect(actualOutput).toBe(output);
   });

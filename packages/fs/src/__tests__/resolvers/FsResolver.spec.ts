@@ -3,7 +3,7 @@ import { vol } from "memfs";
 import { resolvers } from "../..";
 import mockedFS from "../../__mocks__/MockedFs";
 
-const data = [
+const data: [string, any, string | null][] = [
   ["/path/to/file.txt", { cwd: "/" }, "/path/to/file.txt"],
   ["/path/to/file.txt", { cwd: "/path" }, "/path/to/file.txt"],
   ["/path/to/file.txt", { cwd: "/somewhere/else" }, "/path/to/file.txt"],
@@ -23,7 +23,7 @@ describe("FsResolver", () => {
     vol.reset();
   });
 
-  it.each(data)("testing %o in context %o", async (input, context, output) => {
+  it.each(data)("testing %o in context %o", async (input: string, context: any, output: string | null) => {
     const actualOutput = await subject(input, context);
     expect(actualOutput).toBe(output);
   });

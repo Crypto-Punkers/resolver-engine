@@ -4,6 +4,8 @@
     "packages/*",
     "integration-tests"
   ],
+  "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
+  "author": "Crypto Punkers <hello@punkers.co>",
   "scripts": {
     "prepare": "run-s clean build",
     "build": "tsc -b tsproject.json",

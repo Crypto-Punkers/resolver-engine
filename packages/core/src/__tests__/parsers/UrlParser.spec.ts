@@ -3,7 +3,7 @@ import { parsers } from "../..";
 
 const incorrectUrls = [["", null], ["www.google.com", null]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
-const data = incorrectUrls.concat(correctUrls);
+const data: [string, string | null][] = incorrectUrls.concat(correctUrls) as any;
 
 describe("UrlParser", () => {
   const parser = parsers.UrlParser();
@@ -27,7 +27,7 @@ describe("UrlParser", () => {
     });
   });
 
-  it.each(data)("should parse %o into %o", async (input, expected) => {
+  it.each(data)("should parse %o into %o", async (input: string, expected: string | null) => {
     const output = await parser(input, { resolver: "doesn't matter" });
     expect(output).toBe(expected);
   });
