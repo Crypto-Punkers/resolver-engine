@@ -1,5 +1,6 @@
 import { ResolverEngine } from "@resolver-engine/core";
 import path from "path";
+import url from "url";
 import { ImportFile } from "./parsers/importparser";
 
 export function findImports(data: ImportFile): string[] {
@@ -100,7 +101,10 @@ export async function gatherSources(
   let queue: { cwd: string; file: string; relativeTo: string }[] = [];
   let alreadyImported = new Set();
 
-  const absoluteRoots = roots.map(what => path.join(workingDir, what));
+  if (workingDir !== "") {
+    workingDir += "/";
+  }
+  const absoluteRoots = roots.map(what => url.resolve(workingDir, what));
   for (const absWhat of absoluteRoots) {
     queue.push({ cwd: workingDir, file: absWhat, relativeTo: workingDir });
     alreadyImported.add(absWhat);
@@ -115,7 +119,7 @@ export async function gatherSources(
     // if not - return the same name it was imported with
     let relativePath: string;
     if (fileData.file[0] === ".") {
-      relativePath = path.join(fileData.relativeTo, fileData.file);
+      relativePath = url.resolve(fileData.relativeTo, fileData.file);
       result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     } else {
       relativePath = fileData.file;
@@ -126,13 +130,13 @@ export async function gatherSources(
     for (const foundImport of foundImports) {
       let importName: string;
       if (foundImport[0] === ".") {
-        importName = path.join(fileParentDir, foundImport);
+        importName = url.resolve(relativePath, foundImport);
       } else {
         importName = foundImport;
       }
       if (!alreadyImported.has(importName)) {
         alreadyImported.add(importName);
-        queue.push({ cwd: fileParentDir, file: foundImport, relativeTo: path.dirname(relativePath) });
+        queue.push({ cwd: fileParentDir, file: foundImport, relativeTo: relativePath });
       }
     }
   }
