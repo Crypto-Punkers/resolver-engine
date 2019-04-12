@@ -6,18 +6,19 @@
   "author": "Crypto Punkers <hello@punkers.co>",
   "license": "LGPL-3.0-or-later",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint -c ./tslint.json -p ./"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",
+    "@types/jest": "^24.0.6",
     "@types/nock": "^9.3.1",
     "@types/node": "^11.9.4",
-    "@types/jest": "^24.0.6",
     "jest": "<25.0.0",
-    "ts-jest": "^24.0.0",
     "memfs": "^2.15.0",
     "nock": "^10.0.6",
     "rimraf": "^2.6.2",
+    "ts-jest": "^24.0.0",
     "typescript": "^3.2.4"
   },
   "dependencies": {

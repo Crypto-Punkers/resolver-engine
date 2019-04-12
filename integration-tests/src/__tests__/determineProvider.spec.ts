@@ -7,7 +7,7 @@ import mockedFS from "../__mocks__/MockedFs";
 type input_t = [string, string | undefined];
 type output_t = [string, string];
 
-const data: [input_t, output_t][] = [
+const data: Array<[input_t, output_t]> = [
   [
     ["https://github.com/Crypto-Punkers/resolver-engine/examples/github.ts", undefined],
     ["https://raw.githubusercontent.com/Crypto-Punkers/resolver-engine/master/examples/github.ts", "github"],

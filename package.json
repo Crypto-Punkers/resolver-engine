@@ -7,7 +7,6 @@
   "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
   "author": "Crypto Punkers <hello@punkers.co>",
   "scripts": {
-    "prepare": "run-s clean build",
     "build": "tsc -b tsproject.json",
     "build:core": "wsrun -p core --stages build",
     "build:fs": "wsrun -p fs --stages build",
@@ -17,7 +16,8 @@
     "clean": "wsrun --exclude-missing clean",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
     "test": "run-s build test:execute",
-    "test:execute": "wsrun --parallel --collect-logs test"
+    "test:execute": "wsrun --parallel --collect-logs test",
+    "lint": "wsrun --parallel --collect-logs lint"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",
@@ -32,6 +32,9 @@
     "prettier": "1.16.4",
     "rimraf": "^2.6.2",
     "ts-jest": "^24.0.0",
+    "tslint": "^5.15.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.2.4",
     "wsrun": "^3.6.2"
   },

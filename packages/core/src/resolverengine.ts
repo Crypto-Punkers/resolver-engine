@@ -14,7 +14,7 @@ export interface Options {
 
 export class ResolverEngine<R> {
   private resolvers: SubResolver[] = [];
-  private parsers: SubParser<R>[] = [];
+  private parsers: Array<SubParser<R>> = [];
 
   constructor(options?: Options) {
     const opts: Options = { ...options };
@@ -51,7 +51,7 @@ export class ResolverEngine<R> {
       cwd: workingDir,
     };
 
-    const url = await firstResult(this.resolvers, resolver => resolver(uri, ctx));
+    const url = await firstResult(this.resolvers, currentResolver => currentResolver(uri, ctx));
 
     if (url === null) {
       throw resolverError(uri);

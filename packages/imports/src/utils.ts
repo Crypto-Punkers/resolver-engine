@@ -1,10 +1,10 @@
 import { ResolverEngine } from "@resolver-engine/core";
-import path from "path";
-import url from "url";
+import pathSys from "path";
+import urlSys from "url";
 import { ImportFile } from "./parsers/importparser";
 
 export function findImports(data: ImportFile): string[] {
-  let result: string[] = [];
+  const result: string[] = [];
   // regex below matches all possible import statements, namely:
   // - import "somefile";
   // - import "somefile" as something;
@@ -13,6 +13,7 @@ export function findImports(data: ImportFile): string[] {
   // and captures file names
   const regex: RegExp = /import\s+(?:(?:"([^;]*)"|'([^;]*)')(?:;|\s+as\s+[^;]*;)|.+from\s+(?:"(.*)"|'(.*)');)/g;
   let match: RegExpExecArray | null;
+  // tslint:disable-next-line:no-conditional-assignment
   while ((match = regex.exec(data.source))) {
     for (let i = 1; i < match.length; i++) {
       if (match[i] !== undefined) {
@@ -29,7 +30,7 @@ interface ImportTreeNode extends ImportFile {
   // uri and url the same as in rest of resolver-engine
   // it might mean github:user/repo/path.sol and raw link
   // or it might mean relative vs absolute file path
-  imports: { uri: string; url: string }[];
+  imports: Array<{ uri: string; url: string }>;
 }
 
 /**
@@ -43,8 +44,8 @@ async function gatherDepenencyTree(
   workingDir: string,
   resolver: ResolverEngine<ImportFile>,
 ): Promise<ImportTreeNode[]> {
-  let result: ImportTreeNode[] = [];
-  let alreadyImported = new Set();
+  const result: ImportTreeNode[] = [];
+  const alreadyImported = new Set();
 
   /**
    * This function traverses the depedency tree and calculates absolute paths for each import on the way storing each file in in a global array
@@ -65,7 +66,7 @@ async function gatherDepenencyTree(
 
     const fileNode: ImportTreeNode = { uri: file.uri, imports: [], ...resolvedFile };
 
-    const resolvedCwd = path.dirname(url);
+    const resolvedCwd = pathSys.dirname(url);
     for (const importUri of foundImportURIs) {
       const importUrl = await dfs({ searchCwd: resolvedCwd, uri: importUri });
       fileNode.imports.push({ uri: importUri, url: importUrl });
@@ -97,14 +98,14 @@ export async function gatherSources(
   workingDir: string,
   resolver: ResolverEngine<ImportFile>,
 ): Promise<ImportFile[]> {
-  let result: ImportFile[] = [];
-  let queue: { cwd: string; file: string; relativeTo: string }[] = [];
-  let alreadyImported = new Set();
+  const result: ImportFile[] = [];
+  const queue: Array<{ cwd: string; file: string; relativeTo: string }> = [];
+  const alreadyImported = new Set();
 
   if (workingDir !== "") {
     workingDir += "/";
   }
-  const absoluteRoots = roots.map(what => url.resolve(workingDir, what));
+  const absoluteRoots = roots.map(what => urlSys.resolve(workingDir, what));
   for (const absWhat of absoluteRoots) {
     queue.push({ cwd: workingDir, file: absWhat, relativeTo: workingDir });
     alreadyImported.add(absWhat);
@@ -119,18 +120,18 @@ export async function gatherSources(
     // if not - return the same name it was imported with
     let relativePath: string;
     if (fileData.file[0] === ".") {
-      relativePath = url.resolve(fileData.relativeTo, fileData.file);
+      relativePath = urlSys.resolve(fileData.relativeTo, fileData.file);
       result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     } else {
       relativePath = fileData.file;
       result.push({ url: relativePath, source: resolvedFile.source, provider: resolvedFile.provider });
     }
 
-    const fileParentDir = path.dirname(resolvedFile.url);
+    const fileParentDir = pathSys.dirname(resolvedFile.url);
     for (const foundImport of foundImports) {
       let importName: string;
       if (foundImport[0] === ".") {
-        importName = url.resolve(relativePath, foundImport);
+        importName = urlSys.resolve(relativePath, foundImport);
       } else {
         importName = foundImport;
       }
@@ -161,7 +162,7 @@ export async function gatherSourcesAndCanonizeImports(
     file.imports.forEach(i => (file.source = file.source.replace(i.uri, i.url)));
   }
 
-  let sources = await gatherDepenencyTree(roots, workingDir, resolver);
+  const sources = await gatherDepenencyTree(roots, workingDir, resolver);
   sources.forEach(canonizeFile);
   return stripNodes(sources);
 }

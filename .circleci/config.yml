@@ -1,27 +1,50 @@
 version: 2
 jobs:
-  build:
-    docker:
-        - image: circleci/node:10.15
-    steps:
-        - checkout
-        - restore_cache:
-            name: Restore yarn cache
-            key: node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
-        - run:
-            name: Install modules
-            command: yarn --frozen-lockfile install
-        - save_cache:
-            name: Save yarn cache
-            key: node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            paths:
-                - node_modules
-        - run:
-            name: Build
-            command: yarn build
-        - run:
-            name: Tests
-            command: yarn test
-        - run: # TODO(ritave): Move into seperate workspace that lints everything
-            name: Prettier
-            command: yarn prettier
+    test:
+        docker:
+            - image: circleci/node:10.15
+        steps:
+            - checkout
+            - restore_cache:
+                name: Restore yarn cache
+                key: node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - run:
+                name: Install modules
+                command: yarn --frozen-lockfile install
+            - save_cache:
+                name: Save yarn cache
+                key: node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
+                paths:
+                    - node_modules
+            - run:
+                name: Build
+                command: yarn build
+            - run:
+                name: Tests
+                command: yarn test
+    lint:
+        docker:
+            - image: circleci/node:10.15
+        steps:
+            - checkout
+            - restore_cache:
+                name: Restore yarn cache
+                key: node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - run:
+                name: Install modules
+                command: yarn --frozen-lockfile install
+            - save_cache:
+                name: Save yarn cache
+                key: node-modules-{{ .Branch }}-{{ checksum "yarn.lock" }}
+                paths:
+                    - node_modules
+            - run:
+                name: Lint
+                command: yarn lint
+
+workflows:
+    version: 2
+    main:
+        jobs:
+            - test
+            - lint

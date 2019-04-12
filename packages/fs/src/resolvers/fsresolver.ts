@@ -1,10 +1,10 @@
 import { Context, SubResolver } from "@resolver-engine/core";
-import * as fs from "fs";
-import * as path from "path";
+import * as fsSys from "fs";
+import * as pathSys from "path";
 
-const statAsync = (path: string): Promise<fs.Stats> =>
-  new Promise<fs.Stats>((resolve, reject) => {
-    fs.stat(path, (err, stats) => {
+const statAsync = (path: string): Promise<fsSys.Stats> =>
+  new Promise<fsSys.Stats>((resolve, reject) => {
+    fsSys.stat(path, (err, stats) => {
       if (err) {
         reject(err);
       }
@@ -19,8 +19,8 @@ export function FsResolver(): SubResolver {
     const cwd = ctx.cwd || process.cwd();
 
     let myPath: string;
-    if (!path.isAbsolute(resolvePath)) {
-      myPath = path.join(cwd, resolvePath);
+    if (!pathSys.isAbsolute(resolvePath)) {
+      myPath = pathSys.join(cwd, resolvePath);
     } else {
       myPath = resolvePath;
     }

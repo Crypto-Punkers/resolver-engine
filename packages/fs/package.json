@@ -10,7 +10,8 @@
     "build": "tsc",
     "tsc": "tsc",
     "clean": "rimraf build/",
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint -c ../../tslint.json -p ./"
   },
   "dependencies": {
     "@resolver-engine/core": "0.3.0",
