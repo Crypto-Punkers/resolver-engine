@@ -5,15 +5,10 @@ import { IPFSResolver } from "./resolvers/ipfsresolver";
 import { SwarmResolver } from "./resolvers/swarmresolver";
 
 export function ImportsEngine(): ResolverEngine<ImportFile> {
-  return (
-    new ResolverEngine<ImportFile>()
-      //.addResolver(FsResolver())
-      //.addResolver(EthPmResolver())
-      //.addResolver(NodeResolver())
-      .addResolver(GithubResolver())
-      .addResolver(SwarmResolver())
-      .addResolver(IPFSResolver())
-      .addResolver(resolvers.UriResolver())
-      .addParser(ImportParser([parsers.UrlParser()]))
-  );
+  return new ResolverEngine<ImportFile>()
+    .addResolver(GithubResolver())
+    .addResolver(SwarmResolver())
+    .addResolver(IPFSResolver())
+    .addResolver(resolvers.UriResolver())
+    .addParser(ImportParser([parsers.UrlParser()]));
 }

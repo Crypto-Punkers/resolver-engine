@@ -7,10 +7,9 @@ export interface ImportFile {
   url: string;
   source: string;
   provider: string;
-  //internalImportURis: string[];
 }
 
-export function ImportParser(sourceParsers: SubParser<string>[]): SubParser<ImportFile> {
+export function ImportParser(sourceParsers: Array<SubParser<string>>): SubParser<ImportFile> {
   return async (url: string, ctx: Context): Promise<ImportFile | null> => {
     const source = await firstResult(sourceParsers, parser => parser(url, ctx));
     if (!source) {
