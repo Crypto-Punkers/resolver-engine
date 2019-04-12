@@ -7,7 +7,7 @@
   "license": "LGPL-3.0-or-later",
   "scripts": {
     "test": "jest",
-    "lint": "tslint -c ../tslint.json -p ./"
+    "lint": "tslint -c ./tslint.json -p ./"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",

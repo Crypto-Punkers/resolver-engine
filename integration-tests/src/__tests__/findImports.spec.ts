@@ -1,7 +1,7 @@
 import { findImports, ImportFile } from "@resolver-engine/imports";
 
 describe("findImports", function() {
-  let providedFile: ImportFile = { url: "", source: "", provider: "" };
+  const providedFile: ImportFile = { url: "", source: "", provider: "" };
 
   describe("Double quotes", function() {
     it('finds statements like: import "file";', function() {

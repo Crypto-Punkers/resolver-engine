@@ -1,13 +1,15 @@
 jest.mock("fs");
-import nock from "nock";
-import { vol } from "memfs";
-import { ImportsFsEngine } from "@resolver-engine/imports-fs";
 import { gatherSources, ImportFile } from "@resolver-engine/imports";
+import { ImportsFsEngine } from "@resolver-engine/imports-fs";
+import { vol } from "memfs";
+import nock from "nock";
 
-type dictionary = { [s: string]: string };
+interface Dictionary {
+  [s: string]: string;
+}
 
-function expectedOutput(filesObj: dictionary, provider: string, namePrefix: string): ImportFile[] {
-  let result: ImportFile[] = [];
+function expectedOutput(filesObj: Dictionary, provider: string, namePrefix: string): ImportFile[] {
+  const result: ImportFile[] = [];
   let prefix = namePrefix;
   if (namePrefix !== "") {
     prefix += "/";
@@ -16,13 +18,13 @@ function expectedOutput(filesObj: dictionary, provider: string, namePrefix: stri
     result.push({
       url: prefix + k,
       source: filesObj[k],
-      provider: provider,
+      provider,
     });
   }
   return result;
 }
 
-const data: [string, dictionary, string[], string, string][] = [
+const data: Array<[string, Dictionary, string[], string, string]> = [
   [
     "gathers files included by given file",
     {
@@ -130,10 +132,10 @@ describe("gatherSources function", function() {
     vol.reset();
   });
 
-  it.each(data)("%s", async function(message, test_fs, input, cwd, provider) {
-    const EXPECTED_FILES = expectedOutput(test_fs, provider, cwd);
+  it.each(data)("%s", async function(message, testFs, input, cwd, provider) {
+    const EXPECTED_FILES = expectedOutput(testFs, provider, cwd);
 
-    vol.fromJSON(test_fs);
+    vol.fromJSON(testFs);
     const fileList = await gatherSources(input, cwd, resolver);
     expect(fileList.sort((a, b) => a.url.localeCompare(b.url))).toEqual(
       EXPECTED_FILES.sort((a, b) => a.url.localeCompare(b.url)),
@@ -141,11 +143,11 @@ describe("gatherSources function", function() {
   });
 
   it("throws when imported file doesn't exist", async function() {
-    const test_fs: dictionary = {
+    const testFs: Dictionary = {
       "main.sol": 'import "./otherfile.sol";\nrestoffileblahblah',
     };
 
-    vol.fromJSON(test_fs);
+    vol.fromJSON(testFs);
     await expect(gatherSources(["main.sol"], __dirname, resolver)).rejects.toThrowError();
   });
 
