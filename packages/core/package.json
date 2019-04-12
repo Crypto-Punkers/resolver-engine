@@ -10,10 +10,14 @@
     "build": "tsc",
     "tsc": "tsc",
     "clean": "rimraf build/",
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint -c ../../tslint.json -p ./"
   },
   "dependencies": {
     "debug": "^3.1.0",
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "tslint": "^5.15.0"
   }
 }

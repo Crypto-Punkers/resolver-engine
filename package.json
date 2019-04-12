@@ -17,7 +17,8 @@
     "clean": "wsrun --exclude-missing clean",
     "prettier": "prettier --config .prettierrc.yaml --write --list-different './**/*.{ts,tsx,json,md}'",
     "test": "run-s build test:execute",
-    "test:execute": "wsrun --parallel --collect-logs test"
+    "test:execute": "wsrun --parallel --collect-logs test",
+    "lint": "wsrun --parallel --collect-logs lint"
   },
   "devDependencies": {
     "@types/debug": "^4.1.1",
