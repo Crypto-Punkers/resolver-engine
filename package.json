@@ -7,7 +7,6 @@
   "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
   "author": "Crypto Punkers <hello@punkers.co>",
   "scripts": {
-    "prepare": "run-s clean build",
     "build": "tsc -b tsproject.json",
     "build:core": "wsrun -p core --stages build",
     "build:fs": "wsrun -p fs --stages build",
