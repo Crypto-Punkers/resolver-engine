@@ -4,3 +4,4 @@ update_configs:
     - package_manager: "javascript"
       directory: "/"
       update_schedule: "weekly"
+      automerge-rule-development-deps: "in_range"
