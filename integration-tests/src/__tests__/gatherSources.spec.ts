@@ -234,7 +234,7 @@ describe("gatherSources function", function() {
       );
     });
 
-    it.skip("downloads file from GitHub with local import", async function() {
+    it("downloads file from GitHub with local import", async function() {
       const fileList = await gatherSources(
         ["https://github.com/user/repo/blob/master/path/to/file/file_with_local.sol"],
         "",
@@ -276,7 +276,7 @@ describe("gatherSources function", function() {
       );
     });
 
-    it.skip("downloads filr from URL with local import", async function() {
+    it("downloads filr from URL with local import", async function() {
       const fileList = await gatherSources(["http://somepage.tv/some/path/file_local.sol"], "", resolver);
       const EXPECTED_RESULT = [
         {
