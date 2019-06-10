@@ -36,7 +36,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.2.4",
-    "wsrun": "^3.6.2"
+    "wsrun": "^4.0.2"
   },
   "name": "resolver-engine"
 }
