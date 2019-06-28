@@ -9,6 +9,8 @@ const data: [string, string | null][] = [
     "https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts",
     "https://github.com/Crypto-Punkers/resolver-engine/blob/master/examples/github.ts",
   ],
+  [ "c:/foobar/file.sol", null ],
+  [ "c:\\foobar\\file.sol", null ]
 ];
 
 describe("UriResolver", () => {
