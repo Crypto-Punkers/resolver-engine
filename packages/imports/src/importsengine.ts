@@ -1,4 +1,4 @@
-import { parsers, ResolverEngine, resolvers } from "@resolver-engine/core";
+import { parsers, ResolverEngine, resolvers } from "@openzeppelin/resolver-engine-core";
 import { ImportFile, ImportParser } from "./parsers/importparser";
 import { GithubResolver } from "./resolvers/githubresolver";
 import { IPFSResolver } from "./resolvers/ipfsresolver";

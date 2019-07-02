@@ -4,7 +4,7 @@
     "packages/*",
     "integration-tests"
   ],
-  "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
+  "repository": "git@github.com:OpenZeppelin/resolver-engine.git",
   "author": "Crypto Punkers <hello@punkers.co>",
   "scripts": {
     "build": "tsc -b tsproject.json",

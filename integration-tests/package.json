@@ -2,7 +2,7 @@
   "name": "integration-tests",
   "private": true,
   "version": "1.0.0",
-  "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
+  "repository": "git@github.com:OpenZeppelin/resolver-engine.git",
   "author": "Crypto Punkers <hello@punkers.co>",
   "license": "LGPL-3.0-or-later",
   "scripts": {
@@ -22,9 +22,9 @@
     "typescript": "^3.2.4"
   },
   "dependencies": {
-    "@resolver-engine/core": "^0.3.0",
-    "@resolver-engine/fs": "^0.3.0",
-    "@resolver-engine/imports": "^0.3.0",
-    "@resolver-engine/imports-fs": "^0.3.0"
+    "@openzeppelin/resolver-engine-core": "^0.3.0",
+    "@openzeppelin/resolver-engine-fs": "^0.3.0",
+    "@openzeppelin/resolver-engine-imports": "^0.3.0",
+    "@openzeppelin/resolver-engine-imports-fs": "^0.3.0"
   }
 }

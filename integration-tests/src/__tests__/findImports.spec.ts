@@ -1,4 +1,4 @@
-import { findImports, ImportFile } from "@resolver-engine/imports";
+import { findImports, ImportFile } from "@openzeppelin/resolver-engine-imports";
 
 describe("findImports", function() {
   const providedFile: ImportFile = { url: "", source: "", provider: "" };

@@ -1,4 +1,4 @@
-import { Context, firstResult, SubParser } from "@resolver-engine/core";
+import { Context, firstResult, SubParser } from "@openzeppelin/resolver-engine-core";
 import Debug from "debug";
 
 const debug = Debug("resolverengine:importparser");

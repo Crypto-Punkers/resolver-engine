@@ -1,4 +1,4 @@
-import { Context, SubResolver } from "@resolver-engine/core";
+import { Context, SubResolver } from "@openzeppelin/resolver-engine-core";
 
 // 1. (hash)
 const SWARM_URI = /^bzz-raw:\/\/(\w+)/;

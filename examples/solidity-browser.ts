@@ -1,4 +1,4 @@
-import { ImportsEngine } from "@resolver-engine/imports";
+import { ImportsEngine } from "@openzeppelin/resolver-engine-imports";
 
 const resolver = ImportsEngine();
 

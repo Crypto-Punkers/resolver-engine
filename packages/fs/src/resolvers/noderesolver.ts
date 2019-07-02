@@ -1,4 +1,4 @@
-import { Context, SubResolver } from "@resolver-engine/core";
+import { Context, SubResolver } from "@openzeppelin/resolver-engine-core";
 import { BacktrackFsResolver } from "./backtrackfsresolver";
 
 export function NodeResolver(): SubResolver {

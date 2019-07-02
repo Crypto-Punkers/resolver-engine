@@ -1,4 +1,4 @@
-import { parsers, ResolverEngine, resolvers } from "@resolver-engine/imports";
+import { parsers, ResolverEngine, resolvers } from "@openzeppelin/resolver-engine-imports";
 
 const resolver = new ResolverEngine<string>({ debug: true })
   .addParser(parsers.UrlParser())

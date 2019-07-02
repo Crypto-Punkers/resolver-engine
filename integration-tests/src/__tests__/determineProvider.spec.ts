@@ -1,5 +1,5 @@
 jest.mock("fs");
-import { ImportsFsEngine } from "@resolver-engine/imports-fs";
+import { ImportsFsEngine } from "@openzeppelin/resolver-engine-imports-fs";
 import { vol } from "memfs";
 import nock from "nock";
 import mockedFS from "../__mocks__/MockedFs";

@@ -1,5 +1,5 @@
-import { Context, SubResolver } from "@resolver-engine/core";
-import { resolvers } from "@resolver-engine/fs";
+import { Context, SubResolver } from "@openzeppelin/resolver-engine-core";
+import { resolvers } from "@openzeppelin/resolver-engine-fs";
 import Debug from "debug";
 const debug = Debug("resolverengine:ethpmresolver");
 

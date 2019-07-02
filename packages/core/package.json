@@ -1,9 +1,9 @@
 {
-  "name": "@resolver-engine/core",
+  "name": "@openzeppelin/resolver-engine-core",
   "version": "0.3.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
+  "repository": "git@github.com:OpenZeppelin/resolver-engine.git",
   "author": "Crypto Punkers <hello@punkers.co>",
   "license": "LGPL-3.0-or-later",
   "scripts": {

@@ -1,4 +1,4 @@
-import { ImportsFsEngine } from "@resolver-engine/imports-fs";
+import { ImportsFsEngine } from "@openzeppelin/resolver-engine-imports-fs";
 
 const resolver = ImportsFsEngine();
 

@@ -1,4 +1,4 @@
-import { SubParser } from "@resolver-engine/core";
+import { SubParser } from "@openzeppelin/resolver-engine-core";
 import Debug from "debug";
 import * as fs from "fs";
 import { promisify } from "util";

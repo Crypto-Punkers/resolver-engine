@@ -1,4 +1,4 @@
-import { Context, SubResolver } from "@resolver-engine/core";
+import { Context, SubResolver } from "@openzeppelin/resolver-engine-core";
 import * as path from "path";
 import { FsResolver } from "./fsresolver";
 

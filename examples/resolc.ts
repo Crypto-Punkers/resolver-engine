@@ -6,7 +6,7 @@ const solc = require("solc");
 const chalk = require("chalk");
 const yargs = require("yargs");
 
-import { gatherSources, ImportsFsEngine } from "@resolver-engine/imports-fs";
+import { gatherSources, ImportsFsEngine } from "@openzeppelin/resolver-engine-imports-fs";
 import glob = require("glob");
 
 var argv = yargs.argv;

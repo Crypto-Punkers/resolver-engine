@@ -1,4 +1,4 @@
-import { Context, SubResolver } from "@resolver-engine/core";
+import { Context, SubResolver } from "@openzeppelin/resolver-engine-core";
 
 // 1. (root / path to resource)
 const IPFS_URI = /^ipfs:\/\/(.+)$/;

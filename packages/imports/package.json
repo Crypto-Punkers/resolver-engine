@@ -1,9 +1,9 @@
 {
-  "name": "@resolver-engine/imports",
+  "name": "@openzeppelin/resolver-engine-imports",
   "version": "0.3.2",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
+  "repository": "git@github.com:OpenZeppelin/resolver-engine.git",
   "author": "Crypto Punkers <hello@punkers.co>",
   "license": "LGPL-3.0-or-later",
   "scripts": {
@@ -14,7 +14,7 @@
     "lint": "tslint -c ../../tslint.json -p ./"
   },
   "dependencies": {
-    "@resolver-engine/core": "0.3.0",
+    "@openzeppelin/resolver-engine-core": "0.3.0",
     "debug": "^3.1.0",
     "hosted-git-info": "^2.6.0",
     "path-browserify": "^1.0.0",

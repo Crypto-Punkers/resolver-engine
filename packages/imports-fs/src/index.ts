@@ -1,15 +1,15 @@
-export { Context, firstResult, Options, ResolverEngine, SubParser, SubResolver } from "@resolver-engine/core";
+export { Context, firstResult, Options, ResolverEngine, SubParser, SubResolver } from "@openzeppelin/resolver-engine-core";
 export {
   findImports,
   gatherSources,
   gatherSourcesAndCanonizeImports,
   ImportFile,
   ImportsEngine,
-} from "@resolver-engine/imports";
+} from "@openzeppelin/resolver-engine-imports";
 export { ImportsFsEngine } from "./importsfsengine";
-import { parsers as coreParsers, resolvers as coreResolvers } from "@resolver-engine/core";
-import { parsers as fsParsers, resolvers as fsResolvers } from "@resolver-engine/fs";
-import { parsers as importsParsers, resolvers as importsResolvers } from "@resolver-engine/imports";
+import { parsers as coreParsers, resolvers as coreResolvers } from "@openzeppelin/resolver-engine-core";
+import { parsers as fsParsers, resolvers as fsResolvers } from "@openzeppelin/resolver-engine-fs";
+import { parsers as importsParsers, resolvers as importsResolvers } from "@openzeppelin/resolver-engine-imports";
 import { EthPmResolver } from "./resolvers/ethpmresolver";
 
 // TODO(cymerrad)
