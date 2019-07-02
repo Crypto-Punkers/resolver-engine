@@ -1,6 +1,6 @@
 {
   "name": "@openzeppelin/resolver-engine-imports-fs",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "repository": "git@github.com:OpenZeppelin/resolver-engine.git",
@@ -14,8 +14,8 @@
     "lint": "tslint -c ../../tslint.json -p ./"
   },
   "dependencies": {
-    "@openzeppelin/resolver-engine-fs": "0.3.0",
-    "@openzeppelin/resolver-engine-imports": "0.3.2",
+    "@openzeppelin/resolver-engine-fs": "^0.3.3",
+    "@openzeppelin/resolver-engine-imports": "^0.3.3",
     "debug": "^3.1.0"
   },
   "publishConfig": {
