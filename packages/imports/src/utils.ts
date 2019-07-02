@@ -39,7 +39,7 @@ interface ImportTreeNode extends ImportFile {
  * @param workingDir
  * @param resolver
  */
-async function gatherDepenencyTree(
+async function gatherDependencyTree(
   roots: string[],
   workingDir: string,
   resolver: ResolverEngine<ImportFile>,
@@ -162,7 +162,7 @@ export async function gatherSourcesAndCanonizeImports(
     file.imports.forEach(i => (file.source = file.source.replace(i.uri, i.url)));
   }
 
-  const sources = await gatherDepenencyTree(roots, workingDir, resolver);
+  const sources = await gatherDependencyTree(roots, workingDir, resolver);
   sources.forEach(canonizeFile);
   return stripNodes(sources);
 }
