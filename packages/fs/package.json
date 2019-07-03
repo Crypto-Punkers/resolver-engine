@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/fs",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
@@ -14,7 +14,7 @@
     "lint": "tslint -c ../../tslint.json -p ./"
   },
   "dependencies": {
-    "@resolver-engine/core": "0.3.0",
+    "@resolver-engine/core": "^0.3.3",
     "debug": "^3.1.0"
   }
 }

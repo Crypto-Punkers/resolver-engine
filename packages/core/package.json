@@ -1,6 +1,6 @@
 {
   "name": "@resolver-engine/core",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "repository": "git@github.com:Crypto-Punkers/resolver-engine.git",
