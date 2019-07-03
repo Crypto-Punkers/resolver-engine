@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "tsc": "tsc",
-    "clean": "rimraf build/",
+    "clean": "rimraf build/ ./tsconfig.tsbuildinfo",
     "test": "jest",
     "lint": "tslint -c ../../tslint.json -p ./"
   },
