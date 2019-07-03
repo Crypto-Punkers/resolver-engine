@@ -14,9 +14,11 @@
     "lint": "tslint -c ../../tslint.json -p ./"
   },
   "dependencies": {
-    "@types/is-url": "^1.2.28",
     "debug": "^3.1.0",
     "is-url": "^1.2.4",
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "@types/is-url": "^1.2.28"
   }
 }
