@@ -1,7 +1,7 @@
 import nock from "nock";
 import { parsers } from "../..";
 
-const incorrectUrls = [["", null], ["www.google.com", null]];
+const incorrectUrls = [["", null], ["www.google.com", null], [ "c:/foobar/file.sol", null ], [ "c:\\foobar\\file.sol", null ]];
 const correctUrls = [["http://example.com/some/file.txt", "http://example.com/some/file.txt"]];
 const data: [string, string | null][] = incorrectUrls.concat(correctUrls) as any;
 
