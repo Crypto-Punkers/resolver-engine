@@ -1621,12 +1621,7 @@ before-after-hook@^2.0.0:
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.1.0.tgz#b6c03487f44e24200dd30ca5e6a1979c5d2fb635"
   integrity sha512-IWIbu7pMqyw3EAJHzzHbWa85b6oud/yfKYg5rqB5hNE8CeMi3nX+2C2sj0HswfblST86hpVEOAb9x34NZd6P7A==
 
-bluebird@^3.5.1, bluebird@^3.5.3:
-  version "3.5.3"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
-  integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
-
-bluebird@^3.5.5:
+bluebird@^3.5.1, bluebird@^3.5.3, bluebird@^3.5.5:
   version "3.5.5"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
@@ -6917,9 +6912,9 @@ ws@^5.2.0:
     async-limiter "~1.0.0"
 
 wsrun@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/wsrun/-/wsrun-5.0.0.tgz#9b086bfdf04de98be84c73057fd8f42dc36d5c59"
-  integrity sha512-xv3uBTZZqmtmQumR+67S8oJ0zr4sfSbOvs+L7OdNbwUj1XYBX91Kx0Wbm3gpjkn0PKBuCKf3z62DdjO7/+bVKg==
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/wsrun/-/wsrun-5.0.2.tgz#e7d1ebc8bc861647116608c81184fe7521213002"
+  integrity sha512-j3vkJUBa1Z35R6yqc04TTsEnPKKlHV0NiMbdM3QiQMQJDpPUoMgq5RegDTCyxx0ZnmsYCbwNxPGX2ps9DSIXaQ==
   dependencies:
     bluebird "^3.5.1"
     chalk "^2.3.0"
